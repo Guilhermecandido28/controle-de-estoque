@@ -2,6 +2,8 @@ from tkinter import *
 from styles.cores import *
 import tkinter as tk
 from PIL import Image, ImageTk
+from formations import format_cpf
+from tkinter import ttk
 
 janela = Tk()
 
@@ -92,9 +94,29 @@ class Applicantion():
         self.label_cliente.place(relx=0.01, rely=0.12)
         self.linha = Frame(self.principal, bg=cor5)
         self.linha.place(relx=0.146, rely=0.17, relwidth=0.71, relheight=0.004)
-
-
-    
+        # Entrys
+            #nome
+        self.title_nome = Label(self.principal, text='NOME:', font=('arial 12'), foreground= cor4, bg='white')
+        self.title_nome.place(relx=0.148, rely=0.195)
+        self.e_nome = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
+        self.e_nome.place(relx=0.150, rely=0.24, relwidth=0.25, relheight=0.04)
+        self.e_nome.insert(0, "Nome do Cliente")
+        self.e_nome.bind("<FocusIn>", lambda event: self.e_nome.delete(0, "end"))
+            #sobrenome
+        self.title_sobrenome = Label(self.principal, text='SOBRENOME:', font=('arial 12'), foreground= cor4, bg='white')
+        self.title_sobrenome.place(relx=0.416, rely=0.195)
+        self.e_sobrenome = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
+        self.e_sobrenome.place(relx=0.42, rely=0.24, relwidth=0.25, relheight=0.04)
+        self.e_sobrenome.insert(0, "Sobrenome ou Apelido")
+        self.e_sobrenome.bind("<FocusIn>", lambda event: self.e_sobrenome.delete(0, "end"))
+            #CPF
+        self.title_cpf = Label(self.principal, text='CPF', font=('arial 12'), foreground= cor4, bg='white')
+        self.title_cpf.place(relx=0.148, rely=0.30)
+        self.e_cpf = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
+        self.e_cpf.place(relx=0.150, rely=0.35, relwidth=0.15, relheight=0.04)
+        self.e_cpf.insert(0, 'Digite apenas números')
+        self.e_cpf.bind("<FocusIn>", lambda event: self.e_cpf.delete(0, "end"))        
+        self.e_cpf.bind("<KeyRelease>", lambda event: format_cpf(self.e_cpf))    
     
 Applicantion()
 
