@@ -1,9 +1,9 @@
 from tkinter import *
 from styles.cores import *
 import tkinter as tk
-from PIL import Image, ImageTk
-from formations import format_cpf
+from formations import *
 from tkinter import ttk
+
 
 janela = Tk()
 
@@ -93,31 +93,50 @@ class Applicantion():
         self.label_cliente = Label(self.principal, image=self.icone_cliente, bg='white')        
         self.label_cliente.place(relx=0.01, rely=0.12)
         self.linha = Frame(self.principal, bg=cor5)
-        self.linha.place(relx=0.146, rely=0.17, relwidth=0.71, relheight=0.004)
+        self.linha.place(relx=0.146, rely=0.17, relwidth=0.525, relheight=0.004)
         # Entrys
             #nome
         self.title_nome = Label(self.principal, text='NOME:', font=('arial 12'), foreground= cor4, bg='white')
         self.title_nome.place(relx=0.148, rely=0.195)
         self.e_nome = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
         self.e_nome.place(relx=0.150, rely=0.24, relwidth=0.25, relheight=0.04)
-        self.e_nome.insert(0, "Nome do Cliente")
-        self.e_nome.bind("<FocusIn>", lambda event: self.e_nome.delete(0, "end"))
+        placeholder_nome(self.e_nome)
             #sobrenome
         self.title_sobrenome = Label(self.principal, text='SOBRENOME:', font=('arial 12'), foreground= cor4, bg='white')
         self.title_sobrenome.place(relx=0.416, rely=0.195)
         self.e_sobrenome = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
         self.e_sobrenome.place(relx=0.42, rely=0.24, relwidth=0.25, relheight=0.04)
-        self.e_sobrenome.insert(0, "Sobrenome ou Apelido")
-        self.e_sobrenome.bind("<FocusIn>", lambda event: self.e_sobrenome.delete(0, "end"))
+        placeholder_sobrenome(self.e_sobrenome)
             #CPF
-        self.title_cpf = Label(self.principal, text='CPF', font=('arial 12'), foreground= cor4, bg='white')
+        self.title_cpf = Label(self.principal, text='CPF:', font=('arial 12'), foreground= cor4, bg='white')
         self.title_cpf.place(relx=0.148, rely=0.30)
         self.e_cpf = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
         self.e_cpf.place(relx=0.150, rely=0.35, relwidth=0.15, relheight=0.04)
-        self.e_cpf.insert(0, 'Digite apenas números')
-        self.e_cpf.bind("<FocusIn>", lambda event: self.e_cpf.delete(0, "end"))        
-        self.e_cpf.bind("<KeyRelease>", lambda event: format_cpf(self.e_cpf))    
-    
+        placeholder_cpf(self.e_cpf)
+            #celular
+        self.title_celular = Label(self.principal, text="CELULAR:", font=('arial 12'), foreground=cor4, bg='white')
+        self.title_celular.place(relx= 0.316 , rely=0.3)
+        self.e_celular = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
+        self.e_celular.place(relx=0.32, rely=0.35, relwidth=0.15, relheight=0.04)
+        placeholder_celular(self.e_celular)
+            #email
+        self.title_email = Label(self.principal, text="EMAIL:", font=('arial 12'), foreground=cor4, bg='white')
+        self.title_email.place(relx= 0.49 , rely=0.3) 
+        self.e_email = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
+        self.e_email.place(relx=0.49, rely=0.35, relwidth=0.18, relheight=0.04)
+        placeholder_email(self.e_email)
+            #cometário
+        self.title_comment = Label(self.principal, text="OBS:", font=('arial 12'), foreground=cor4, bg='white')
+        self.title_comment.place(relx=0.148, rely=0.405)
+        self.e_comment = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
+        self.e_comment.place(relx=0.150, rely=0.46, relwidth=0.52, relheight=0.04)
+        # endereço
+        self.linha2 = Frame(self.principal, bg=cor5)
+        self.linha2.place(relx=0.01, rely=0.58, relwidth=0.66, relheight=0.004)
+        self.titulo_endereco = Label(self.principal, text="ENDEREÇO", font=('arial 14'), foreground=cor4, bg='white')
+        self.titulo_endereco.place(relx=0.01, rely=0.53)
+          
+
 Applicantion()
 
         
