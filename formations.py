@@ -45,30 +45,30 @@ def format_email(entry):
 
 
 def placeholder_cpf(entry):
-    if entry.get() == 'Digite apenas números':
+    if entry.get() == '  Digite apenas números':
         entry.delete(0, "end")    
-    entry.insert(0, 'Digite apenas números')
+    entry.insert(0, '  Digite apenas números')
     entry.bind("<FocusIn>", lambda event: entry.delete(0, "end"))        
     entry.bind("<KeyRelease>", lambda event: format_cpf(entry))
     
 
 def placeholder_celular(entry):
-    entry.insert(0, 'Digite apenas números')
+    entry.insert(0, '  Digite apenas números')
     entry.bind("<FocusIn>", lambda event: entry.delete(0, "end"))        
     entry.bind("<KeyRelease>", lambda event: format_celular(entry))
 
 def placeholder_nome(entry):
-    entry.insert(0, 'Nome')
+    entry.insert(0, '  Nome')
     entry.bind("<FocusIn>", lambda event: entry.delete(0, "end"))        
     entry.bind("<KeyRelease>", lambda event: format_nome(entry))
 
 def placeholder_sobrenome(entry):
-    entry.insert(0, 'Sobrenome ou apelido')
+    entry.insert(0, '  Sobrenome ou apelido')
     entry.bind("<FocusIn>", lambda event: entry.delete(0, "end"))        
     entry.bind("<KeyRelease>", lambda event: format_nome(entry))
 
 def placeholder_email(entry):
-    entry.insert(0, 'Digite o e-mail')
+    entry.insert(0, '  Digite o e-mail')
     entry.bind("<FocusIn>", lambda event: entry.delete(0, "end"))        
     entry.bind("<KeyRelease>", lambda event: format_email(entry))
     
