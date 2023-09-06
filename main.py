@@ -5,7 +5,6 @@ from PIL import Image, ImageTk
 
 janela = Tk()
 
-
 class Applicantion():
     def __init__(self):
         self.janela = janela
