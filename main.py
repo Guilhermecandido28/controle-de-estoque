@@ -39,35 +39,35 @@ class Applicantion():
     def buttons(self):
         #Botão cliente
         self.img_cliente = PhotoImage(file='imagens/cliente.png')
-        self.btn_clientes = Button(self.menu, text='Clientes', image=self.img_cliente, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'))
+        self.btn_clientes = Button(self.menu, text='Clientes', image=self.img_cliente, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2')
         self.btn_clientes.place(relx=0, rely=0, relwidth=0.14, relheight=1)
         #botão vendas
         self.img_vendas = PhotoImage(file='imagens/vendas.png')
-        self.btn_vendas = Button(self.menu, text='Vendas', image=self.img_vendas, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'))
+        self.btn_vendas = Button(self.menu, text='Vendas', image=self.img_vendas, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2')
         self.btn_vendas.place(relx=0.14, rely=0, relwidth=0.14, relheight=1)
         # Fornecedor
         self.img_fornecedor = PhotoImage(file='imagens/fornecedor.png')
-        self.btn_fornecedor = Button(self.menu, text='Fornecedor', image=self.img_fornecedor, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'))
+        self.btn_fornecedor = Button(self.menu, text='Fornecedor', image=self.img_fornecedor, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2')
         self.btn_fornecedor.place(relx=0.28, rely=0, relwidth=0.14, relheight=1)
         #estoque
         self.img_estoque= PhotoImage(file='imagens/estoque.png')
-        self.btn_estoque = Button(self.menu, text='Estoque', image=self.img_estoque, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'))
+        self.btn_estoque = Button(self.menu, text='Estoque', image=self.img_estoque, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2')
         self.btn_estoque.place(relx=0.42, rely=0, relwidth=0.14, relheight=1)
         #compras
         self.img_compras= PhotoImage(file='imagens/compras.png')
-        self.btn_compras = Button(self.menu, text='Compras', image=self.img_compras, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'))
+        self.btn_compras = Button(self.menu, text='Compras', image=self.img_compras, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2')
         self.btn_compras.place(relx=0.56, rely=0, relwidth=0.14, relheight=1)
         #financeiro
         self.img_financeiro= PhotoImage(file='imagens/financeiro.png')
-        self.btn_financeiro = Button(self.menu, text='Financeiro', image=self.img_financeiro, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'))
+        self.btn_financeiro = Button(self.menu, text='Financeiro', image=self.img_financeiro, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2')
         self.btn_financeiro.place(relx=0.7, rely=0, relwidth=0.14, relheight=1)
         #configurações
         self.img_settings= PhotoImage(file='imagens/settings.png')
-        self.btn_settings = Button(self.menu, text='Configurações', image=self.img_settings, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'))
+        self.btn_settings = Button(self.menu, text='Configurações', image=self.img_settings, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2')
         self.btn_settings.place(relx=0.84, rely=0, relwidth=0.14, relheight=1)
         #home
         self.img_home = PhotoImage(file='imagens/home.png')
-        self.btn_home = Button(self.header, image=self.img_home, bg=cor3, bd=0, font=('arial 12 bold'))
+        self.btn_home = Button(self.header, image=self.img_home, bg=cor3, bd=0, font=('arial 12 bold'), cursor='hand2')
         self.btn_home.place(relx=0, rely=0, relheight=1, relwidth=0.05)
         
     def buscar(self):        
@@ -77,16 +77,16 @@ class Applicantion():
         self.search.place(relx=0, rely=0, relheight=0.1, relwidth=0.8)
         #botão_pesquisar
         self.img_search = PhotoImage(file='imagens/search.png')
-        self.btn_search = Button(self.principal, image=self.img_search, bg=cor5, bd=0)
+        self.btn_search = Button(self.principal, image=self.img_search, bg=cor5, bd=0, cursor='hand2')
         self.btn_search.place(relx=0.8, rely=0, relheight=0.1, relwidth=0.05)
         #Botão_imprimir
         self.img_print = PhotoImage(file='imagens/impressora.png')
-        self.btn_print = Button(self.principal, image=self.img_print, bg=cor5, bd=0)
+        self.btn_print = Button(self.principal, image=self.img_print, bg=cor5, bd=0, cursor='hand2')
         self.btn_print.place(relx=0.85, rely=0, relheight=0.1, relwidth=0.05)
     
     def add_client(self):
         #Botão_adicionar_cliente        
-        self.btn_addcliente = Button(self.principal, text='ADICIONAR\n Cliente', bg=cor6, compound='center',bd=0, font=('arial 14 bold'), foreground='white')
+        self.btn_addcliente = Button(self.principal, text='ADICIONAR\n Cliente', bg=cor6, compound='center',bd=0, font=('arial 14 bold'), foreground='white', cursor='hand2')
         self.btn_addcliente.place(relx=0.9, rely=0, relheight=0.1, relwidth=0.1)
         #título 
         self.titulo = Label(self.principal, text='Ficha de Cadastro de Clientes', bg='white', font=('arial 16 bold'))
@@ -97,7 +97,7 @@ class Applicantion():
         self.label_cliente.place(relx=0.01, rely=0.12)
         self.linha = Frame(self.principal, bg=cor5)
         self.linha.place(relx=0.146, rely=0.17, relwidth=0.525, relheight=0.004)
-        botao_upload = tk.Button(janela, text="Upload de foto", command=lambda: carregar_imagem(self.label_cliente), font=('arial 12 bold'), background='green', foreground='white')
+        botao_upload = tk.Button(janela, text="Upload de foto", command=lambda: carregar_imagem(self.label_cliente), font=('arial 12 bold'), background='green', foreground='white', cursor='hand2')
         botao_upload.place(relx=0.030, rely=0.52)
         
         # Entrys
@@ -176,9 +176,9 @@ class Applicantion():
         self.title_estado.place(relx=.545, rely= .705 )
         #botão limpar
         self.img_limpar = PhotoImage(file='imagens/vassoura.png')
-        self.btn_limpar_endereco = Button(self.principal, text=' Limpar', image=self.img_limpar, compound=LEFT, bg=cor4, font=('arial 12 bold'), command=lambda: limpar([self.e_cidade, self.e_bairro, self.e_numero, self.e_rua, self.e_cep]))
+        self.btn_limpar_endereco = Button(self.principal, text=' Limpar', image=self.img_limpar, compound=LEFT, bg=cor4, font=('arial 12 bold'), command=lambda: limpar([self.e_cidade, self.e_bairro, self.e_numero, self.e_rua, self.e_cep]), cursor='hand2')
         self.btn_limpar_endereco.place(relx=.600, rely=.810, relheight=0.05, relwidth= 0.07)        
-        self.btn_limpar_cadastro = Button(self.principal, text=' Limpar', image=self.img_limpar, compound=LEFT, bg=cor4, font=('arial 12 bold'), command= lambda:limpar([self.e_nome, self.e_sobrenome, self.e_cpf, self.e_celular, self.e_email, self.e_comment]))
+        self.btn_limpar_cadastro = Button(self.principal, text=' Limpar', image=self.img_limpar, compound=LEFT, bg=cor4, font=('arial 12 bold'), command= lambda:limpar([self.e_nome, self.e_sobrenome, self.e_cpf, self.e_celular, self.e_email, self.e_comment]), cursor='hand2')
         self.btn_limpar_cadastro.place(relx=.600, rely=.505, relheight=0.05, relwidth= 0.07)
         
 
