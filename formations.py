@@ -43,6 +43,20 @@ def format_email(entry):
     entry.bind("<FocusOut>", lambda event: email_text)
     entry.bind("<FocusIn>", lambda event: email_text)
 
+def format_cep(entry):
+    cep_text = entry.get()    
+    formatted_cep = ''.join(cep_text.split()).replace('-', '')    
+    if not formatted_cep.isdigit():
+        formatted_cep = ''.join(filter(str.isdigit, formatted_cep))
+    if len(formatted_cep) > 8:        
+        formatted_cep = formatted_cep[:8]
+    if len(formatted_cep) == 8:       
+        formatted_cep = f'{formatted_cep[:5]}-{formatted_cep[5:]}'    
+    entry.delete(0, tk.END)
+    entry.insert(0, formatted_cep)
+    entry.bind("<FocusOut>", lambda event: formatted_cep)
+    entry.bind("<FocusIn>", lambda event: formatted_cep)
+
 
 def placeholder_cpf(entry):
     if entry.get() == '  Digite apenas números':
@@ -71,6 +85,11 @@ def placeholder_email(entry):
     entry.insert(0, '  Digite o e-mail')
     entry.bind("<FocusIn>", lambda event: entry.delete(0, "end"))        
     entry.bind("<KeyRelease>", lambda event: format_email(entry))
+
+def placeholder_cep(entry):
+    entry.insert(0, '  _____-___ ')
+    entry.bind("<FocusIn>", lambda event: entry.delete(0, "end"))        
+    entry.bind("<KeyRelease>", lambda event: format_cep(entry))
     
 
 
