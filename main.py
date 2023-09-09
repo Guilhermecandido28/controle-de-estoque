@@ -5,6 +5,7 @@ from formations import *
 from tkinter import ttk
 from upload_imagens import carregar_imagem
 from PIL import Image, ImageTk
+from limpar import limpar
 
 
 janela = Tk()
@@ -173,6 +174,12 @@ class Applicantion():
         estados.place(relx=0.545, rely=0.75, relwidth=0.124, relheight=0.04)      
         self.title_estado = Label(self.principal, text="ESTADO:", font=('arial 14'), foreground=cor4, bg='white')
         self.title_estado.place(relx=.545, rely= .705 )
+        #botão limpar
+        self.img_limpar = PhotoImage(file='imagens/vassoura.png')
+        self.btn_limpar_endereco = Button(self.principal, text=' Limpar', image=self.img_limpar, compound=LEFT, bg=cor4, font=('arial 12 bold'), command=lambda: limpar([self.e_cidade, self.e_bairro, self.e_numero, self.e_rua, self.e_cep]))
+        self.btn_limpar_endereco.place(relx=.600, rely=.810, relheight=0.05, relwidth= 0.07)        
+        self.btn_limpar_cadastro = Button(self.principal, text=' Limpar', image=self.img_limpar, compound=LEFT, bg=cor4, font=('arial 12 bold'), command= lambda:limpar([self.e_nome, self.e_sobrenome, self.e_cpf, self.e_celular, self.e_email, self.e_comment]))
+        self.btn_limpar_cadastro.place(relx=.600, rely=.505, relheight=0.05, relwidth= 0.07)
         
 
           
