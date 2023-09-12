@@ -1,9 +1,9 @@
 from tkinter import *
 from styles.cores import *
 import tkinter as tk
-from tkinter import filedialog
 from formations import *
 from tkinter import ttk
+from upload_antes import carregar_imagem
 from PIL import Image, ImageTk
 from limpar import limpar
 
@@ -13,7 +13,6 @@ janela = Tk()
 class Applicantion():
     def __init__(self):
         self.janela = janela
-        self.img = Image.open('imagens/pessoa.png')
         self.tela()
         self.frames()
         self.buttons()
@@ -84,38 +83,22 @@ class Applicantion():
         self.img_print = PhotoImage(file='imagens/impressora.png')
         self.btn_print = Button(self.principal, image=self.img_print, bg=cor5, bd=0, cursor='hand2')
         self.btn_print.place(relx=0.85, rely=0, relheight=0.1, relwidth=0.05)
-
-    def upload(self):
-        self.filename = filedialog.askopenfilename(title="Selecione uma foto", filetypes=[("Imagens", "*.jpg *.png *.bmp")])        
-        self.img = Image.open(self.filename)
-        largura = self.my_canvas.winfo_width()
-        altura = self.my_canvas.winfo_height()
-        resized_img2 = self.img.resize((largura, altura))
-        self.img_tk = ImageTk.PhotoImage(resized_img2)
-        self.my_canvas.create_image(0,0, image=self.img_tk, anchor='nw')
-
-    def resizer(self,e):
-        global resized_img, new_img       
-        resized_img = self.img.resize((e.width, e.height))        
-        new_img = ImageTk.PhotoImage(resized_img)
-        self.my_canvas.create_image(0,0, image=new_img, anchor='nw')
-
+    
     def add_client(self):
         #Botão_adicionar_cliente        
         self.btn_addcliente = Button(self.principal, text='ADICIONAR\n Cliente', bg=cor6, compound='center',bd=0, font=('arial 14 bold'), foreground='white', cursor='hand2')
         self.btn_addcliente.place(relx=0.9, rely=0, relheight=0.1, relwidth=0.1)
         #título 
         self.titulo = Label(self.principal, text='Ficha de Cadastro de Clientes', bg='white', font=('arial 16 bold'))
+        self.titulo.place(relx=0., rely=0.1, relwidth=0.5, relheight=0.1)
+        #imagem        
+        self.icone_cliente = PhotoImage(file='imagens/pessoa.png')        
+        self.label_cliente = Label(self.principal, image=self.icone_cliente, bg='white')        
+        self.label_cliente.place(relx=0.01, rely=0.12)
         self.linha = Frame(self.principal, bg=cor5)
         self.linha.place(relx=0.146, rely=0.17, relwidth=0.525, relheight=0.004)
-        self.titulo.place(relx=0., rely=0.1, relwidth=0.5, relheight=0.1)
-        #imagem
-        self.my_canvas = Canvas(self.principal, bd=0, highlightthickness=0, relief='ridge')
-        self.my_canvas.place(relx=0, rely=0.1, relheight=.34, relwidth=.14)       
-        self.my_canvas.bind('<Configure>', self.resizer)
-        botao_upload = tk.Button(self.principal, command= self.upload , text="Upload de foto", font=('arial 12 bold'), background='green', foreground='white', cursor='hand2')
-        botao_upload.place(relx=0, rely=0.44, relwidth=.14, relheight=0.04)
-        
+        botao_upload = tk.Button(janela, text="Upload de foto", command=lambda: carregar_imagem(self.label_cliente), font=('arial 12 bold'), background='green', foreground='white', cursor='hand2')
+        botao_upload.place(relx=0.030, rely=0.52)
         
         # Entrys
             #nome
