@@ -8,20 +8,17 @@ from PIL import Image, ImageTk
 from limpar import limpar
 
 
-class AddClient():
-    def __init__(self, frame_pai) -> None:                
-        self.principal = tk.Frame(frame_pai, bg= 'white')
-        self.add_client()
-        self.hist_client()
-        self.buscar_cliente()
-        self.tvw_hist()        
-        self.img = Image.open('imagens/pessoa.png')            
 
+class AddCliente():
+    def __init__(self,frame_pai) -> None: 
+        self.img = Image.open('imagens/pessoa.png')               
+        self.principal = frame_pai
+        self.add_client()
+        self.hist_client()        
+        self.tvw_hist()       
+                      
+        
     def add_client(self):
-        self.principal.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.67)
-        #Botão_adicionar_cliente        
-        self.btn_addcliente = Button(self.principal, text='ADICIONAR\n Cliente', bg=cor6, compound='center',bd=0, font=('arial 14 bold'), foreground='white', cursor='hand2')
-        self.btn_addcliente.place(relx=0.9, rely=0, relheight=0.1, relwidth=0.1)
         #título 
         self.titulo = Label(self.principal, text='Ficha de Cadastro de Clientes', bg='white', font=('arial 16 bold'))
         self.linha = Frame(self.principal, bg=cor5)
@@ -34,8 +31,6 @@ class AddClient():
         self.my_canvas.bind('<Configure>', self.resizer)
         botao_upload = tk.Button(self.principal, command= self.upload , text="Upload de foto", font=('arial 12 bold'), background='green', foreground='white', cursor='hand2')
         botao_upload.place(relx=0, rely=0.44, relwidth=.14, relheight=0.04)
-        
-        
         # Entrys
             #nome
         self.title_nome = Label(self.principal, text='NOME:', font=('arial 12'), foreground= cor4, bg='white')
@@ -116,6 +111,11 @@ class AddClient():
         self.btn_limpar_endereco.place(relx=.600, rely=.810, relheight=0.05, relwidth= 0.07)        
         self.btn_limpar_cadastro = Button(self.principal, text=' Limpar', image=self.img_limpar, compound=LEFT, bg=cor4, font=('arial 12 bold'), command= lambda:limpar([self.e_nome, self.e_sobrenome, self.e_cpf, self.e_celular, self.e_email, self.e_comment]), cursor='hand2')
         self.btn_limpar_cadastro.place(relx=.600, rely=.505, relheight=0.05, relwidth= 0.07)
+        #botão salvar
+        self.img_salvar = PhotoImage(file='imagens/salvar.png')
+        self.btn_salvar = Button(self.principal, text='Salvar', image=self.img_salvar, compound=LEFT, bg=cor6, font=('arial 22 bold'), cursor='hand2', foreground='white')
+        self.btn_salvar.place(relx=.25, rely=.91, relwidth=.18)
+        
 
     def hist_client(self):
         self.hist_titulo = Label(self.principal, text='Clientes Cadastrados', bg='white', font=('arial 16 bold'), foreground=cor5)
@@ -129,27 +129,12 @@ class AddClient():
         self.tvw_hist.column("Data", anchor=W, width=120)
         self.tvw_hist.column("Nome", anchor=W, width=200, minwidth=120)
         self.tvw_hist.column("Valor Gasto", anchor=CENTER, width=80, minwidth=25)
-        self.tvw_hist.place(relx=0.689, rely=0.19, relheight=.7, relwidth=.3)
+        self.tvw_hist.place(relx=0.689, rely=0.21, relheight=.7, relwidth=.3)
         self.tvw_hist.heading("#0", text="ID", anchor=CENTER)
-        self.tvw_hist.heading("#1", text="Data", anchor=CENTER)
-        self.tvw_hist.heading("#2", text="Nome", anchor=CENTER)
-        self.tvw_hist.heading("#3", text="Valor Gasto", anchor=CENTER)
-        
+        self.tvw_hist.heading("#1", text="DATA", anchor=CENTER)
+        self.tvw_hist.heading("#2", text="NOME", anchor=CENTER)
+        self.tvw_hist.heading("#3", text="VALOR GASTO", anchor=CENTER)
 
-    def buscar_cliente(self):
-        self.search = Entry(self.principal, font=('arial 14'), bg=cor5, bd=0)
-        self.search.insert(0, "Procure por...")
-        self.search.bind("<FocusIn>", lambda event: self.search.delete(0, "end"))
-        self.search.place(relx=0, rely=0, relheight=0.1, relwidth=0.8)
-        #botão_pesquisar
-        self.img_search = PhotoImage(file='imagens/search.png')
-        self.btn_search = Button(self.principal, image=self.img_search, bg=cor5, bd=0, cursor='hand2')
-        self.btn_search.place(relx=0.8, rely=0, relheight=0.1, relwidth=0.05)
-        #Botão_imprimir
-        self.img_print = PhotoImage(file='imagens/impressora.png')
-        self.btn_print = Button(self.principal, image=self.img_print, bg=cor5, bd=0, cursor='hand2')
-        self.btn_print.place(relx=0.85, rely=0, relheight=0.1, relwidth=0.05) 
-   
     def resizer(self,e):
         global resized_img, new_img       
         resized_img = self.img.resize((e.width, e.height))        

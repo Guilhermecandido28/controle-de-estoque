@@ -2,22 +2,22 @@ from tkinter import *
 from styles.cores import *
 import tkinter as tk
 from formations import *
-from tkinter import ttk
-from PIL import Image, ImageTk
+from PIL import Image
 from limpar import limpar
-from cliente.add_cliente import AddClient
+from clientes.cliente import Cliente
 
 
 janela = Tk()
 
-class Applicantion(AddClient):
+
+class Applicantion(Cliente):
     def __init__(self):
-        self.janela = janela
-        self.img = Image.open('imagens/pessoa.png')
+        self.janela = janela        
         self.tela()
         self.frames()
-        self.buttons()       
-        AddClient(self.janela)                      
+        self.buttons()
+        self.temporario = Label(text='voce esta no home', font=('arial 18 bold'))
+        self.temporario.place(relx=.5, rely=.5)                  
         janela.mainloop()
 
     def tela(self):
@@ -33,12 +33,19 @@ class Applicantion(AddClient):
         self.menu.place(relx=0, rely=0.09, relwidth=1, relheight=0.05)
         self.location = tk.Frame(self.janela, bg=cor1)
         self.location.place(relx=0, rely=0.14, relwidth=1, relheight=0.09)        
-        
+    def cliente(self):
+        cliente = Cliente(self.janela)
+        cliente.clientes()
+        cliente.buscar_cliente()
+        cliente.cabecalho()
+        cliente.inserir_dados()
+
              
     def buttons(self):
+        
         #Botão cliente
         self.img_cliente = PhotoImage(file='imagens/cliente.png')
-        self.btn_clientes = Button(self.menu, text='Clientes', image=self.img_cliente, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2')
+        self.btn_clientes = Button(self.menu, text='Clientes', image=self.img_cliente, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2', command=self.cliente)
         self.btn_clientes.place(relx=0, rely=0, relwidth=0.14, relheight=1)
         #botão vendas
         self.img_vendas = PhotoImage(file='imagens/vendas.png')
@@ -68,7 +75,7 @@ class Applicantion(AddClient):
         self.img_home = PhotoImage(file='imagens/home.png')
         self.btn_home = Button(self.header, image=self.img_home, bg=cor3, bd=0, font=('arial 12 bold'), cursor='hand2')
         self.btn_home.place(relx=0, rely=0, relheight=1, relwidth=0.05)
-           
+
+    
+               
 Applicantion()
-
-
