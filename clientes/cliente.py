@@ -12,15 +12,29 @@ class Cliente(AddCliente):
         self.principal = tk.Frame(frame, bg= 'white')
 
     def novo_cliente(self):
-        novo_cliente = AddCliente(self.principal)
-        return novo_cliente
+        self.btn_addcliente.configure(state='disabled')        
+        self.novo_cliente = AddCliente(self.principal)       
 
-        
+        return self.novo_cliente
+         
+            
     def clientes(self):
         self.principal.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.67)
         #Botão_adicionar_cliente        
         self.btn_addcliente = Button(self.principal, text='ADICIONAR\n Cliente', bg=cor6, compound='center',bd=0, font=('arial 14 bold'), foreground='white', cursor='hand2', command=self.novo_cliente)
         self.btn_addcliente.place(relx=0.9, rely=0, relheight=0.1, relwidth=0.1)
+        self.btn_addcliente.bind('<Button-1>', self.destruidor_frame)
+        
+        
+    def destruidor_frame(self, event):    
+        self.frame.destroy()
+        self.lb_id.destroy()
+        self.lb_nome.destroy()
+        self.lb_telefone.destroy()
+        
+
+
+
 
     def buscar_cliente(self):
         self.search = Entry(self.principal, font=('arial 14'), bg=cor5, bd=0)

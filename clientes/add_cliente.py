@@ -15,7 +15,8 @@ class AddCliente():
         self.principal = frame_pai
         self.add_client()
         self.hist_client()        
-        self.tvw_hist()       
+        self.tvw_hist()
+               
                       
         
     def add_client(self):
@@ -28,7 +29,7 @@ class AddCliente():
         self.my_canvas = Canvas(self.principal, bd=0, highlightthickness=0, relief='ridge')
         self.my_canvas.place(relx=0, rely=0.1, relheight=.34, relwidth=.14)
               
-        self.my_canvas.bind('<Configure>', self.resizer)
+        self.my_canvas.bind('<Configure>', self.resizer)        
         botao_upload = tk.Button(self.principal, command= self.upload , text="Upload de foto", font=('arial 12 bold'), background='green', foreground='white', cursor='hand2')
         botao_upload.place(relx=0, rely=0.44, relwidth=.14, relheight=0.04)
         # Entrys
@@ -113,10 +114,9 @@ class AddCliente():
         self.btn_limpar_cadastro.place(relx=.600, rely=.505, relheight=0.05, relwidth= 0.07)
         #botão salvar
         self.img_salvar = PhotoImage(file='imagens/salvar.png')
-        self.btn_salvar = Button(self.principal, text='Salvar', image=self.img_salvar, compound=LEFT, bg=cor6, font=('arial 22 bold'), cursor='hand2', foreground='white')
+        self.btn_salvar = Button(self.principal, text='Salvar', image=self.img_salvar, compound=LEFT, bg=cor6, font=('arial 22 bold'), cursor='hand2', foreground='white', command=self.salvar_cliente)
         self.btn_salvar.place(relx=.25, rely=.91, relwidth=.18)
-        
-
+  
     def hist_client(self):
         self.hist_titulo = Label(self.principal, text='Clientes Cadastrados', bg='white', font=('arial 16 bold'), foreground=cor5)
         self.hist_linha = Frame(self.principal, bg=cor5)
@@ -139,13 +139,39 @@ class AddCliente():
         global resized_img, new_img       
         resized_img = self.img.resize((e.width, e.height))        
         new_img = ImageTk.PhotoImage(resized_img)
-        self.my_canvas.create_image(0,0, image=new_img, anchor='nw')
+        self.img_id_resizer = self.my_canvas.create_image(0,0, image=new_img, anchor='nw')
+        
+        return self.img_id_resizer
 
-    def upload(self):        
+    def upload(self):                
         self.filename = filedialog.askopenfilename(title="Selecione uma foto", filetypes=[("Imagens", "*.jpg *.png *.bmp")])        
         self.img = Image.open(self.filename)
         largura = self.my_canvas.winfo_width()
         altura = self.my_canvas.winfo_height()
         resized_img2 = self.img.resize((largura, altura))
         self.img_tk = ImageTk.PhotoImage(resized_img2)
-        self.my_canvas.create_image(0,0, image=self.img_tk, anchor='nw') 
+        self.img_id = self.my_canvas.create_image(0,0, image=self.img_tk, anchor='nw')
+        
+        return self.img_id 
+    
+    def salvar_cliente(self):
+        self.e_nome.delete(0, "end")
+        placeholder_nome(self.e_nome)
+        self.e_sobrenome.delete(0, "end")
+        placeholder_sobrenome(self.e_sobrenome)
+        self.e_cpf.delete(0, "end")
+        placeholder_cpf(self.e_cpf)
+        self.e_celular.delete(0, "end")
+        placeholder_celular(self.e_celular)
+        self.e_cep.delete(0, "end")
+        placeholder_cep(self.e_cep)
+        self.e_email.delete(0, "end")
+        placeholder_email(self.e_email)
+        self.e_comment.delete(0, 'end')
+        self.my_canvas.delete(self.img_id)
+        self.img_id_resizer = 1
+        self.img_id = None
+        self.img = Image.open('imagens/pessoa.png')                                      
+        print('cliente salvo')
+
+        
