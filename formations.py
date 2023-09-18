@@ -36,12 +36,14 @@ def format_nome(entry):
     entry.bind("<FocusOut>", lambda event: formatted_nome)
     entry.bind("<FocusIn>", lambda event: formatted_nome)
 
-def format_email(entry):
-    email_text = entry.get()  
+def format_instagram(entry):
+    instagram_text = entry.get()
+    formatted_instagram = instagram_text.replace('@','')    
+    formatted_instagram = f'{formatted_instagram}'  
     entry.delete(0, tk.END)
-    entry.insert(0, email_text)
-    entry.bind("<FocusOut>", lambda event: email_text)
-    entry.bind("<FocusIn>", lambda event: email_text)
+    entry.insert(0, formatted_instagram)
+    entry.bind("<FocusOut>", lambda event:formatted_instagram)
+    entry.bind("<FocusIn>", lambda event: formatted_instagram)
 
 def format_cep(entry):
     cep_text = entry.get()    
@@ -81,10 +83,10 @@ def placeholder_sobrenome(entry):
     entry.bind("<FocusIn>", lambda event: entry.delete(0, "end"))        
     entry.bind("<KeyRelease>", lambda event: format_nome(entry))
 
-def placeholder_email(entry):
-    entry.insert(0, '  Digite o e-mail')
+def placeholder_instagram(entry):
+    entry.insert(0, '  @')
     entry.bind("<FocusIn>", lambda event: entry.delete(0, "end"))        
-    entry.bind("<KeyRelease>", lambda event: format_email(entry))
+    entry.bind("<KeyRelease>", lambda event: format_instagram(entry))
 
 def placeholder_cep(entry):
     entry.insert(0, '  _____-___ ')

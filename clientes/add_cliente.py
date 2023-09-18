@@ -4,8 +4,14 @@ import tkinter as tk
 from tkinter import filedialog
 from formations import *
 from tkinter import ttk
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageEnhance
 from limpar import limpar
+from clientes.banco_dados_cliente import *
+import sqlite3
+from clientes.foto_instagram import *
+
+  
+
 
 
 
@@ -13,12 +19,11 @@ class AddCliente():
     def __init__(self,frame_pai) -> None: 
         self.img = Image.open('imagens/pessoa.png')               
         self.principal = frame_pai
+        self.filename = None
         self.add_client()
         self.hist_client()        
-        self.tvw_hist()
-               
-                      
-        
+        self.tvw_hist()             
+
     def add_client(self):
         #título 
         self.titulo = Label(self.principal, text='Ficha de Cadastro de Clientes', bg='white', font=('arial 16 bold'))
@@ -30,8 +35,10 @@ class AddCliente():
         self.my_canvas.place(relx=0, rely=0.1, relheight=.34, relwidth=.14)
               
         self.my_canvas.bind('<Configure>', self.resizer)        
-        botao_upload = tk.Button(self.principal, command= self.upload , text="Upload de foto", font=('arial 12 bold'), background='green', foreground='white', cursor='hand2')
+        botao_upload = tk.Button(self.principal, command= self.upload , text="Upload", font=('arial 12 bold'), background='green', foreground='white', cursor='hand2')
         botao_upload.place(relx=0, rely=0.44, relwidth=.14, relheight=0.04)
+        botao_upload = tk.Button(self.principal, command= self.upload_instagram , text="Mostre foto perfil instagram ", font=('arial 12 bold'), background='green', foreground='white', cursor='hand2')
+        botao_upload.place(relx=0.49, rely=0.38, relwidth=.18, relheight=0.04)
         # Entrys
             #nome
         self.title_nome = Label(self.principal, text='NOME:', font=('arial 12'), foreground= cor4, bg='white')
@@ -58,11 +65,11 @@ class AddCliente():
         self.e_celular.place(relx=0.32, rely=0.34, relwidth=0.15, relheight=0.04)
         placeholder_celular(self.e_celular)
             #email
-        self.title_email = Label(self.principal, text="EMAIL:", font=('arial 12'), foreground=cor4, bg='white')
-        self.title_email.place(relx= 0.49 , rely=0.295) 
-        self.e_email = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
-        self.e_email.place(relx=0.49, rely=0.34, relwidth=0.18, relheight=0.04)
-        placeholder_email(self.e_email)
+        self.title_instagram = Label(self.principal, text="INSTAGRAM:", font=('arial 12'), foreground=cor4, bg='white')
+        self.title_instagram.place(relx= 0.49 , rely=0.295) 
+        self.e_instagram = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
+        self.e_instagram.place(relx=0.49, rely=0.34, relwidth=0.18, relheight=0.04)
+        placeholder_instagram(self.e_instagram)
             #cometário
         self.title_comment = Label(self.principal, text="OBS:", font=('arial 12'), foreground=cor4, bg='white')
         self.title_comment.place(relx=0.148, rely=0.395)
@@ -100,10 +107,10 @@ class AddCliente():
         self.e_cidade = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
         self.e_cidade.place(relx=0.24, rely=0.75, relwidth=0.263, relheight=0.04)
             #ESTADO
-        estados = ttk.Combobox(self.principal, font=('arial 12'), takefocus=True, state='readonly')
-        estados['values'] = ['Acre', 'Alagoas', 'Amapá', 'Amazonas', 'Bahia', 'Ceará', 'Distrito Federal', 'Espírito Santo', 'Goiás', 'Maranhão', 'Mato Grosso', 'Mato Grosso do Sul', 'Minas Gerais', 'Pará', 'Paraíba', 'Paraná', 'Pernambuco', 'Piauí', 'Rio de Janeiro', 'Rio Grande do Norte', 'Rio Grande do Sul', 'Rondônia', 'Roraima', 'Santa Catarina', 'São Paulo', 'Sergipe', 'Tocantins']
-        estados.current(24)  # Pré-seleciona o estado de São Paulo
-        estados.place(relx=0.545, rely=0.75, relwidth=0.124, relheight=0.04)      
+        self.e_estados = ttk.Combobox(self.principal, font=('arial 12'), takefocus=True, state='readonly')
+        self.e_estados['values'] = ['Acre', 'Alagoas', 'Amapá', 'Amazonas', 'Bahia', 'Ceará', 'Distrito Federal', 'Espírito Santo', 'Goiás', 'Maranhão', 'Mato Grosso', 'Mato Grosso do Sul', 'Minas Gerais', 'Pará', 'Paraíba', 'Paraná', 'Pernambuco', 'Piauí', 'Rio de Janeiro', 'Rio Grande do Norte', 'Rio Grande do Sul', 'Rondônia', 'Roraima', 'Santa Catarina', 'São Paulo', 'Sergipe', 'Tocantins']
+        self.e_estados.current(24)  # Pré-seleciona o estado de São Paulo
+        self.e_estados.place(relx=0.545, rely=0.75, relwidth=0.124, relheight=0.04)      
         self.title_estado = Label(self.principal, text="ESTADO:", font=('arial 14'), foreground=cor4, bg='white')
         self.title_estado.place(relx=.545, rely= .705 )
         #botão limpar
@@ -116,6 +123,7 @@ class AddCliente():
         self.img_salvar = PhotoImage(file='imagens/salvar.png')
         self.btn_salvar = Button(self.principal, text='Salvar', image=self.img_salvar, compound=LEFT, bg=cor6, font=('arial 22 bold'), cursor='hand2', foreground='white', command=self.salvar_cliente)
         self.btn_salvar.place(relx=.25, rely=.91, relwidth=.18)
+        
   
     def hist_client(self):
         self.hist_titulo = Label(self.principal, text='Clientes Cadastrados', bg='white', font=('arial 16 bold'), foreground=cor5)
@@ -126,7 +134,7 @@ class AddCliente():
     def tvw_hist(self):               
         self.tvw_hist = ttk.Treeview(self.principal, columns=("Data", "Nome", "Valor Gasto"))
         self.tvw_hist.column("#0", width=25, minwidth=25)        
-        self.tvw_hist.column("Data", anchor=W, width=120)
+        self.tvw_hist.column("Data", anchor=W, width=70)
         self.tvw_hist.column("Nome", anchor=W, width=200, minwidth=120)
         self.tvw_hist.column("Valor Gasto", anchor=CENTER, width=80, minwidth=25)
         self.tvw_hist.place(relx=0.689, rely=0.21, relheight=.7, relwidth=.3)
@@ -150,10 +158,38 @@ class AddCliente():
         resized_img2 = self.img.resize((largura, altura))
         self.img_tk = ImageTk.PhotoImage(resized_img2)
         self.img_id = self.my_canvas.create_image(0,0, image=self.img_tk, anchor='nw')
-        
         return self.img_id 
     
     def salvar_cliente(self):
+        if self.filename is not None:
+            with open(self.filename, 'rb') as img_file:
+                self.byte_img = img_file.read()
+        else:
+            self.img_padrao = Image.open('imagens/pessoa.png')
+            with open('imagens/pessoa.png', 'rb') as img_file:
+                self.byte_img = img_file.read()
+        value_imagem = self.byte_img
+        value_nome = self.e_nome.get()
+        value_sobrenome = self.e_sobrenome.get()
+        value_celular = self.e_celular.get()
+        value_cpf = self.e_cpf.get()
+        value_instagram = self.e_instagram.get()
+        value_obs = self.e_comment.get()
+        value_cep = self.e_cep.get()
+        value_rua = self.e_rua.get()
+        value_numero = self.e_numero.get()
+        value_bairro = self.e_bairro.get()
+        value_cidade = self.e_cidade.get()
+        value_estados = self.e_estados.get()
+
+        query = "INSERT INTO clientes (imagem, nome, sobrenome, celular, cpf, instagram, OBS, CEP, rua, numero, bairro, cidade, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        params = (sqlite3.Binary(value_imagem), value_nome, value_sobrenome, value_celular, value_cpf, value_instagram, value_obs, value_cep, value_rua, value_numero, value_bairro, value_cidade, value_estados)
+        dml(query, params)
+        print('cliente foi salvo')
+
+
+
+
         self.e_nome.delete(0, "end")
         placeholder_nome(self.e_nome)
         self.e_sobrenome.delete(0, "end")
@@ -164,14 +200,39 @@ class AddCliente():
         placeholder_celular(self.e_celular)
         self.e_cep.delete(0, "end")
         placeholder_cep(self.e_cep)
-        self.e_email.delete(0, "end")
-        placeholder_email(self.e_email)
-        self.e_comment.delete(0, 'end')
-        self.my_canvas.delete(self.img_id)
+        self.e_instagram.delete(0, "end")
+        placeholder_instagram(self.e_instagram)
+        self.e_comment.delete(0, 'end')        
         self.my_canvas.delete(self.img_id_resizer)
         self.img_id_resizer = None
         self.img_id = None        
-        self.img = Image.open('imagens/pessoa.png')                                     
+        self.img = Image.open('imagens/pessoa.png')
+        self.e_rua.delete(0, 'end')
+        self.e_numero.delete(0,'end')
+        self.e_bairro.delete(0,'end')
+        self.e_cidade.delete(0,'end')
+                                           
         print('cliente salvo')
+        
+    def upload_instagram(self):
+        usuario_instagram = self.e_instagram.get()
 
+        url_foto_perfil = obter_url_foto_perfil(usuario_instagram)
+        if url_foto_perfil:
+            caminho_foto_perfil = baixar_foto_perfil(url_foto_perfil, usuario_instagram)
+            if caminho_foto_perfil:
+                print('Foto de perfil baixada com sucesso:', caminho_foto_perfil)
+            else:
+                print('Não foi possível baixar a foto de perfil')
+        else:
+            print('Não foi possível obter a URL da foto de perfil')
+        
+        self.filename = f'imagens/{self.e_instagram.get()}.jpg'        
+        self.img = Image.open(self.filename)
+        largura = self.my_canvas.winfo_width()
+        altura = self.my_canvas.winfo_height()
+        resized_img2 = self.img.resize((largura, altura))
+        self.img_tk = ImageTk.PhotoImage(resized_img2)
+        self.img_id = self.my_canvas.create_image(0,0, image=self.img_tk, anchor='nw')
+        return self.img_id
         

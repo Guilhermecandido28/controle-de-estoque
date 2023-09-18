@@ -42,21 +42,23 @@ class Cliente(AddCliente):
 
     def inserir_dados(self):
         self.ins_treeview = ttk.Treeview(self.principal)
-        style = ttk.Style()
-        style.configure("Treeview.Heading", font=('Arial', 18), foreground='gray')
-        self.ins_treeview['columns'] = ('ID', 'NOME', 'TELEFONE', 'EMAIL')
+        style = ttk.Style(self.ins_treeview)
+        style.configure("Treeview.Heading", font=('Arial', 18), foreground='gray', padding=0)
+        self.ins_treeview['columns'] = ('ID', 'NOME', 'TELEFONE', 'EMAIL','VALOR GASTO')
         self.ins_treeview.heading('#0', text='EDITAR', anchor=W)
         self.ins_treeview.heading('#1', text='ID', anchor=W)
         self.ins_treeview.heading('#2', text='NOME')
         self.ins_treeview.heading('#3', text='TELEFONE')
         self.ins_treeview.heading('#4', text='EMAIL')
+        self.ins_treeview.heading('#5', text='VALOR GASTO' )
         self.ins_treeview.place(relx=0, rely=.1, relheight=.9, relwidth=1)
-        self.ins_treeview.column("#0", width=50, minwidth=50)
-        self.ins_treeview.column("ID", width=25, minwidth=25)
-        self.ins_treeview.column("NOME", width=100, minwidth=50)
-        self.ins_treeview.column("TELEFONE", width=100, minwidth=50)
-        self.ins_treeview.column("EMAIL", width=175, minwidth=50)
-        self.ins_treeview.update_idletasks()
+        self.ins_treeview.column("#0", width=110, stretch=FALSE)
+        self.ins_treeview.column("ID",width=40, stretch=FALSE)
+        self.ins_treeview.column("NOME", minwidth=600, stretch=TRUE)
+        self.ins_treeview.column("TELEFONE", minwidth=250, stretch=TRUE)
+        self.ins_treeview.column("EMAIL",minwidth=250, stretch=TRUE)
+        self.ins_treeview.column("VALOR GASTO", minwidth=240, stretch=TRUE)
+        
     
 
         
