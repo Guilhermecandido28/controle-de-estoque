@@ -36,8 +36,7 @@ class Applicantion(Cliente):
     def cliente(self):
         cliente = Cliente(self.janela)
         cliente.clientes()
-        cliente.buscar_cliente()
-        cliente.cabecalho()
+        cliente.buscar_cliente()        
         cliente.inserir_dados()
 
              

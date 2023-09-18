@@ -5,6 +5,7 @@ from formations import *
 from PIL import Image
 from limpar import limpar
 from clientes.add_cliente import AddCliente
+from tkinter import ttk
 
 
 class Cliente(AddCliente):
@@ -23,17 +24,6 @@ class Cliente(AddCliente):
         #Botão_adicionar_cliente        
         self.btn_addcliente = Button(self.principal, text='ADICIONAR\n Cliente', bg=cor6, compound='center',bd=0, font=('arial 14 bold'), foreground='white', cursor='hand2', command=self.novo_cliente)
         self.btn_addcliente.place(relx=0.9, rely=0, relheight=0.1, relwidth=0.1)
-        self.btn_addcliente.bind('<Button-1>', self.destruidor_frame)
-        
-        
-    def destruidor_frame(self, event):    
-        self.frame.destroy()
-        self.lb_id.destroy()
-        self.lb_nome.destroy()
-        self.lb_telefone.destroy()
-        
-
-
 
 
     def buscar_cliente(self):
@@ -50,27 +40,23 @@ class Cliente(AddCliente):
         self.btn_print = Button(self.principal, image=self.img_print, bg=cor5, bd=0, cursor='hand2')
         self.btn_print.place(relx=0.85, rely=0, relheight=0.1, relwidth=0.05)
 
-    def cabecalho(self):
-        #Labels
-        self.lb_id = Label(self.principal, text='ID', foreground=cor5, background='white', font=('arial 14 bold'), anchor=N, bd=0, padx=0, pady=0)
-        self.lb_nome = Label(self.principal, text='NOME', foreground=cor5, background='white', font=('arial 14 bold'))
-        self.lb_telefone = Label(self.principal, text='TELEFONE', foreground=cor5, background='white', font=('arial 14 bold'))
-        self.lb_email = Label(self.principal, text='E-MAIL', foreground=cor5, background='white', font=('arial 14 bold'))
-        self.lb_editar = Label(self.principal, text='EDITAR', foreground=cor5, background='white', font=('arial 14 bold'))
-        self.lb_id.place(relx=.02, rely=0.11, relheight=1)
-        self.lb_nome.place(relx=0.06, rely=0.11)
-        self.lb_telefone.place(relx=0.46, rely=0.11)
-        self.lb_email.place(relx=0.66, rely=0.11)
-        self.lb_editar.place(relx=0.92, rely=0.11)
-    
     def inserir_dados(self):
-        #lista de clientes:
-        self.lista_clientes = []
-        #Frame
-        self.frame = Frame(self.principal, bg='gray')
-        self.frame.place(relx=0.02, rely=0.15, relwidth=.98, relheight=.85)
-        self.canvas = tk.Canvas(self.frame)
-        self.canvas.pack(side="left", fill="both", expand=True)
-        self.scrollbar = Scrollbar(self.canvas)
-        self.scrollbar.pack(side=RIGHT, fill= Y) 
-        self.canvas.create_text(50,30 + 50, text='guilherme', anchor=tk.W)
+        self.ins_treeview = ttk.Treeview(self.principal)
+        style = ttk.Style()
+        style.configure("Treeview.Heading", font=('Arial', 18), foreground='gray')
+        self.ins_treeview['columns'] = ('ID', 'NOME', 'TELEFONE', 'EMAIL')
+        self.ins_treeview.heading('#0', text='EDITAR', anchor=W)
+        self.ins_treeview.heading('#1', text='ID', anchor=W)
+        self.ins_treeview.heading('#2', text='NOME')
+        self.ins_treeview.heading('#3', text='TELEFONE')
+        self.ins_treeview.heading('#4', text='EMAIL')
+        self.ins_treeview.place(relx=0, rely=.1, relheight=.9, relwidth=1)
+        self.ins_treeview.column("#0", width=50, minwidth=50)
+        self.ins_treeview.column("ID", width=25, minwidth=25)
+        self.ins_treeview.column("NOME", width=100, minwidth=50)
+        self.ins_treeview.column("TELEFONE", width=100, minwidth=50)
+        self.ins_treeview.column("EMAIL", width=175, minwidth=50)
+        self.ins_treeview.update_idletasks()
+    
+
+        

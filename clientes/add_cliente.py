@@ -171,7 +171,7 @@ class AddCliente():
         self.my_canvas.delete(self.img_id_resizer)
         self.img_id_resizer = None
         self.img_id = None        
-        self.img = Image.open('imagens/pessoa.png')                                      
+        self.img = Image.open('imagens/pessoa.png')                                     
         print('cliente salvo')
 
         
