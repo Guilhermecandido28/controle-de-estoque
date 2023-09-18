@@ -140,7 +140,6 @@ class AddCliente():
         resized_img = self.img.resize((e.width, e.height))        
         new_img = ImageTk.PhotoImage(resized_img)
         self.img_id_resizer = self.my_canvas.create_image(0,0, image=new_img, anchor='nw')
-        
         return self.img_id_resizer
 
     def upload(self):                
@@ -169,8 +168,9 @@ class AddCliente():
         placeholder_email(self.e_email)
         self.e_comment.delete(0, 'end')
         self.my_canvas.delete(self.img_id)
-        self.img_id_resizer = 1
-        self.img_id = None
+        self.my_canvas.delete(self.img_id_resizer)
+        self.img_id_resizer = None
+        self.img_id = None        
         self.img = Image.open('imagens/pessoa.png')                                      
         print('cliente salvo')
 
