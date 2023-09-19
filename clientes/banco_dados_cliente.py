@@ -14,7 +14,7 @@ def conexao_banco():
         print(ex)
     return con
 
-def dql(query):
+def dql(query): #select
     vcon=conexao_banco()
     c=vcon.cursor()
     c.execute(query)

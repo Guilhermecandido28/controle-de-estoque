@@ -6,13 +6,19 @@ from PIL import Image
 from limpar import limpar
 from clientes.add_cliente import AddCliente
 from tkinter import ttk
+from clientes.banco_dados_cliente import *
+import io
+
 
 
 class Cliente(AddCliente):
     def __init__(self, frame) -> None:
         self.principal = tk.Frame(frame, bg= 'white')
+        self.inserir_dados()
+        self.clientes_na_treeview()
 
     def novo_cliente(self):
+        
         self.btn_addcliente.configure(state='disabled')        
         self.novo_cliente = AddCliente(self.principal)       
 
@@ -43,22 +49,34 @@ class Cliente(AddCliente):
     def inserir_dados(self):
         self.ins_treeview = ttk.Treeview(self.principal)
         style = ttk.Style(self.ins_treeview)
+        style.configure("Treeview",
+                        rowheight = 50,
+                        font = ('arial', 16)
+
+                        )
+        
         style.configure("Treeview.Heading", font=('Arial', 18), foreground='gray', padding=0)
-        self.ins_treeview['columns'] = ('ID', 'NOME', 'TELEFONE', 'EMAIL','VALOR GASTO')
+        self.ins_treeview['columns'] = ('ID', 'NOME', 'SOBRENOME','CONTATO', 'VALOR GASTO')
         self.ins_treeview.heading('#0', text='EDITAR', anchor=W)
-        self.ins_treeview.heading('#1', text='ID', anchor=W)
+        self.ins_treeview.heading('#1', text='ID', anchor=W)        
         self.ins_treeview.heading('#2', text='NOME')
-        self.ins_treeview.heading('#3', text='TELEFONE')
-        self.ins_treeview.heading('#4', text='EMAIL')
+        self.ins_treeview.heading('#3', text='SOBRENOME')
+        self.ins_treeview.heading('#4', text='CONTATO' )
         self.ins_treeview.heading('#5', text='VALOR GASTO' )
         self.ins_treeview.place(relx=0, rely=.1, relheight=.9, relwidth=1)
-        self.ins_treeview.column("#0", width=110, stretch=FALSE)
-        self.ins_treeview.column("ID",width=40, stretch=FALSE)
-        self.ins_treeview.column("NOME", minwidth=600, stretch=TRUE)
-        self.ins_treeview.column("TELEFONE", minwidth=250, stretch=TRUE)
-        self.ins_treeview.column("EMAIL",minwidth=250, stretch=TRUE)
-        self.ins_treeview.column("VALOR GASTO", minwidth=240, stretch=TRUE)
-        
-    
+        self.ins_treeview.column("#0", width=110, stretch=FALSE, anchor='w')
+        self.ins_treeview.column("ID",width=40, stretch=FALSE, anchor='w')        
+        self.ins_treeview.column("NOME", minwidth=250, stretch=TRUE, anchor='center')
+        self.ins_treeview.column("SOBRENOME",minwidth=250, stretch=TRUE, anchor='center')
+        self.ins_treeview.column("CONTATO", minwidth=240, stretch=TRUE, anchor='center')        
+        self.ins_treeview.column("VALOR GASTO", minwidth=240, stretch=TRUE, anchor='center')
 
+    def clientes_na_treeview(self): 
+        # self.ins_treeview.delete(*self.ins_treeview.get_children())       
+        query ="SELECT id, nome, sobrenome, celular, valor_gasto FROM clientes order by id"
+        linhas= dql(query)
+        for i in linhas:
+            self.ins_treeview.insert("", "end", values=i)
+        self.ins_treeview.delete()
+        
         

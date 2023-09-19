@@ -7,6 +7,7 @@ from limpar import limpar
 from clientes.cliente import Cliente
 
 
+
 janela = Tk()
 
 
@@ -38,10 +39,12 @@ class Applicantion(Cliente):
         cliente.clientes()
         cliente.buscar_cliente()        
         cliente.inserir_dados()
+        cliente.clientes_na_treeview()
 
              
     def buttons(self):
         
+ 
         #Botão cliente
         self.img_cliente = PhotoImage(file='imagens/cliente.png')
         self.btn_clientes = Button(self.menu, text='Clientes', image=self.img_cliente, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2', command=self.cliente)
