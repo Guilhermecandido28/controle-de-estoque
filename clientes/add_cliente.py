@@ -137,7 +137,7 @@ class AddCliente():
         self.tvw_hist.column("Data", anchor=W, width=70)
         self.tvw_hist.column("Nome", anchor=W, width=200, minwidth=120)
         self.tvw_hist.column("Valor Gasto", anchor=CENTER, width=80, minwidth=25)
-        self.tvw_hist.place(relx=0.689, rely=0.21, relheight=.7, relwidth=.3)
+        self.tvw_hist.place(relx=0.689, rely=0.20, relheight=.795, relwidth=.309)
         self.tvw_hist.heading("#0", text="ID", anchor=CENTER)
         self.tvw_hist.heading("#1", text="DATA", anchor=CENTER)
         self.tvw_hist.heading("#2", text="NOME", anchor=CENTER)
@@ -186,10 +186,6 @@ class AddCliente():
         params = (sqlite3.Binary(value_imagem), value_nome, value_sobrenome, value_celular, value_cpf, value_instagram, value_obs, value_cep, value_rua, value_numero, value_bairro, value_cidade, value_estados)
         dml(query, params)
         print('cliente foi salvo')
-
-
-
-
         self.e_nome.delete(0, "end")
         placeholder_nome(self.e_nome)
         self.e_sobrenome.delete(0, "end")
@@ -216,7 +212,6 @@ class AddCliente():
         
     def upload_instagram(self):
         usuario_instagram = self.e_instagram.get()
-
         url_foto_perfil = obter_url_foto_perfil(usuario_instagram)
         if url_foto_perfil:
             caminho_foto_perfil = baixar_foto_perfil(url_foto_perfil, usuario_instagram)
