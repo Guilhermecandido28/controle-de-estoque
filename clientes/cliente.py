@@ -7,7 +7,7 @@ from limpar import limpar
 from clientes.add_cliente import AddCliente
 from tkinter import ttk
 from clientes.banco_dados_cliente import *
-import io
+
 
 
 
@@ -16,14 +16,12 @@ class Cliente(AddCliente):
         self.principal = tk.Frame(frame, bg= 'white')
         self.inserir_dados()
         self.clientes_na_treeview()
+        
 
     def novo_cliente(self):
-        
-        self.btn_addcliente.configure(state='disabled')        
-        self.novo_cliente = AddCliente(self.principal)       
-
-        return self.novo_cliente
-         
+        self.btn_addcliente.configure(state='disabled')
+        self.limpar_treeview()  # Limpa a TreeView antes de criar um novo cliente
+        self.novo_cliente = AddCliente(self.principal)
             
     def clientes(self):
         self.principal.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.67)
@@ -46,16 +44,19 @@ class Cliente(AddCliente):
         self.btn_print = Button(self.principal, image=self.img_print, bg=cor5, bd=0, cursor='hand2')
         self.btn_print.place(relx=0.85, rely=0, relheight=0.1, relwidth=0.05)
 
+    def limpar_treeview(self):
+        if self.ins_treeview:
+            self.ins_treeview.delete(*self.ins_treeview.get_children())
+
     def inserir_dados(self):
         self.ins_treeview = ttk.Treeview(self.principal)
         style = ttk.Style(self.ins_treeview)
-        style.configure("Treeview",
-                        rowheight = 50,
-                        font = ('arial', 16)
-
+        style.configure("Treeview", font= ('arial 15 normal'),
+                        rowheight= 40,
+                        )
+        style.configure("Treeview.Heading", font= ('arial 15 normal'), foreground='gray', padding=0 
                         )
         
-        style.configure("Treeview.Heading", font=('Arial', 18), foreground='gray', padding=0)
         self.ins_treeview['columns'] = ('ID', 'NOME', 'SOBRENOME','CONTATO', 'VALOR GASTO')
         self.ins_treeview.heading('#0', text='EDITAR', anchor=W)
         self.ins_treeview.heading('#1', text='ID', anchor=W)        
@@ -70,13 +71,19 @@ class Cliente(AddCliente):
         self.ins_treeview.column("SOBRENOME",minwidth=250, stretch=TRUE, anchor='center')
         self.ins_treeview.column("CONTATO", minwidth=240, stretch=TRUE, anchor='center')        
         self.ins_treeview.column("VALOR GASTO", minwidth=240, stretch=TRUE, anchor='center')
+  
+
 
     def clientes_na_treeview(self): 
-        # self.ins_treeview.delete(*self.ins_treeview.get_children())       
+        if self.ins_treeview:
+            self.ins_treeview.delete(*self.ins_treeview.get_children())       
         query ="SELECT id, nome, sobrenome, celular, valor_gasto FROM clientes order by id"
         linhas= dql(query)
-        for i in linhas:
+        for i in linhas:            
             self.ins_treeview.insert("", "end", values=i)
-        self.ins_treeview.delete()
+            
+    
+    
+            
         
         
