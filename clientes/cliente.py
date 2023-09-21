@@ -38,21 +38,21 @@ class Cliente(AddCliente):
         self.search.place(relx=0, rely=0, relheight=0.1, relwidth=0.8)
         #botão_pesquisar
         self.img_search = PhotoImage(file='imagens/search.png')
-        self.btn_search = Button(self.principal, image=self.img_search, bg=cor5, bd=0, cursor='hand2')
+        self.btn_search = Button(self.principal, image=self.img_search, bg=cor5, bd=0, cursor='hand2', command=self.cliente_buscado)
         self.btn_search.place(relx=0.8, rely=0, relheight=0.1, relwidth=0.05)
         #Botão_imprimir
         self.img_print = PhotoImage(file='imagens/impressora.png')
         self.btn_print = Button(self.principal, image=self.img_print, bg=cor5, bd=0, cursor='hand2')
         self.btn_print.place(relx=0.85, rely=0, relheight=0.1, relwidth=0.05)
+        self.search.bind('<Return>', self.on_enter)
 
-
+    def on_enter(self,event):
+        self.cliente_buscado()
     def limpar_treeview(self):
         if self.ins_treeview:
-            
             self.ins_treeview.delete(*self.ins_treeview.get_children())
             
-            
-    
+
     def inserir_dados(self):        
         self.tree_scroll = Scrollbar(self.principal)
         self.tree_scroll.place(relx=0.985, rely=0.1, relheight=.9, relwidth=.015)
@@ -97,7 +97,25 @@ class Cliente(AddCliente):
                 self.ins_treeview.insert("", "end", values=i, tags=('evenrow',))
             count+=1 
        
-    
 
+    def cliente_buscado(self):        
+        self.c_buscado = self.search.get()
+        consulta = f"SELECT id, nome, sobrenome, celular, valor_gasto FROM clientes " \
+        f"WHERE id LIKE '%{self.c_buscado}%' " \
+        f"OR nome LIKE '%{self.c_buscado}%' " \
+        f"OR celular LIKE '%{self.c_buscado}%' " \
+        f"OR sobrenome LIKE '%{self.c_buscado}%'"
+        linhas = dql(consulta)
+        count=0
+        for item in self.ins_treeview.get_children():
+            self.ins_treeview.delete(item)        
+        for i in linhas:
+            if count % 2 == 0:            
+                self.ins_treeview.insert("", "end", values=i, tags=('oddrow',))
+            else:
+                self.ins_treeview.insert("", "end", values=i, tags=('evenrow',))
+            count+=1
         
+        
+           
         
