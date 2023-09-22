@@ -9,14 +9,9 @@ from limpar import limpar
 from clientes.banco_dados_cliente import *
 import sqlite3
 from clientes.foto_instagram import *
-from tkinter import messagebox
+from clientes.add_cliente import AddCliente
 
-  
-
-
-
-
-class AddCliente():
+class EddCliente(AddCliente):
     def __init__(self,frame_pai) -> None: 
         self.img = Image.open('imagens/pessoa.png')               
         self.principal = frame_pai
@@ -46,31 +41,31 @@ class AddCliente():
         self.title_nome.place(relx=0.148, rely=0.195)
         self.e_nome = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
         self.e_nome.place(relx=0.150, rely=0.24, relwidth=0.25, relheight=0.04)
-        placeholder_nome(self.e_nome)
+        
             #sobrenome
         self.title_sobrenome = Label(self.principal, text='SOBRENOME:', font=('arial 12'), foreground= cor4, bg='white')
         self.title_sobrenome.place(relx=0.416, rely=0.195)
         self.e_sobrenome = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
         self.e_sobrenome.place(relx=0.42, rely=0.24, relwidth=0.25, relheight=0.04)
-        placeholder_sobrenome(self.e_sobrenome)
+        
             #CPF
         self.title_cpf = Label(self.principal, text='CPF:', font=('arial 12'), foreground= cor4, bg='white')
         self.title_cpf.place(relx=0.148, rely=0.295)
         self.e_cpf = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
         self.e_cpf.place(relx=0.150, rely=0.34, relwidth=0.15, relheight=0.04)
-        placeholder_cpf(self.e_cpf)
+        
             #celular
         self.title_celular = Label(self.principal, text="CELULAR:", font=('arial 12'), foreground=cor4, bg='white')
         self.title_celular.place(relx= 0.316 , rely=0.295)
         self.e_celular = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
         self.e_celular.place(relx=0.32, rely=0.34, relwidth=0.15, relheight=0.04)
-        placeholder_celular(self.e_celular)
+        
             #email
         self.title_instagram = Label(self.principal, text="INSTAGRAM:", font=('arial 12'), foreground=cor4, bg='white')
         self.title_instagram.place(relx= 0.49 , rely=0.295) 
         self.e_instagram = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
         self.e_instagram.place(relx=0.49, rely=0.34, relwidth=0.18, relheight=0.04)
-        placeholder_instagram(self.e_instagram)
+        
             #cometário
         self.title_comment = Label(self.principal, text="OBS:", font=('arial 12'), foreground=cor4, bg='white')
         self.title_comment.place(relx=0.148, rely=0.395)
@@ -86,7 +81,7 @@ class AddCliente():
         self.title_cep.place(relx=0.01, rely=0.605)
         self.e_cep = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
         self.e_cep.place(relx=0.01, rely=0.65, relwidth=0.08, relheight=0.04)  
-        placeholder_cep(self.e_cep)
+        
             #RUA
         self.title_rua = Label(self.principal, text="RUA:", font=('arial 14'), foreground=cor4, bg='white')
         self.title_rua.place(relx=.125, rely= .605 )
@@ -124,25 +119,7 @@ class AddCliente():
         self.img_salvar = PhotoImage(file='imagens/salvar.png')
         self.btn_salvar = Button(self.principal, text='Salvar', image=self.img_salvar, compound=LEFT, bg=cor6, font=('arial 22 bold'), cursor='hand2', foreground='white', command=self.salvar_cliente)
         self.btn_salvar.place(relx=.25, rely=.91, relwidth=.18)
-        
-  
-    def hist_client(self):
-        self.hist_titulo = Label(self.principal, text='Clientes Cadastrados', bg='white', font=('arial 16 bold'), foreground=cor5)
-        self.hist_linha = Frame(self.principal, bg=cor5)
-        self.hist_linha.place(relx=0.689, rely=0.17, relwidth=0.30, relheight=0.004)
-        self.hist_titulo.place(relx=.51, rely=0.1, relwidth=0.5, relheight=0.1)
 
-    def tvw_hist(self):               
-        self.tvw_hist = ttk.Treeview(self.principal, columns=("Data", "Nome", "Valor Gasto"))
-        self.tvw_hist.column("#0", width=25, minwidth=25)        
-        self.tvw_hist.column("Data", anchor=W, width=70)
-        self.tvw_hist.column("Nome", anchor=W, width=200, minwidth=120)
-        self.tvw_hist.column("Valor Gasto", anchor=CENTER, width=80, minwidth=25)
-        self.tvw_hist.place(relx=0.689, rely=0.20, relheight=.795, relwidth=.309)
-        self.tvw_hist.heading("#0", text="ID", anchor=CENTER)
-        self.tvw_hist.heading("#1", text="DATA", anchor=CENTER)
-        self.tvw_hist.heading("#2", text="NOME", anchor=CENTER)
-        self.tvw_hist.heading("#3", text="VALOR GASTO", anchor=CENTER)
 
     def resizer(self,e):
         global resized_img, new_img       
@@ -213,11 +190,7 @@ class AddCliente():
         
     def upload_instagram(self):
         usuario_instagram = self.e_instagram.get()
-        try:
-            url_foto_perfil = obter_url_foto_perfil(usuario_instagram)
-        except:
-            messagebox.showerror('Erro', 'Usuário de instagram não encontrado')
-            
+        url_foto_perfil = obter_url_foto_perfil(usuario_instagram)
         if url_foto_perfil:
             caminho_foto_perfil = baixar_foto_perfil(url_foto_perfil, usuario_instagram)
             if caminho_foto_perfil:

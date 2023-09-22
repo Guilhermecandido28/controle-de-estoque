@@ -32,7 +32,7 @@ class Applicantion(Cliente):
         self.header.place(relx=0, rely=0, relwidth=1, relheight=0.09)
         self.menu = tk.Frame(self.janela, bg=cor4)
         self.menu.place(relx=0, rely=0.09, relwidth=1, relheight=0.05)
-        self.location = tk.Frame(self.janela, bg=cor1)
+        self.location = tk.Canvas(self.janela, bg=cor1, bd=0, highlightthickness=0)
         self.location.place(relx=0, rely=0.14, relwidth=1, relheight=0.09)        
     def cliente(self):
         cliente = Cliente(self.janela)
@@ -40,6 +40,7 @@ class Applicantion(Cliente):
         cliente.buscar_cliente()        
         cliente.inserir_dados()
         cliente.clientes_na_treeview()
+        
 
              
     def buttons(self):
