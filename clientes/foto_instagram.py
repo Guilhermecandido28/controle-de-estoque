@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 import os
+from PIL import Image
+import io
 
 def obter_url_foto_perfil(usuario_instagram):
     url = f"https://www.instagram.com/{usuario_instagram}/"
@@ -16,6 +18,11 @@ def obter_url_foto_perfil(usuario_instagram):
 def baixar_foto_perfil(url, usuario_instagram):
     response = requests.get(url)
     if response.status_code == 200:
+        # Carrega a imagem usando Pillow (PIL)
+        img = Image.open(io.BytesIO(response.content))
+
+        # Ajusta a qualidade da imagem (0 a 100, sendo 100 a melhor qualidade)
+        img.save('temp.jpg', format='JPEG', quality=90)
         # Certifique-se de que a pasta "imagens" exista
         if not os.path.exists('imagens'):
             os.makedirs('imagens')

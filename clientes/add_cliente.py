@@ -4,7 +4,7 @@ import tkinter as tk
 from tkinter import filedialog
 from formations import *
 from tkinter import ttk
-from PIL import Image, ImageTk, ImageEnhance
+from PIL import Image, ImageTk
 from limpar import limpar
 from clientes.banco_dados_cliente import *
 import sqlite3
@@ -152,7 +152,7 @@ class AddCliente():
         return self.img_id_resizer
 
     def upload(self):                
-        self.filename = filedialog.askopenfilename(title="Selecione uma foto", filetypes=[("Imagens", "*.jpg *.png *.bmp")])        
+        self.filename = filedialog.askopenfilename(title="Selecione uma foto", filetypes=[("Imagens", "*.jpg *.png *.bmp", "*.jpeg")])        
         self.img = Image.open(self.filename)
         largura = self.my_canvas.winfo_width()
         altura = self.my_canvas.winfo_height()

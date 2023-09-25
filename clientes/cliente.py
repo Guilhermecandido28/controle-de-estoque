@@ -4,25 +4,62 @@ import tkinter as tk
 from formations import *
 from limpar import limpar
 from clientes.add_cliente import AddCliente
+from clientes.editar_cliente import EditarCliente
 from tkinter import ttk
 from clientes.banco_dados_cliente import *
 from tkinter import messagebox
+import io
+from PIL import Image, ImageTk
 
 
 
-class Cliente(AddCliente):
+class Cliente(AddCliente, EditarCliente):
     def __init__(self, frame) -> None:
         self.principal = tk.Frame(frame, bg= 'white')
+        self.f_editar_cliente = tk.Frame(frame, bg='white')
         self.inserir_dados()
         self.clientes_na_treeview()              
         
 
     def novo_cliente(self):
         self.btn_addcliente.configure(state='disabled')
+        self.btn_edtcliente.configure(state='disabled')
+        self.btn_exclcliente.configure(state='disabled')
         self.tree_scroll.place_forget()        
         self.limpar_treeview()  # Limpa a TreeView antes de criar um novo cliente
         self.novo_cliente = AddCliente(self.principal)
+        
+    def editar_cliente(self):        
+        if self.ins_treeview.selection() == ():
+            messagebox.showerror('Erro', "Selecione um cliente primeiro! ")
+        else:
+            self.f_editar_cliente.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.67)
+            items_selecionado = []
+            for item in self.ins_treeview.selection():
+                item_values = self.ins_treeview.item(item, 'values')
+                items_selecionado.append(item_values)
+            self.btn_edtcliente.configure(state='disabled')
+            self.tree_scroll.place_forget()        
+            self.limpar_treeview()  # Limpa a TreeView antes de criar um novo cliente
+            query_img = f"SELECT imagem FROM clientes WHERE id = {items_selecionado[0][0]}"
+            img_em_bytes = dql(query_img)                       
+            img = Image.open(io.BytesIO(img_em_bytes[0][0]))                                   
+            self.ed_cliente = EditarCliente(self.f_editar_cliente, img, id=items_selecionado[0][0])
+            lista_entrys = [self.ed_cliente.ed_id, self.ed_cliente.ed_nome, self.ed_cliente.ed_sobrenome, self.ed_cliente.ed_cpf, self.ed_cliente.ed_celular, self.ed_cliente.ed_instagram, self.ed_cliente.ed_comment, self.ed_cliente.ed_cep, self.ed_cliente.ed_rua, self.ed_cliente.ed_numero, self.ed_cliente.ed_bairro, self.ed_cliente.ed_cidade, self.ed_cliente.ed_estados]        
+            limpar(lista_entrys)            
+            query =f"SELECT id, nome, sobrenome, cpf, celular, instagram, OBS, CEP, rua, numero, bairro, cidade, estado FROM clientes WHERE id = {items_selecionado[0][0]}"           
+
+            dados = dql(query)            
+            count=0
+            for campo in lista_entrys:
+                campo.insert(0, dados[0][count])
+                count+=1
+        
+        
+
+        
             
+
     def clientes(self):
         self.principal.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.67)
         #Botão_adicionar_cliente        
@@ -104,11 +141,8 @@ class Cliente(AddCliente):
             count+=1 
             
 
-    def editar_cliente(self):
-        items_selecionados = []
-        for item in self.ins_treeview.selection():
-            item_values = self.ins_treeview.item(item, 'values')
-            items_selecionados.append(item_values)
+    
+        
 
     def excluir_cliente(self):
         items_selecionados = []
@@ -124,7 +158,7 @@ class Cliente(AddCliente):
                 item_id.append(ids)
             for cliente in item_id:
                 query = "DELETE FROM clientes WHERE id=?"
-                dml(query, cliente)
+                dml(query, (cliente,))
             self.clientes_na_treeview()
             print('cliente excluido')
         
