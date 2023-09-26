@@ -92,6 +92,7 @@ class AddCliente():
         self.title_rua.place(relx=.125, rely= .605 )
         self.e_rua = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
         self.e_rua.place(relx=0.125, rely=0.65, relwidth=0.38, relheight=0.04)
+        placeholder_endereco(self.e_rua)
             #N°
         self.title_numero = Label(self.principal, text="NÚMERO:", font=('arial 14'), foreground=cor4, bg='white')
         self.title_numero.place(relx=.545, rely= .605 )
@@ -101,12 +102,14 @@ class AddCliente():
         self.title_bairro = Label(self.principal, text="BAIRRO:", font=('arial 14'), foreground=cor4, bg='white')
         self.title_bairro.place(relx=.01, rely= .705 )
         self.e_bairro = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
-        self.e_bairro.place(relx=0.01, rely=0.75, relwidth=0.20, relheight=0.04) 
+        self.e_bairro.place(relx=0.01, rely=0.75, relwidth=0.20, relheight=0.04)
+        placeholder_endereco(self.e_bairro) 
             #CIDADE
         self.title_cidade = Label(self.principal, text="CIDADE:", font=('arial 14'), foreground=cor4, bg='white')
         self.title_cidade.place(relx=.24, rely= .705 )
         self.e_cidade = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
         self.e_cidade.place(relx=0.24, rely=0.75, relwidth=0.263, relheight=0.04)
+        placeholder_endereco(self.e_cidade)
             #ESTADO
         self.e_estados = ttk.Combobox(self.principal, font=('arial 12'), takefocus=True, state='readonly')
         self.e_estados['values'] = ['Acre', 'Alagoas', 'Amapá', 'Amazonas', 'Bahia', 'Ceará', 'Distrito Federal', 'Espírito Santo', 'Goiás', 'Maranhão', 'Mato Grosso', 'Mato Grosso do Sul', 'Minas Gerais', 'Pará', 'Paraíba', 'Paraná', 'Pernambuco', 'Piauí', 'Rio de Janeiro', 'Rio Grande do Norte', 'Rio Grande do Sul', 'Rondônia', 'Roraima', 'Santa Catarina', 'São Paulo', 'Sergipe', 'Tocantins']
@@ -152,7 +155,7 @@ class AddCliente():
         return self.img_id_resizer
 
     def upload(self):                
-        self.filename = filedialog.askopenfilename(title="Selecione uma foto", filetypes=[("Imagens", "*.jpg *.png *.bmp", "*.jpeg")])        
+        self.filename = filedialog.askopenfilename(title="Selecione uma foto", filetypes=[("Imagens", "*.jpg *.png *.bmp")])        
         self.img = Image.open(self.filename)
         largura = self.my_canvas.winfo_width()
         altura = self.my_canvas.winfo_height()

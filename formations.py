@@ -92,6 +92,10 @@ def placeholder_cep(entry):
     entry.insert(0, '  _____-___ ')
     entry.bind("<FocusIn>", lambda event: entry.delete(0, "end"))        
     entry.bind("<KeyRelease>", lambda event: format_cep(entry))
+
+def placeholder_endereco(entry):
+    entry.bind("<FocusIn>", lambda event: entry.delete(0,'end'))
+    entry.bind("<KeyRelease>", lambda event: format_nome(entry))
     
 
 

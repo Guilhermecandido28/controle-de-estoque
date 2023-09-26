@@ -10,6 +10,8 @@ from clientes.banco_dados_cliente import *
 from tkinter import messagebox
 import io
 from PIL import Image, ImageTk
+from clientes.imprimir_ficha import ImprimirFicha
+import subprocess
 
 
 
@@ -54,11 +56,7 @@ class Cliente(AddCliente, EditarCliente):
             for campo in lista_entrys:
                 campo.insert(0, dados[0][count])
                 count+=1
-        
-        
 
-        
-            
 
     def clientes(self):
         self.principal.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.67)
@@ -85,9 +83,10 @@ class Cliente(AddCliente, EditarCliente):
         self.search.bind('<Return>', self.on_enter)
         #Botão_imprimir
         self.img_print = PhotoImage(file='imagens/impressora.png')
-        self.btn_print = Button(self.principal, image=self.img_print, bg=cor5, bd=0, cursor='hand2')
+        self.btn_print = Button(self.principal, image=self.img_print, bg=cor5, bd=0, cursor='hand2', command=self.imprimir_cliente)
         self.btn_print.place(relx=0.65, rely=0, relheight=0.1, relwidth=0.05)
         
+   
 
     def on_enter(self,event):
         self.cliente_buscado()
@@ -183,5 +182,27 @@ class Cliente(AddCliente, EditarCliente):
             count+=1
         
         
-           
+    def imprimir_cliente(self):
+        qual_id = []
+        
+        if self.ins_treeview.selection() == ():
+            messagebox.showerror('Erro', "Selecione um cliente primeiro! ")
+        else:
+            for item in self.ins_treeview.selection():
+                itens = self.ins_treeview.item(item, 'values')
+                qual_id.append(itens)
+        
+        script_dir = os.path.dirname(__file__)        
+        abs_file_path = os.path.join(script_dir, "FICHA.docx")
+
+        if not os.path.exists(abs_file_path):
+            print("O arquivo 'FICHA.docx' não foi encontrado no caminho especificado.")
+        else:
+            pessoa = ImprimirFicha(abs_file_path, qual_id[0][0])
+            pessoa.substituir_valores()       
+
+        caminho = os.path.join(script_dir, f'Ficha_{pessoa.nome[0][0]}.docx')
+        print(caminho)
+        comando = f"start winword {caminho}"
+        subprocess.run(comando, shell=True)       
         
