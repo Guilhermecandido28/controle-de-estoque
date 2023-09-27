@@ -76,7 +76,7 @@ class ImprimirFicha():
         except Exception as e:
             print(f'ocorreu um erro: {str(e)}')
 
-        self.documento.save(f"clientes/Ficha_{self.referencias['AAAA']}.docx")
+        self.documento.save(f"clientes/fichas_word/Ficha_{self.referencias['AAAA']}.docx")
         
     
 

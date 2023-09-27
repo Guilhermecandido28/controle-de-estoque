@@ -12,6 +12,7 @@ import io
 from PIL import Image, ImageTk
 from clientes.imprimir_ficha import ImprimirFicha
 import subprocess
+import os
 
 
 
@@ -19,14 +20,19 @@ class Cliente(AddCliente, EditarCliente):
     def __init__(self, frame) -> None:
         self.principal = tk.Frame(frame, bg= 'white')
         self.f_editar_cliente = tk.Frame(frame, bg='white')
+        self.location = tk.Canvas(frame, bd=0, highlightthickness=0)        
         self.inserir_dados()
         self.clientes_na_treeview()              
-        
+
+       
 
     def novo_cliente(self):
-        self.btn_addcliente.configure(state='disabled')
-        self.btn_edtcliente.configure(state='disabled')
-        self.btn_exclcliente.configure(state='disabled')
+        self.btn_addcliente.destroy()
+        self.btn_edtcliente.destroy()
+        self.btn_exclcliente.destroy()
+        self.btn_search.destroy()
+        self.btn_print.destroy()
+        self.search.destroy()         
         self.tree_scroll.place_forget()        
         self.limpar_treeview()  # Limpa a TreeView antes de criar um novo cliente
         self.novo_cliente = AddCliente(self.principal)
@@ -59,17 +65,29 @@ class Cliente(AddCliente, EditarCliente):
 
 
     def clientes(self):
+        self.location.place(relx=0, rely=0.14, relwidth=1, relheight=0.09)
+        self.location.place_configure(relheight=0.09)
+        self.img_location = Image.open('imagens/location.png')
+        self.img_location_tk = ImageTk.PhotoImage(self.img_location)
+        self.location.create_text(100,30, text='CLIENTE', anchor=NW, font=('arial 18 bold underline'))
+        
+        self.location.bind('<Configure>', self.resize_image)
         self.principal.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.67)
         #Botão_adicionar_cliente        
-        self.btn_addcliente = Button(self.principal, text='ADICIONAR\n Cliente', bg=cor6, compound='center',bd=0, font=('arial 14 bold'), foreground='white', cursor='hand2', command=self.novo_cliente)
+        self.btn_addcliente = Button(self.principal, text='ADICIONAR\n Cliente', bg='light gray', compound='center',bd=0, font=('arial 14 bold'), foreground='black', cursor='hand2', command=self.novo_cliente)
         self.btn_addcliente.place(relx=0.9, rely=0, relheight=0.1, relwidth=0.1)
         #botão de editar cliente
-        self.btn_edtcliente = Button(self.principal, text='EDITAR\n Cliente', bg='dark red', compound='center',bd=0, font=('arial 14 bold'), foreground='white', cursor='hand2', command=self.editar_cliente)
+        self.btn_edtcliente = Button(self.principal, text='EDITAR\n Cliente', bg='dark gray', compound='center',bd=0, font=('arial 14 bold'), foreground='black', cursor='hand2', command=self.editar_cliente)
         self.btn_edtcliente.place(relx=0.8, rely=0, relheight=0.1, relwidth=0.1)
-        #excluir cliente
-        self.btn_exclcliente = Button(self.principal, text='EXCLUIR\n Cliente', bg='red', compound='center',bd=0, font=('arial 14 bold'), foreground='white', cursor='hand2',command=self.excluir_cliente)
+        #excluir cliente        
+        self.btn_exclcliente = Button(self.principal, text='EXCLUIR\n Cliente', bg='gray', compound='center',bd=0, font=('arial 14 bold'), foreground='black', cursor='hand2',command=self.excluir_cliente)
         self.btn_exclcliente.place(relx=0.7, rely=0, relheight=0.1, relwidth=0.1)
 
+    def resize_image(self, event):
+        self.nova_imagem = self.img_location.resize((event.width, event.height))
+        self.nova_imagem_tk = ImageTk.PhotoImage(self.nova_imagem)
+        self.location.create_image(0,0, anchor = NW, image = self.nova_imagem_tk)
+        self.location.image = self.nova_imagem_tk
 
     def buscar_cliente(self):
         self.search = Entry(self.principal, font=('arial 14'), bg=cor5, bd=0)
@@ -201,7 +219,7 @@ class Cliente(AddCliente, EditarCliente):
             pessoa = ImprimirFicha(abs_file_path, qual_id[0][0])
             pessoa.substituir_valores()       
 
-        caminho = os.path.join(script_dir, f'Ficha_{pessoa.nome[0][0]}.docx')
+        caminho = os.path.join(script_dir, f'fichas_word/Ficha_{pessoa.nome[0][0]}.docx')
         print(caminho)
         comando = f"start winword {caminho}"
         subprocess.run(comando, shell=True)       

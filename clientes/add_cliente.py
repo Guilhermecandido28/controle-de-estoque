@@ -30,7 +30,7 @@ class AddCliente():
         self.titulo = Label(self.principal, text='Ficha de Cadastro de Clientes', bg='white', font=('arial 16 bold'))
         self.linha = Frame(self.principal, bg=cor5)
         self.linha.place(relx=0.146, rely=0.17, relwidth=0.525, relheight=0.004)
-        self.titulo.place(relx=0., rely=0.1, relwidth=0.5, relheight=0.1)
+        self.titulo.place(relx=0., rely=0.1, relwidth=0.55, relheight=0.1)
         #imagem
         self.my_canvas = Canvas(self.principal, bd=0, highlightthickness=0, relief='ridge')
         self.my_canvas.place(relx=0, rely=0.1, relheight=.34, relwidth=.14)
@@ -173,7 +173,7 @@ class AddCliente():
             with open('imagens/pessoa.png', 'rb') as img_file:
                 self.byte_img = img_file.read()
         value_imagem = self.byte_img
-        value_nome = self.e_nome.get()
+        value_nome = self.e_nome.get().strip()
         value_sobrenome = self.e_sobrenome.get()
         value_celular = self.e_celular.get()
         value_cpf = self.e_cpf.get()
@@ -212,7 +212,7 @@ class AddCliente():
         self.e_bairro.delete(0,'end')
         self.e_cidade.delete(0,'end')
                                            
-        print('cliente salvo')
+        messagebox.showinfo("Sucesso", "Operação realizada com sucesso!")
         
     def upload_instagram(self):
         usuario_instagram = self.e_instagram.get()

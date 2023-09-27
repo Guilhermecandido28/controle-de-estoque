@@ -43,6 +43,9 @@ class EditarCliente():
         placeholder_cpf(self.ed_cpf)
         placeholder_instagram(self.ed_instagram)
         placeholder_cep(self.ed_cep)
+        placeholder_endereco(self.ed_rua)
+        placeholder_endereco(self.ed_bairro)
+        placeholder_endereco(self.ed_cidade)
         #----------------------------------------------------------------------------------#
         self.ed_id.place(relx=.05, rely=.2, relwidth=.05, relheight=0.04) 
         self.ed_nome.place(relx=.05, rely=.3, relwidth=.2, relheight=0.04)
@@ -125,7 +128,7 @@ class EditarCliente():
 
         modify_id = self.ed_id.get()
         
-        modify_nome = self.ed_nome.get()
+        modify_nome = self.ed_nome.get().strip()
         modify_sobrenome = self.ed_sobrenome.get()
         modify_celular = self.ed_celular.get()
         modify_cpf = self.ed_cpf.get()
