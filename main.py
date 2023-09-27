@@ -5,21 +5,28 @@ from formations import *
 from PIL import Image
 from limpar import limpar
 from clientes.cliente import Cliente
+from tkinter import messagebox
+from home import Home
+from PIL import Image, ImageTk
 
 
 
 janela = Tk()
 
 
-class Applicantion(Cliente):
+
+class Applicantion(Cliente, Home):
+    
     def __init__(self):
-        self.janela = janela        
+        self.janela = janela 
         self.tela()
-        self.frames()
+        self.frames()        
         self.buttons()
-        self.temporario = Label(text='voce esta no home', font=('arial 18 bold'))
-        self.temporario.place(relx=.5, rely=.5)                  
+        self.cliente_widgets_criados = False
+        self.inicio = Home(self.janela)         
         janela.mainloop()
+        
+        
 
     def tela(self):
         self.janela.title('Controle fincanceiro')
@@ -34,14 +41,30 @@ class Applicantion(Cliente):
         self.menu.place(relx=0, rely=0.09, relwidth=1, relheight=0.05)
                 
     def cliente(self):
-        cliente = Cliente(self.janela)
-        cliente.clientes()
-        cliente.buscar_cliente()        
-        cliente.inserir_dados()
-        cliente.clientes_na_treeview()
+        global cliente
+        if not self.cliente_widgets_criados:                
+            cliente = Cliente(self.janela)
+            cliente.clientes()
+            cliente.buscar_cliente()        
+            cliente.inserir_dados()
+            cliente.clientes_na_treeview()
+            self.cliente_widgets_criados = True           
+            
+        else:
+            pass
+        
         
 
-             
+    
+    def home(self):
+        self.frame_do_home = self.inicio.frame_home()        
+        cliente.principal.place_forget()
+        cliente.location.place_forget()
+        self.cliente_widgets_criados = False
+            
+        
+
+
     def buttons(self):
         
  
@@ -75,7 +98,7 @@ class Applicantion(Cliente):
         self.btn_settings.place(relx=0.84, rely=0, relwidth=0.14, relheight=1)
         #home
         self.img_home = PhotoImage(file='imagens/home.png')
-        self.btn_home = Button(self.header, image=self.img_home, bg=cor3, bd=0, font=('arial 12 bold'), cursor='hand2')
+        self.btn_home = Button(self.header, image=self.img_home, bg=cor3, bd=0, font=('arial 12 bold'), cursor='hand2', command=self.home)
         self.btn_home.place(relx=0, rely=0, relheight=1, relwidth=0.05)
 
     

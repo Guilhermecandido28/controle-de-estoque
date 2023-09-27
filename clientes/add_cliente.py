@@ -19,13 +19,14 @@ from tkinter import messagebox
 class AddCliente():
     def __init__(self,frame_pai) -> None: 
         self.img = Image.open('imagens/pessoa.png')               
-        self.principal = frame_pai
+        self.principal = tk.Frame(frame_pai, bg= 'white')
         self.filename = None
         self.add_client()
         self.hist_client()        
         self.tvw_hist()             
 
     def add_client(self):
+        self.principal.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.67)
         #título 
         self.titulo = Label(self.principal, text='Ficha de Cadastro de Clientes', bg='white', font=('arial 16 bold'))
         self.linha = Frame(self.principal, bg=cor5)
@@ -127,8 +128,14 @@ class AddCliente():
         self.img_salvar = PhotoImage(file='imagens/salvar.png')
         self.btn_salvar = Button(self.principal, text='Salvar', image=self.img_salvar, compound=LEFT, bg=cor6, font=('arial 22 bold'), cursor='hand2', foreground='white', command=self.salvar_cliente)
         self.btn_salvar.place(relx=.25, rely=.91, relwidth=.18)
+        #botão voltar
+        self.img_voltar = PhotoImage(file='imagens/voltar.png')
+        self.btn_voltar = Button(self.principal, image=self.img_voltar, bg='white', cursor='hand2', command=self.voltar)
+        self.btn_voltar.place(relx=0.962, rely=0)
         
-  
+    def voltar(self):
+        self.principal.destroy()
+        
     def hist_client(self):
         self.hist_titulo = Label(self.principal, text='Clientes Cadastrados', bg='white', font=('arial 16 bold'), foreground=cor5)
         self.hist_linha = Frame(self.principal, bg=cor5)

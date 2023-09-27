@@ -18,6 +18,7 @@ import os
 
 class Cliente(AddCliente, EditarCliente):
     def __init__(self, frame) -> None:
+        self.janela = frame
         self.principal = tk.Frame(frame, bg= 'white')
         self.f_editar_cliente = tk.Frame(frame, bg='white')
         self.location = tk.Canvas(frame, bd=0, highlightthickness=0)        
@@ -26,16 +27,8 @@ class Cliente(AddCliente, EditarCliente):
 
        
 
-    def novo_cliente(self):
-        self.btn_addcliente.destroy()
-        self.btn_edtcliente.destroy()
-        self.btn_exclcliente.destroy()
-        self.btn_search.destroy()
-        self.btn_print.destroy()
-        self.search.destroy()         
-        self.tree_scroll.place_forget()        
-        self.limpar_treeview()  # Limpa a TreeView antes de criar um novo cliente
-        self.novo_cliente = AddCliente(self.principal)
+    def novo_cliente(self):        
+        self.novo_cliente = AddCliente(self.janela)
         
     def editar_cliente(self):        
         if self.ins_treeview.selection() == ():
@@ -65,8 +58,7 @@ class Cliente(AddCliente, EditarCliente):
 
 
     def clientes(self):
-        self.location.place(relx=0, rely=0.14, relwidth=1, relheight=0.09)
-        self.location.place_configure(relheight=0.09)
+        self.location.place(relx=0, rely=0.14, relwidth=1, relheight=0.09)        
         self.img_location = Image.open('imagens/location.png')
         self.img_location_tk = ImageTk.PhotoImage(self.img_location)
         self.location.create_text(100,30, text='CLIENTE', anchor=NW, font=('arial 18 bold underline'))
@@ -82,6 +74,16 @@ class Cliente(AddCliente, EditarCliente):
         #excluir cliente        
         self.btn_exclcliente = Button(self.principal, text='EXCLUIR\n Cliente', bg='gray', compound='center',bd=0, font=('arial 14 bold'), foreground='black', cursor='hand2',command=self.excluir_cliente)
         self.btn_exclcliente.place(relx=0.7, rely=0, relheight=0.1, relwidth=0.1)
+        #botão voltar
+        self.img_voltar = PhotoImage(file='imagens/voltar.png')
+        self.btn_voltar = Button(self.f_editar_cliente, image=self.img_voltar, bg='white', cursor='hand2', command=self.voltar)
+        self.btn_voltar.place(relx=0.962, rely=0.0)
+        
+    def voltar(self):
+        self.f_editar_cliente.place_forget()
+        self.btn_edtcliente.configure(state='active')
+        self.clientes_na_treeview()
+
 
     def resize_image(self, event):
         self.nova_imagem = self.img_location.resize((event.width, event.height))
