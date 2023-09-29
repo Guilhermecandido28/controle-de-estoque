@@ -8,6 +8,7 @@ from clientes.cliente import Cliente
 from tkinter import messagebox
 from home import Home
 from PIL import Image, ImageTk
+from estoque.estoque import Estoque
 
 
 
@@ -15,7 +16,7 @@ janela = Tk()
 
 
 
-class Applicantion(Cliente, Home):
+class Applicantion(Cliente, Home, Estoque):
     
     def __init__(self):
         self.janela = janela 
@@ -31,7 +32,7 @@ class Applicantion(Cliente, Home):
     def tela(self):
         self.janela.title('Controle fincanceiro')
         self.janela.geometry('1500x1000')
-        self.janela.configure(background= cor5)
+        self.janela.configure(background= "#8A8A8A")
         janela.minsize(1500, 1000)
     
     def frames(self):
@@ -39,6 +40,7 @@ class Applicantion(Cliente, Home):
         self.header.place(relx=0, rely=0, relwidth=1, relheight=0.09)
         self.menu = tk.Frame(self.janela, bg=cor4)
         self.menu.place(relx=0, rely=0.09, relwidth=1, relheight=0.05)
+        
                 
     def cliente(self):
         global cliente
@@ -54,15 +56,25 @@ class Applicantion(Cliente, Home):
             pass
         
         
-
+    def estoque(self):
+        estoque = Estoque(self.janela)
+        estoque.estoques()
+        self.esquecer_functions()
     
     def home(self):
-        self.frame_do_home = self.inicio.frame_home()        
-        cliente.principal.place_forget()
-        cliente.location.place_forget()
-        self.cliente_widgets_criados = False
+        self.frame_do_home = self.inicio.frame_home()
+        self.esquecer_functions()
             
+    def esquecer_functions(self):
+        try:        
+            cliente.principal.place_forget()
+            cliente.location.place_forget()
+            cliente.f_editar_cliente.place_forget()
+            cliente.f_add_cliente.place_forget()
+        except:
+            print('O cliente ainda não foi instanciado.')
         
+        self.cliente_widgets_criados = False   
 
 
     def buttons(self):
@@ -82,7 +94,7 @@ class Applicantion(Cliente, Home):
         self.btn_fornecedor.place(relx=0.28, rely=0, relwidth=0.14, relheight=1)
         #estoque
         self.img_estoque= PhotoImage(file='imagens/estoque.png')
-        self.btn_estoque = Button(self.menu, text='Estoque', image=self.img_estoque, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2')
+        self.btn_estoque = Button(self.menu, text='Estoque', image=self.img_estoque, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2', command=self.estoque)
         self.btn_estoque.place(relx=0.42, rely=0, relwidth=0.14, relheight=1)
         #compras
         self.img_compras= PhotoImage(file='imagens/compras.png')

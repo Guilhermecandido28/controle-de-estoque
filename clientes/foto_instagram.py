@@ -22,7 +22,7 @@ def baixar_foto_perfil(url, usuario_instagram):
         img = Image.open(io.BytesIO(response.content))
 
         # Ajusta a qualidade da imagem (0 a 100, sendo 100 a melhor qualidade)
-        img.save('temp.jpg', format='JPEG', quality=90)
+        img.save('temp.jpg', format='JPEG', quality=100)
         # Certifique-se de que a pasta "imagens" exista
         if not os.path.exists('imagens'):
             os.makedirs('imagens')
@@ -35,5 +35,5 @@ def baixar_foto_perfil(url, usuario_instagram):
         print('Erro ao baixar a foto de perfil')
         return None
 
-# Exemplo de utilização
+
 

@@ -10,6 +10,7 @@ from clientes.banco_dados_cliente import *
 import sqlite3
 from clientes.foto_instagram import *
 from tkinter import messagebox
+from datetime import datetime
 
   
 
@@ -17,21 +18,21 @@ from tkinter import messagebox
 
 
 class AddCliente():
-    def __init__(self,frame_pai) -> None: 
+    def __init__(self,frame) -> None: 
         self.img = Image.open('imagens/pessoa.png')               
-        self.principal = tk.Frame(frame_pai, bg= 'white')
+        self.principal = frame
         self.filename = None
-        self.add_client()
-        self.hist_client()        
-        self.tvw_hist()             
+        self.add_client()               
+        self.tvw_hist()
+        self.inserir_na_treeview()             
 
     def add_client(self):
-        self.principal.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.67)
+        
         #título 
-        self.titulo = Label(self.principal, text='Ficha de Cadastro de Clientes', bg='white', font=('arial 16 bold'))
+        self.titulo = Label(self.principal, text='Ficha de Cadastro de Clientes', bg='white', font=('arial 36 bold'))
         self.linha = Frame(self.principal, bg=cor5)
         self.linha.place(relx=0.146, rely=0.17, relwidth=0.525, relheight=0.004)
-        self.titulo.place(relx=0., rely=0.1, relwidth=0.55, relheight=0.1)
+        self.titulo.place(relx=0.146, rely=0.07, relheight=0.1)
         #imagem
         self.my_canvas = Canvas(self.principal, bd=0, highlightthickness=0, relief='ridge')
         self.my_canvas.place(relx=0, rely=0.1, relheight=.34, relwidth=.14)
@@ -39,8 +40,8 @@ class AddCliente():
         self.my_canvas.bind('<Configure>', self.resizer)        
         botao_upload = tk.Button(self.principal, command= self.upload , text="Upload", font=('arial 12 bold'), background='green', foreground='white', cursor='hand2')
         botao_upload.place(relx=0, rely=0.44, relwidth=.14, relheight=0.04)
-        botao_upload = tk.Button(self.principal, command= self.upload_instagram , text="Mostre foto perfil instagram ", font=('arial 12 bold'), background='green', foreground='white', cursor='hand2')
-        botao_upload.place(relx=0.49, rely=0.38, relwidth=.18, relheight=0.04)
+        botao_upload_instagram = tk.Button(self.principal, command= self.upload_instagram , text="Mostre foto perfil instagram ", font=('arial 12 bold'), background='green', foreground='white', cursor='hand2')
+        botao_upload_instagram.place(relx=0.49, rely=0.38, relwidth=.18, relheight=0.04)
         # Entrys
             #nome
         self.title_nome = Label(self.principal, text='NOME:', font=('arial 12'), foreground= cor4, bg='white')
@@ -130,29 +131,31 @@ class AddCliente():
         self.btn_salvar.place(relx=.25, rely=.91, relwidth=.18)
         #botão voltar
         self.img_voltar = PhotoImage(file='imagens/voltar.png')
-        self.btn_voltar = Button(self.principal, image=self.img_voltar, bg='white', cursor='hand2', command=self.voltar)
+        self.btn_voltar = Button(self.principal, image=self.img_voltar, bg='white', cursor='hand2', command=self.voltar, relief='flat')
         self.btn_voltar.place(relx=0.962, rely=0)
         
     def voltar(self):
-        self.principal.destroy()
+        self.principal.place_forget()
         
-    def hist_client(self):
-        self.hist_titulo = Label(self.principal, text='Clientes Cadastrados', bg='white', font=('arial 16 bold'), foreground=cor5)
+        
+
+    def tvw_hist(self):
+        self.hist_titulo = Label(self.principal, text='Histórico Clientes', bg='white', font=('arial 16 bold'), foreground=cor5)
         self.hist_linha = Frame(self.principal, bg=cor5)
         self.hist_linha.place(relx=0.689, rely=0.17, relwidth=0.30, relheight=0.004)
-        self.hist_titulo.place(relx=.51, rely=0.1, relwidth=0.5, relheight=0.1)
-
-    def tvw_hist(self):               
-        self.tvw_hist = ttk.Treeview(self.principal, columns=("Data", "Nome", "Valor Gasto"))
-        self.tvw_hist.column("#0", width=25, minwidth=25)        
-        self.tvw_hist.column("Data", anchor=W, width=70)
-        self.tvw_hist.column("Nome", anchor=W, width=200, minwidth=120)
-        self.tvw_hist.column("Valor Gasto", anchor=CENTER, width=80, minwidth=25)
-        self.tvw_hist.place(relx=0.689, rely=0.20, relheight=.795, relwidth=.309)
-        self.tvw_hist.heading("#0", text="ID", anchor=CENTER)
+        self.hist_titulo.place(relx=.689, rely=0.125) 
+        self.hist_scroll = Scrollbar(self.principal)
+        self.hist_scroll.place(relx=0.985, rely=0.2, relheight=.798, relwidth=.015)              
+        self.tvw_hist = ttk.Treeview(self.principal, yscrollcommand=self.hist_scroll.set, columns=("Data", "Nome", "Valor"), show="headings")
+        self.hist_scroll.config(command=self.tvw_hist.yview)       
+        self.tvw_hist.column("Data", anchor=W, width=30, minwidth=20)
+        self.tvw_hist.column("Nome", anchor=W, width=70, minwidth=120)
+        self.tvw_hist.column("Valor", anchor=CENTER, width=70, minwidth=25)
+        self.tvw_hist.place(relx=0.689, rely=0.20, relheight=.795, relwidth=.297)
+        
         self.tvw_hist.heading("#1", text="DATA", anchor=CENTER)
         self.tvw_hist.heading("#2", text="NOME", anchor=CENTER)
-        self.tvw_hist.heading("#3", text="VALOR GASTO", anchor=CENTER)
+        self.tvw_hist.heading("#3", text="VALOR", anchor=CENTER)
 
     def resizer(self,e):
         global resized_img, new_img       
@@ -246,3 +249,20 @@ class AddCliente():
         self.img_id = self.my_canvas.create_image(0,0, image=self.img_tk, anchor='nw')
         return self.img_id
         
+    def inserir_na_treeview(self):
+        self.tvw_hist.tag_configure('oddrow', background='white')
+        self.tvw_hist.tag_configure('evenrow', background='light gray') 
+        if self.tvw_hist:
+            self.tvw_hist.delete(*self.tvw_hist.get_children())       
+        query ="SELECT nome, valor_gasto FROM clientes order by id"
+        linhas= dql(query)
+        count=0
+        data_atual = datetime.now().strftime('%d/%m/%Y')
+        for i in linhas:
+            values_with_date = (data_atual,) + i
+            if count % 2 == 0:    
+               self.tvw_hist.insert("", "end",values=values_with_date, tags=('oddrow',))             
+
+            else:
+                self.tvw_hist.insert("", "end",values=values_with_date, tags=('evenrow',))
+            count+=1 

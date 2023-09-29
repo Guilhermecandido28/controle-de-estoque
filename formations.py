@@ -14,6 +14,17 @@ def format_celular(entry):
     entry.bind("<FocusOut>", lambda event: formatted_celular)
     entry.bind("<FocusIn>", lambda event: formatted_celular)
 
+def format_estoque_minemax(entry):
+    estoque = entry.get()
+    formatted_estoque = ''.join(estoque.split()).replace(' ','').replace(' ','')
+    if not formatted_estoque.isdigit():
+        formatted_estoque = ''.join(filter(str.isdigit, formatted_estoque))
+    entry.delete(0, tk.END)
+    entry.insert(0, formatted_estoque)
+    entry.bind("<FocusOut>", lambda event: formatted_estoque)
+    entry.bind("<FocusIn>", lambda event: formatted_estoque)
+
+
 def format_cpf(entry):
     cpf_text = entry.get()    
     formatted_cpf = ''.join(cpf_text.split()).replace('.', '').replace('-', '')    
@@ -73,8 +84,12 @@ def placeholder_celular(entry):
     entry.bind("<FocusIn>", lambda event: entry.delete(0, "end"))        
     entry.bind("<KeyRelease>", lambda event: format_celular(entry))
 
-def placeholder_nome(entry):
-    entry.insert(0, '  Nome')
+def placeholder_estoque(entry):
+    
+    entry.bind("<FocusIn>", lambda event: entry.delete(0, "end"))        
+    entry.bind("<KeyRelease>", lambda event: format_estoque_minemax(entry))
+
+def placeholder_nome(entry):    
     entry.bind("<FocusIn>", lambda event: entry.delete(0, "end"))        
     entry.bind("<KeyRelease>", lambda event: format_nome(entry))
 

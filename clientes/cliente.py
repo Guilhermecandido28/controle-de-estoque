@@ -21,6 +21,7 @@ class Cliente(AddCliente, EditarCliente):
         self.janela = frame
         self.principal = tk.Frame(frame, bg= 'white')
         self.f_editar_cliente = tk.Frame(frame, bg='white')
+        self.f_add_cliente = tk.Frame(frame, bg= 'white')
         self.location = tk.Canvas(frame, bd=0, highlightthickness=0)        
         self.inserir_dados()
         self.clientes_na_treeview()              
@@ -28,7 +29,8 @@ class Cliente(AddCliente, EditarCliente):
        
 
     def novo_cliente(self):        
-        self.novo_cliente = AddCliente(self.janela)
+        self.adicionar_cliente = AddCliente(self.f_add_cliente)
+        self.f_add_cliente.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.72)
         
     def editar_cliente(self):        
         if self.ins_treeview.selection() == ():
@@ -41,7 +43,7 @@ class Cliente(AddCliente, EditarCliente):
                 items_selecionado.append(item_values)
             self.btn_edtcliente.configure(state='disabled')
             self.tree_scroll.place_forget()        
-            self.limpar_treeview()  # Limpa a TreeView antes de criar um novo cliente
+            self.limpar_treeview() 
             query_img = f"SELECT imagem FROM clientes WHERE id = {items_selecionado[0][0]}"
             img_em_bytes = dql(query_img)                       
             img = Image.open(io.BytesIO(img_em_bytes[0][0]))                                   
@@ -64,7 +66,7 @@ class Cliente(AddCliente, EditarCliente):
         self.location.create_text(100,30, text='CLIENTE', anchor=NW, font=('arial 18 bold underline'))
         
         self.location.bind('<Configure>', self.resize_image)
-        self.principal.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.67)
+        self.principal.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.72)
         #Botão_adicionar_cliente        
         self.btn_addcliente = Button(self.principal, text='ADICIONAR\n Cliente', bg='light gray', compound='center',bd=0, font=('arial 14 bold'), foreground='black', cursor='hand2', command=self.novo_cliente)
         self.btn_addcliente.place(relx=0.9, rely=0, relheight=0.1, relwidth=0.1)
@@ -76,10 +78,10 @@ class Cliente(AddCliente, EditarCliente):
         self.btn_exclcliente.place(relx=0.7, rely=0, relheight=0.1, relwidth=0.1)
         #botão voltar
         self.img_voltar = PhotoImage(file='imagens/voltar.png')
-        self.btn_voltar = Button(self.f_editar_cliente, image=self.img_voltar, bg='white', cursor='hand2', command=self.voltar)
+        self.btn_voltar = Button(self.f_editar_cliente, image=self.img_voltar, bg='white', cursor='hand2', command=self.voltar, relief='flat')
         self.btn_voltar.place(relx=0.962, rely=0.0)
         
-    def voltar(self):
+    def voltar(self):     
         self.f_editar_cliente.place_forget()
         self.btn_edtcliente.configure(state='active')
         self.clientes_na_treeview()
@@ -92,24 +94,23 @@ class Cliente(AddCliente, EditarCliente):
         self.location.image = self.nova_imagem_tk
 
     def buscar_cliente(self):
-        self.search = Entry(self.principal, font=('arial 14'), bg=cor5, bd=0)
+        self.search = Entry(self.principal, font=('arial 14'), bg="#8A8A8A", bd=0)
         self.search.insert(0, "Procure por cliente...")
         self.search.bind("<FocusIn>", lambda event: self.search.delete(0, "end"))
         self.search.place(relx=0, rely=0, relheight=0.1, relwidth=0.7)
         #botão_pesquisar
         self.img_search = PhotoImage(file='imagens/search.png')
-        self.btn_search = Button(self.principal, image=self.img_search, bg=cor5, bd=0, cursor='hand2', command=self.cliente_buscado)
+        self.btn_search = Button(self.principal, image=self.img_search, bg="#8A8A8A", bd=0, cursor='hand2', command=self.cliente_buscado)
         self.btn_search.place(relx=0.6, rely=0, relheight=0.1, relwidth=0.05)
         self.search.bind('<Return>', self.on_enter)
         #Botão_imprimir
         self.img_print = PhotoImage(file='imagens/impressora.png')
-        self.btn_print = Button(self.principal, image=self.img_print, bg=cor5, bd=0, cursor='hand2', command=self.imprimir_cliente)
+        self.btn_print = Button(self.principal, image=self.img_print, bg="#8A8A8A", bd=0, cursor='hand2', command=self.imprimir_cliente)
         self.btn_print.place(relx=0.65, rely=0, relheight=0.1, relwidth=0.05)
-        
-   
 
     def on_enter(self,event):
         self.cliente_buscado()
+
     def limpar_treeview(self):
         if self.ins_treeview:
             self.ins_treeview.delete(*self.ins_treeview.get_children())
@@ -158,10 +159,7 @@ class Cliente(AddCliente, EditarCliente):
             else:
                 self.ins_treeview.insert("", "end",values=i, tags=('evenrow',))
             count+=1 
-            
-
-    
-        
+ 
 
     def excluir_cliente(self):
         items_selecionados = []
