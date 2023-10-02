@@ -12,12 +12,13 @@
 56
 58
 60
-PP
-P
-M
 G
-GG
 G1
 G2
 G3
 G4
+GG
+M
+P
+PP
+TESTE

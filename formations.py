@@ -25,6 +25,20 @@ def format_estoque_minemax(entry):
     entry.bind("<FocusIn>", lambda event: formatted_estoque)
 
 
+def format_custo(entry):   
+    custo = entry.get()
+    formatted_custo = ''.join(custo.split()).replace(' ','').replace('.',',')
+    if not formatted_custo.isdigit():
+        formatted_custo = ''.join(filter(lambda x: x.isdigit() or x == ',', formatted_custo))
+    if ',' in formatted_custo:
+        pos = formatted_custo.index(',')        
+        formatted_custo = f'{formatted_custo[:pos+3]}'    
+    entry.delete(0, tk.END)
+    entry.insert(0, formatted_custo)
+    entry.bind("<FocusOut>", lambda event: formatted_custo)
+    entry.bind("<FocusIn>", lambda event: formatted_custo)
+
+
 def format_cpf(entry):
     cpf_text = entry.get()    
     formatted_cpf = ''.join(cpf_text.split()).replace('.', '').replace('-', '')    
@@ -88,6 +102,9 @@ def placeholder_estoque(entry):
     
     entry.bind("<FocusIn>", lambda event: entry.delete(0, "end"))        
     entry.bind("<KeyRelease>", lambda event: format_estoque_minemax(entry))
+
+def placeholder_custo(entry):       
+    entry.bind("<KeyRelease>", lambda event: format_custo(entry))
 
 def placeholder_nome(entry):    
     entry.bind("<FocusIn>", lambda event: entry.delete(0, "end"))        

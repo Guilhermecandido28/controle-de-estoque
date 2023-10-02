@@ -22,7 +22,7 @@ class Estoque():
 
     def add_estoque(self):
         self.adicionar_estoque = AddEstoque(self.f_add_estoque)
-        self.f_add_estoque.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.67)
+        self.f_add_estoque.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.72)
 
     def estoques(self):
         self.location_est.place(relx=0, rely=0.14, relwidth=1, relheight=0.09)        

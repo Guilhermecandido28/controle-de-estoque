@@ -10,13 +10,14 @@ from clientes.banco_dados_cliente import *
 import sqlite3
 from clientes.foto_instagram import *
 from tkinter import messagebox
-from datetime import datetime
+
 
 
 class AddEstoque():
     def __init__(self, frame):
         self.principal = frame
         self.add_estoque()
+        
 
     def add_estoque(self):
         self.titulo_est = Label(self.principal, text='Ficha de Cadastro de Produto', bg='white', font=('arial 36 bold'))
@@ -92,6 +93,59 @@ class AddEstoque():
         self.e_cor['values'] = list(self.e_cor['values']) + self.ler_cores_do_arquivo()
         self.btn_add_cor = Button(self.principal, image=self.img_adicionar, background='dark green', relief='flat', highlightthickness=0, bd=0, command=self.cor, cursor='hand2')
         self.btn_add_cor.place(relx=0.592, rely=0.50, relheight=0.04, relwidth=0.02)
+        #preços e custos
+            #titulo
+        self.titulo_custos = Label(self.principal, text='PREÇOS E CUSTOS', font=('arial 16 bold'), foreground= cor4, bg='white')
+        self.titulo_custos.place(relx=0.01, rely=0.56)
+        self.linha_custos = Frame(self.principal, bg=cor4)
+        self.linha_custos.place(relx=0.01, rely=0.60, relwidth=0.98, relheight=0.004)
+            #custo
+        self.t_preco_custo = Label(self.principal, text='CUSTO:', font=('arial 12'), foreground= cor4, bg='white')
+        self.t_preco_custo.place(relx=0.01, rely=0.65)
+        self.preco_custo = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
+        self.preco_custo.place(relx=.01, rely=0.70, relheight=0.04)
+        placeholder_custo(self.preco_custo)
+            #venda
+        self.t_venda = Label(self.principal, text='VENDA:', font=('arial 12'), foreground= cor4, bg='white')
+        self.t_venda.place(relx=.17, rely=0.65)
+        self.preco_venda = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
+        self.preco_venda.place(relx=.17, rely=0.70, relheight=0.04)
+        placeholder_custo(self.preco_venda)
+        
+                    # porcentagem de lucro
+        
+        self.l_lucro = Label(self.principal, text='0,00%', bg='white', anchor='n', font=('arial 26 bold'))
+        self.l_lucro.place(relx=.30, rely=.69)
+        self.margem_lucro = Label(self.principal, text='MARGEM DE LUCRO', bg='white', font=('arial 14 bold'))
+        self.margem_lucro.place(relx=.4, rely=.70)
+        self.preco_venda.bind('<KeyRelease>', lambda event: self.calcular_lucro_e_porcentagem())
+
+       
+
+    def calcular_lucro_e_porcentagem(self):
+        preco_custo = self.preco_custo.get()
+        preco_venda = self.preco_venda.get()
+
+        if preco_custo and preco_venda:
+            try:
+                preco_custo = float(preco_custo)
+                preco_venda = float(preco_venda)
+                self.lucro = preco_venda - preco_custo
+                self.porcentagem_lucro = (self.lucro / preco_custo) * 100
+
+                # Atualize as labels com os resultados
+                if self.lucro > 0: 
+                    self.l_lucro.config(text=f'{self.porcentagem_lucro:.0f}%', font=('arial 26 bold'), foreground='green')
+                    self.l_lucro.place_forget()
+                    self.l_lucro.place(relx=.30, rely=.69)
+                else:
+                    self.l_lucro.config(text=f'{self.porcentagem_lucro:.0f}%', font=('arial 26 bold'), foreground='red')
+                    self.l_lucro.place_forget()
+                    self.l_lucro.place(relx=.30, rely=.69)
+            except ValueError:
+                pass
+        else:
+            pass
 
         #botão voltar
         self.img_voltar = PhotoImage(file='imagens/voltar.png')
@@ -156,9 +210,9 @@ class AddEstoque():
         self.e_marca.configure(state='normal')
         self.btn_add_marca.place_forget()
         self.btn_exc_marca = Button(self.principal, image=self.img_excluir_marca, background='dark green', relief='flat', highlightthickness=0, bd=0, command=lambda: self.e_marca.set(""), cursor='hand2')
-        self.btn_exc_marca.place(relx=0.591, rely=0.30, relheight=0.04, relwidth=0.02)
+        self.btn_exc_marca.place(relx=0.591, rely=0.50, relheight=0.04, relwidth=0.02)
         self.btn_ok_marca = Button(self.principal, image=self.img_ok_marca, background='dark green', relief='flat', highlightthickness=0, bd=0, command=self.salvar_marca, cursor='hand2')
-        self.btn_ok_marca.place(relx=0.612, rely=0.30, relheight=0.04, relwidth=0.02)
+        self.btn_ok_marca.place(relx=0.612, rely=0.50, relheight=0.04, relwidth=0.02)
 
     def categoria(self):
         self.img_excluir = PhotoImage(file='imagens/excluir.png')
@@ -336,20 +390,6 @@ class AddEstoque():
         self.btn_ok_tamanho.place_forget()
         self.btn_add_tamanho.place(relx=0.482, rely=0.50, relheight=0.04, relwidth=0.02)
 
-    # def excluir_linha_e_reorganizar_arquivo(self,caminho_arquivo, linha_para_excluir):
-    #     # Ler o conteúdo do arquivo e remover a linha desejada
-    #     linhas = []
-    #     with open(caminho_arquivo, 'r') as file:
-    #         linhas = file.readlines()
-        
-    #     # Remover a linha desejada (se existir)
-    #     linhas = [linha for linha in linhas if linha.strip() != linha_para_excluir]
-
-    #     # Escrever o conteúdo atualizado de volta ao arquivo
-    #     with open(caminho_arquivo, 'w') as file:
-    #         file.writelines(linhas)
-
-    #     messagebox.showinfo('Sucesso!', 'Item excluído com sucesso!')
-    
+   
     def voltar(self):
         self.principal.place_forget()
