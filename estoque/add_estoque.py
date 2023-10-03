@@ -6,10 +6,9 @@ from formations import *
 from tkinter import ttk
 from PIL import Image, ImageTk
 from limpar import limpar
-from clientes.banco_dados_cliente import *
-import sqlite3
-from clientes.foto_instagram import *
+from estoque.banco_dados_estoque import *
 from tkinter import messagebox
+from estoque.barcode import *
 
 
 
@@ -27,11 +26,17 @@ class AddEstoque():
         #imagem
         self.my_canvas = Canvas(self.principal, bd=0, highlightthickness=0, relief='ridge')
         self.my_canvas.place(relx=0.01, rely=0.15, relheight=.39, relwidth=.14)
-        # self.my_canvas.bind('<Configure>', self.resizer)
+        self.my_canvas.bind('<Configure>', self.resizer)
         #upload
-        botao_upload = tk.Button(self.principal, text="Upload", font=('arial 12 bold'), background='green', foreground='white', cursor='hand2')
+        botao_upload = tk.Button(self.principal, text="Upload", font=('arial 12 bold'), background='green', foreground='white', cursor='hand2', command=self.upload)
         botao_upload.place(relx=0.01, rely=0.50, relwidth=.14, relheight=0.04)
          # Entrys
+            #codigo de barras
+        self.title_barcode = Label(self.principal, text='CÓDIGO DE BARRAS:', font=('arial 12'), foreground= cor4, bg='white')
+        self.title_barcode.place(relx=0.71, rely=0.15)
+        self.codigo = tk.StringVar()
+        self.e_barcode = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0, textvariable=self.codigo)
+        self.e_barcode.place(relx=0.71, rely=0.20, relwidth=0.20, relheight=0.04)
             #DESCRIÇÃO
         self.title_descricao = Label(self.principal, text='DESCRIÇÃO:', font=('arial 12'), foreground= cor4, bg='white')
         self.title_descricao.place(relx=0.158, rely=0.15)
@@ -65,8 +70,8 @@ class AddEstoque():
         self.e_estoque_min.place(relx=0.160, rely=0.40, relwidth=0.21, relheight=0.04)     
 
         placeholder_estoque(self.e_estoque_min)
-            #ESTOQUE MAXIMO
-        self.title_estoque_max = Label(self.principal, text='ESTOQUE MÁXIMO:', font=('arial 12'), foreground= cor4, bg='white')
+            #QUANTIDADE EM ESTOQUE
+        self.title_estoque_max = Label(self.principal, text='QUANTIDADE EM ESTOQUE:', font=('arial 12'), foreground= cor4, bg='white')
         self.title_estoque_max.place(relx=0.40, rely=0.35)
         self.e_estoque_max = Spinbox(self.principal, from_=1, to=100, background=cor4, font=('arial 12'), bd=0, highlightthickness=0, buttonbackground=cor4)
         self.e_estoque_max.place(relx=0.400, rely=0.40, relwidth=0.21, relheight=0.04)        
@@ -112,15 +117,64 @@ class AddEstoque():
         self.preco_venda.place(relx=.17, rely=0.70, relheight=0.04)
         placeholder_custo(self.preco_venda)
         
-                    # porcentagem de lucro
+            # porcentagem de lucro
         
         self.l_lucro = Label(self.principal, text='0,00%', bg='white', anchor='n', font=('arial 26 bold'))
         self.l_lucro.place(relx=.30, rely=.69)
         self.margem_lucro = Label(self.principal, text='MARGEM DE LUCRO', bg='white', font=('arial 14 bold'))
-        self.margem_lucro.place(relx=.4, rely=.70)
+        self.margem_lucro.place(relx=.37, rely=.70)
         self.preco_venda.bind('<KeyRelease>', lambda event: self.calcular_lucro_e_porcentagem())
+        
+        #botão salvar
+        self.img_salvar = PhotoImage(file='imagens/salvar.png')
+        self.btn_salvar = Button(self.principal, text='Salvar', image=self.img_salvar, compound=LEFT, bg=cor6, font=('arial 22 bold'), cursor='hand2', foreground='white', command=self.salvar_produto)
+        self.btn_salvar.place(relx=.25, rely=.91, relwidth=.18)        
+        #botão voltar
+        self.img_voltar = PhotoImage(file='imagens/voltar.png')
+        self.btn_voltar = Button(self.principal, image=self.img_voltar, bg='white', cursor='hand2', command=self.voltar, relief='flat')
+        self.btn_voltar.place(relx=0.962, rely=0)
 
-       
+
+
+    def salvar_produto(self):
+        lista = [self.e_descricao, self.e_categoria, self.e_marca, self.e_estoque_min, self.e_estoque_max, self.e_tamanho, self.e_cor, self.preco_custo, self.preco_venda]
+        for entry in lista:
+            if entry.get() == "":
+                messagebox.showerror('Erro', f'Preencha todos os campos. O campo código de barras se deixado vazio, será gerado um código automaticamente.')
+                return
+        if self.e_barcode.get() == "":            
+            gerar_barcode(self.codigo)
+        else:
+            if len(self.e_barcode.get()) < 12:
+                messagebox.showerror('Erro', 'O código de barras deve ter 12 dígitos, ou deixo-o em branco para ser gerado um código automaticamente.')
+
+        if self.filename is not None:
+            with open(self.filename, 'rb') as img_file:
+                self.byte_img = img_file.read()
+        else:
+            self.img_padrao = Image.open('imagens/pessoa.png')
+            with open('imagens/pessoa.png', 'rb') as img_file:
+                self.byte_img = img_file.read()
+        value_imagem = self.byte_img   
+        self.value_id = self.e_barcode.get()        
+        value_descricao = self.e_descricao.get().strip()
+        value_categoria = self.e_categoria.get()
+        value_marca = self.e_marca.get()
+        value_estoque_min = self.e_estoque_min.get()
+        value_qtd_estoque = self.e_estoque_max.get()
+        value_obs = self.e_obs.get()
+        value_tamanho = self.e_tamanho.get()
+        value_cor = self.e_cor.get()
+        value_custo = self.preco_custo.get()
+        value_venda = self.preco_venda.get()
+        
+
+        query = "INSERT INTO estoque (id, descricao, categoria, marca, estoque_minimo, quantidade, observacoes, tamanho, cor, custo, venda, imagem) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        params = (self.value_id, value_descricao, value_categoria, value_marca, value_estoque_min, value_qtd_estoque, value_obs, value_tamanho, value_cor, value_custo, value_venda, value_imagem)
+        dml(query, params)
+        print('cliente foi salvo')           
+                                        
+        messagebox.showinfo("Sucesso", "Operação realizada com sucesso!")   
 
     def calcular_lucro_e_porcentagem(self):
         preco_custo = self.preco_custo.get()
@@ -146,11 +200,6 @@ class AddEstoque():
                 pass
         else:
             pass
-
-        #botão voltar
-        self.img_voltar = PhotoImage(file='imagens/voltar.png')
-        self.btn_voltar = Button(self.principal, image=self.img_voltar, bg='white', cursor='hand2', command=self.voltar, relief='flat')
-        self.btn_voltar.place(relx=0.962, rely=0)
 
     def ler_cores_do_arquivo(self):
         self.cores = []
@@ -390,6 +439,22 @@ class AddEstoque():
         self.btn_ok_tamanho.place_forget()
         self.btn_add_tamanho.place(relx=0.482, rely=0.50, relheight=0.04, relwidth=0.02)
 
-   
     def voltar(self):
         self.principal.place_forget()
+
+    def resizer(self,e):
+        global resized_img, new_img       
+        resized_img = self.img.resize((e.width, e.height))        
+        new_img = ImageTk.PhotoImage(resized_img)
+        self.img_id_resizer = self.my_canvas.create_image(0,0, image=new_img, anchor='nw')
+        return self.img_id_resizer
+    
+    def upload(self):                
+        self.filename = filedialog.askopenfilename(title="Selecione uma foto", filetypes=[("Imagens", "*.jpg *.png *.bmp")])        
+        self.img = Image.open(self.filename)
+        largura = self.my_canvas.winfo_width()
+        altura = self.my_canvas.winfo_height()
+        resized_img2 = self.img.resize((largura, altura))
+        self.img_tk = ImageTk.PhotoImage(resized_img2)
+        self.img_id = self.my_canvas.create_image(0,0, image=self.img_tk, anchor='nw')
+        return self.img_id 

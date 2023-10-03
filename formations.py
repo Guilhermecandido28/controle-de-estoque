@@ -1,4 +1,5 @@
 import tkinter as tk
+from random import randint
 
 def format_celular(entry):
     celular = entry.get()
@@ -13,6 +14,8 @@ def format_celular(entry):
     entry.insert(0, formatted_celular)
     entry.bind("<FocusOut>", lambda event: formatted_celular)
     entry.bind("<FocusIn>", lambda event: formatted_celular)
+
+
 
 def format_estoque_minemax(entry):
     estoque = entry.get()

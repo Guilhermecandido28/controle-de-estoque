@@ -7,6 +7,7 @@ from tkinter import ttk
 from tkinter import messagebox
 import io
 from estoque.add_estoque import AddEstoque
+from estoque.banco_dados_estoque import *
 from PIL import Image, ImageTk
 import subprocess
 import os
@@ -19,6 +20,8 @@ class Estoque():
         self.location_est = tk.Canvas(frame, bd=0, highlightthickness=0)
         self.buscar_estoque_est()
         self.tree_estoque()
+        self.estoque_na_treeview()
+        
 
     def add_estoque(self):
         self.adicionar_estoque = AddEstoque(self.f_add_estoque)
@@ -39,7 +42,7 @@ class Estoque():
         self.btn_edtestoque = Button(self.principal, text='EDITAR\n Estoque', bg='dark gray', compound='center',bd=0, font=('arial 14 bold'), foreground='black', cursor='hand2')
         self.btn_edtestoque.place(relx=0.8, rely=0, relheight=0.1, relwidth=0.1)
         #excluir estoque        
-        self.btn_exclestoque = Button(self.principal, text='EXCLUIR\n Estoque', bg='gray', compound='center',bd=0, font=('arial 14 bold'), foreground='black', cursor='hand2')
+        self.btn_exclestoque = Button(self.principal, text='EXCLUIR\n Estoque', bg='gray', compound='center',bd=0, font=('arial 14 bold'), foreground='black', cursor='hand2', command=self.excluir_estoque)
         self.btn_exclestoque.place(relx=0.7, rely=0, relheight=0.1, relwidth=0.1)
         #botão voltar
         self.img_voltar = PhotoImage(file='imagens/voltar.png')
@@ -59,9 +62,9 @@ class Estoque():
         self.search_est.place(relx=0, rely=0, relheight=0.1, relwidth=0.7)
         #botão_pesquisar
         self.img_search_est = PhotoImage(file='imagens/search.png')
-        self.btn_search_est = Button(self.principal, image=self.img_search_est, bg="#8A8A8A", bd=0, cursor='hand2', )
+        self.btn_search_est = Button(self.principal, image=self.img_search_est, bg="#8A8A8A", bd=0, cursor='hand2', command=self.estoque_buscado)
         self.btn_search_est.place(relx=0.6, rely=0, relheight=0.1, relwidth=0.05)
-        # self.search_est.bind('<Return>', self.on_enter_est)
+        self.search_est.bind('<Return>', self.on_enter_est)
         #Botão_imprimir
         self.img_print_est = PhotoImage(file='imagens/impressora.png')
         self.btn_print_est = Button(self.principal, image=self.img_print_est, bg="#8A8A8A", bd=0, cursor='hand2')
@@ -78,18 +81,24 @@ class Estoque():
         style.configure("Treeview.Heading", font= ('arial 15 normal'), foreground='gray', padding=0 
                         )
         self.estoque_tree_scroll.config(command=self.estoque_treeview.yview)
-        self.estoque_treeview['columns'] = ('ID', 'DESCRIÇÃO', 'QUANTIDADE','CUSTO', 'VENDA')
-        self.estoque_treeview.heading('#1', text='ID', anchor=W)        
+        self.estoque_treeview['columns'] = ('CÓD. BARRAS', 'DESCRIÇÃO','CATEGORIA','MARCA','COR', 'QUANTIDADE','TAMANHO', 'VENDA')
+        self.estoque_treeview.heading('#1', text='CÓD. BARRAS', anchor=W)        
         self.estoque_treeview.heading('#2', text='DESCRIÇÃO')
-        self.estoque_treeview.heading('#3', text='QUANTIDADE')
-        self.estoque_treeview.heading('#4', text='CUSTO' )
-        self.estoque_treeview.heading('#5', text='VENDA' )
+        self.estoque_treeview.heading('#3', text='CATEGORIA')
+        self.estoque_treeview.heading('#4', text='MARCA')
+        self.estoque_treeview.heading('#5', text='COR')
+        self.estoque_treeview.heading('#6', text='QTD un.')
+        self.estoque_treeview.heading('#7', text='TAM' )
+        self.estoque_treeview.heading('#8', text='VENDA R$' )
         self.estoque_treeview.place(relx=0, rely=.1, relheight=.9, relwidth=.985)
-        self.estoque_treeview.column("ID",width=40, stretch=FALSE, anchor='w')        
-        self.estoque_treeview.column("DESCRIÇÃO", width=600, minwidth=250, stretch=TRUE, anchor='center')
-        self.estoque_treeview.column("QUANTIDADE",minwidth=250, stretch=TRUE, anchor='center')
-        self.estoque_treeview.column("CUSTO", minwidth=240, stretch=TRUE, anchor='center')        
-        self.estoque_treeview.column("VENDA", minwidth=240, stretch=TRUE, anchor='center')
+        self.estoque_treeview.column("CÓD. BARRAS",width=160, stretch=FALSE, anchor='w')        
+        self.estoque_treeview.column("DESCRIÇÃO", width=200, minwidth=250, stretch=TRUE, anchor='center')
+        self.estoque_treeview.column("CATEGORIA", width=150, minwidth=150, stretch=TRUE, anchor='center')
+        self.estoque_treeview.column("MARCA", width=100, minwidth=100, stretch=TRUE, anchor='center')
+        self.estoque_treeview.column("COR", width=200, minwidth=250, stretch=TRUE, anchor='center')
+        self.estoque_treeview.column("QUANTIDADE",minwidth=50, stretch=TRUE, anchor='center')
+        self.estoque_treeview.column("TAMANHO", minwidth=100, stretch=TRUE, anchor='center')        
+        self.estoque_treeview.column("VENDA", minwidth=100, stretch=TRUE, anchor='center')
 
 
     def estoque_na_treeview(self):
@@ -97,7 +106,7 @@ class Estoque():
         self.estoque_treeview.tag_configure('evenrow', background='light gray') 
         if self.estoque_treeview:
             self.estoque_treeview.delete(*self.estoque_treeview.get_children())       
-        query ="SELECT id, nome, sobrenome, celular, valor_gasto FROM estoque order by id"
+        query ="SELECT ID, descricao, categoria, marca, cor, quantidade, tamanho, venda FROM estoque order by ID"
         linhas= dql(query)
         count=0
         
@@ -122,19 +131,23 @@ class Estoque():
             for i, item in enumerate(items_selecionados):
                 ids = items_selecionados[i][0]
                 item_id.append(ids)
-            for cliente in item_id:
+            for produto in item_id:
                 query = "DELETE FROM estoque WHERE id=?"
-                dml(query, (cliente,))
+                dml(query, (produto,))
             self.estoque_na_treeview()
-            print('cliente excluido')
+            print('produto excluido')
 
     def estoque_buscado(self):        
         self.e_buscado = self.search_est.get()
-        consulta = f"SELECT id, nome, sobrenome, celular, valor_gasto FROM estoque " \
+        consulta = f"SELECT id, descricao, categoria, marca, cor, quantidade, tamanho, venda FROM estoque " \
         f"WHERE id LIKE '%{self.e_buscado}%' " \
-        f"OR nome LIKE '%{self.e_buscado}%' " \
-        f"OR celular LIKE '%{self.e_buscado}%' " \
-        f"OR sobrenome LIKE '%{self.e_buscado}%'"
+        f"OR descricao LIKE '%{self.e_buscado}%' " \
+        f"OR categoria LIKE '%{self.e_buscado}%' " \
+        f"OR marca LIKE '%{self.e_buscado}%' " \
+        f"OR cor LIKE '%{self.e_buscado}%' " \
+        f"OR quantidade LIKE '%{self.e_buscado}%' " \
+        f"OR tamanho LIKE '%{self.e_buscado}%' " \
+        f"OR venda LIKE '%{self.e_buscado}%'"
         linhas = dql(consulta)
         count=0
         for item in self.estoque_treeview.get_children():
@@ -145,4 +158,5 @@ class Estoque():
             else:
                 self.estoque_treeview.insert("", "end", values=i, tags=('evenrow',))
             count+=1
-
+    def on_enter_est(self,event):
+        self.estoque_buscado()
