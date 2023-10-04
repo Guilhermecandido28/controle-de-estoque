@@ -24,21 +24,18 @@ class Applicantion(Cliente, Home, Estoque):
         self.frames()        
         self.buttons()
         self.home_widgets_criados = False
-        print(self.home_widgets_criados, ', o home esta desligado')
         self.cliente_widgets_criados = False
-        print(self.cliente_widgets_criados, ', o cliente esta desligado')
-        self.estoque_widgets_criados = False
-        print(self.estoque_widgets_criados, ', o estoque esta desligado')                 
+        self.estoque_widgets_criados = False                
         janela.mainloop()
         
-        
-
+ 
     def tela(self):
         self.janela.title('Controle fincanceiro')
         self.janela.geometry('1500x1000')
         self.janela.configure(background= "#8A8A8A")
         janela.minsize(1500, 1000)
-    
+
+
     def frames(self):
         self.header = tk.Frame(self.janela, bg=cor3)
         self.header.place(relx=0, rely=0, relwidth=1, relheight=0.09)
@@ -56,12 +53,10 @@ class Applicantion(Cliente, Home, Estoque):
             cliente.clientes_na_treeview()
             self.esquecer_functions()
             self.cliente_widgets_criados = True 
-            print(self.cliente_widgets_criados, 'O cliente esta ligado')
         else:
             pass          
           
-              
-        
+         
     def estoque(self):
         global estoque
         if not self.estoque_widgets_criados:
@@ -69,10 +64,10 @@ class Applicantion(Cliente, Home, Estoque):
             estoque.estoques()
             self.esquecer_functions()
             self.estoque_widgets_criados = True
-            print(self.estoque_widgets_criados, ', O estoque esta ligado')
         else:
             pass
     
+
     def home(self):
         global home
         if not self.home_widgets_criados:
@@ -80,7 +75,6 @@ class Applicantion(Cliente, Home, Estoque):
             home.frame_home()
             self.esquecer_functions()
             self.home_widgets_criados = True
-            print(self.home_widgets_criados, ', o home esta ligado')
         else:
             pass
 
@@ -103,9 +97,7 @@ class Applicantion(Cliente, Home, Estoque):
             self.home_widgets_criados = False
             print(self.home_widgets_criados, ', o home foi desligado')
         
-          
-
-
+ 
     def buttons(self):         
         #Botão cliente
         self.img_cliente = PhotoImage(file='imagens/cliente.png')
@@ -139,5 +131,6 @@ class Applicantion(Cliente, Home, Estoque):
         self.img_home = PhotoImage(file='imagens/home.png')
         self.btn_home = Button(self.header, image=self.img_home, bg=cor3, bd=0, font=('arial 12 bold'), cursor='hand2', command=self.home)
         self.btn_home.place(relx=0, rely=0, relheight=1, relwidth=0.05)   
-               
+  
+              
 Applicantion()
