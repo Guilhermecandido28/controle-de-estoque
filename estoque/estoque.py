@@ -7,12 +7,13 @@ from tkinter import ttk
 from tkinter import messagebox
 import io
 from estoque.add_estoque import AddEstoque
+from estoque.editar_estoque import EditarEstoque
 from estoque.banco_dados_estoque import *
 from PIL import Image, ImageTk
 import subprocess
 import os
 
-class Estoque():
+class Estoque(EditarEstoque):
     def __init__(self, frame):
         self.principal = tk.Frame(frame, bg= 'white')
         self.f_editar_estoque = tk.Frame(frame, bg='white')
@@ -22,6 +23,30 @@ class Estoque():
         self.tree_estoque()
         self.estoque_na_treeview()
         
+    def editar_estoque(self):        
+        if self.estoque_treeview.selection() == ():
+            messagebox.showerror('Erro', "Selecione um produto primeiro! ")
+        else:
+            self.f_editar_estoque.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.72)
+            items_selecionado = []
+            for item in self.estoque_treeview .selection():
+                item_values = self.estoque_treeview .item(item, 'values')
+                items_selecionado.append(item_values)            
+            self.estoque_tree_scroll.place_forget()        
+            self.limpar_treeview() 
+            query_img = f"SELECT imagem FROM estoque WHERE id = {items_selecionado[0][0]}"
+            img_em_bytes = dql(query_img)                       
+            img = Image.open(io.BytesIO(img_em_bytes[0][0]))                                   
+            self.ed_estoque = EditarEstoque(self.f_editar_estoque, img, id=items_selecionado[0][0])
+            lista_entrys = [self.ed_estoque.ed_barcode, self.ed_estoque.ed_descricao, self.ed_estoque.ed_categoria, self.ed_estoque.ed_marca, self.ed_estoque.ed_estoque_min, self.ed_estoque.ed_quantidade, self.ed_estoque.ed_obs, self.ed_estoque.ed_tamanho, self.ed_estoque.ed_cor, self.ed_estoque.ed_preco_custo, self.ed_estoque.ed_preco_venda]        
+            limpar(lista_entrys)            
+            query =f"SELECT id, descricao, categoria, marca, estoque_minimo, quantidade, observacoes, tamanho, cor, custo, venda FROM estoque WHERE id = {items_selecionado[0][0]}"           
+
+            dados = dql(query)            
+            count=0
+            for campo in lista_entrys:
+                campo.insert(0, dados[0][count])
+                count+=1
 
     def add_estoque(self):
         self.adicionar_estoque = AddEstoque(self.f_add_estoque)
@@ -33,13 +58,12 @@ class Estoque():
         self.img_location_est_tk = ImageTk.PhotoImage(self.img_location_est)
         self.location_est.create_text(100,30, text='ESTOQUE', anchor=NW, font=('arial 18 bold underline'))
         self.location_est.bind('<Configure>', self.resize_image)
-        self.principal.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.72)
-        self.principal.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.72)
+        self.principal.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.72)        
         #Botão_adicionar_estoque        
         self.btn_addestoque = Button(self.principal, text='ADICIONAR\n Estoque', bg='light gray', compound='center',bd=0, font=('arial 14 bold'), foreground='black', cursor='hand2', command=self.add_estoque)
         self.btn_addestoque.place(relx=0.9, rely=0, relheight=0.1, relwidth=0.1)
         #botão de editar estoque
-        self.btn_edtestoque = Button(self.principal, text='EDITAR\n Estoque', bg='dark gray', compound='center',bd=0, font=('arial 14 bold'), foreground='black', cursor='hand2')
+        self.btn_edtestoque = Button(self.principal, text='EDITAR\n Estoque', bg='dark gray', compound='center',bd=0, font=('arial 14 bold'), foreground='black', cursor='hand2', command=self.editar_estoque)
         self.btn_edtestoque.place(relx=0.8, rely=0, relheight=0.1, relwidth=0.1)
         #excluir estoque        
         self.btn_exclestoque = Button(self.principal, text='EXCLUIR\n Estoque', bg='gray', compound='center',bd=0, font=('arial 14 bold'), foreground='black', cursor='hand2', command=self.excluir_estoque)
@@ -48,6 +72,10 @@ class Estoque():
         self.img_voltar = PhotoImage(file='imagens/voltar.png')
         self.btn_voltar = Button(self.f_editar_estoque, image=self.img_voltar, bg='white', cursor='hand2', command=self.voltar, relief='flat')
         self.btn_voltar.place(relx=0.962, rely=0.0)
+
+    def voltar(self):
+        self.f_editar_estoque.place_forget()
+        self.estoque_na_treeview()
 
     def resize_image(self, event):
         self.nova_imagem_est = self.img_location_est.resize((event.width, event.height))
@@ -160,3 +188,7 @@ class Estoque():
             count+=1
     def on_enter_est(self,event):
         self.estoque_buscado()
+
+    def limpar_treeview(self):
+        if self.estoque_treeview:
+            self.estoque_treeview.delete(*self.estoque_treeview.get_children())

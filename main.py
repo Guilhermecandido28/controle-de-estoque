@@ -23,8 +23,12 @@ class Applicantion(Cliente, Home, Estoque):
         self.tela()
         self.frames()        
         self.buttons()
+        self.home_widgets_criados = False
+        print(self.home_widgets_criados, ', o home esta desligado')
         self.cliente_widgets_criados = False
-        self.inicio = Home(self.janela)         
+        print(self.cliente_widgets_criados, ', o cliente esta desligado')
+        self.estoque_widgets_criados = False
+        print(self.estoque_widgets_criados, ', o estoque esta desligado')                 
         janela.mainloop()
         
         
@@ -44,42 +48,65 @@ class Applicantion(Cliente, Home, Estoque):
                 
     def cliente(self):
         global cliente
-        if not self.cliente_widgets_criados:                
+        if not self.cliente_widgets_criados:                        
             cliente = Cliente(self.janela)
             cliente.clientes()
             cliente.buscar_cliente()        
             cliente.inserir_dados()
             cliente.clientes_na_treeview()
-            self.cliente_widgets_criados = True           
-            
+            self.esquecer_functions()
+            self.cliente_widgets_criados = True 
+            print(self.cliente_widgets_criados, 'O cliente esta ligado')
         else:
-            pass
-        
+            pass          
+          
+              
         
     def estoque(self):
-        estoque = Estoque(self.janela)
-        estoque.estoques()
-        self.esquecer_functions()
+        global estoque
+        if not self.estoque_widgets_criados:
+            estoque = Estoque(self.janela)
+            estoque.estoques()
+            self.esquecer_functions()
+            self.estoque_widgets_criados = True
+            print(self.estoque_widgets_criados, ', O estoque esta ligado')
+        else:
+            pass
     
     def home(self):
-        self.frame_do_home = self.inicio.frame_home()
-        self.esquecer_functions()
+        global home
+        if not self.home_widgets_criados:
+            home = Home(self.janela)
+            home.frame_home()
+            self.esquecer_functions()
+            self.home_widgets_criados = True
+            print(self.home_widgets_criados, ', o home esta ligado')
+        else:
+            pass
+
             
     def esquecer_functions(self):
-        try:        
+        if self.cliente_widgets_criados:        
             cliente.principal.place_forget()
             cliente.location.place_forget()
             cliente.f_editar_cliente.place_forget()
             cliente.f_add_cliente.place_forget()
-        except:
-            print('O cliente ainda não foi instanciado.')
+            self.cliente_widgets_criados = False
+            print(self.cliente_widgets_criados, ', O cliente foi desligado') 
+        if self.estoque_widgets_criados:          
+            estoque.principal.place_forget()
+            estoque.location_est.place_forget()
+            self.estoque_widgets_criados = False
+            print(self.estoque_widgets_criados, ', o estoque foi desligado')
+        if self.home_widgets_criados:
+            home.home.place_forget()
+            self.home_widgets_criados = False
+            print(self.home_widgets_criados, ', o home foi desligado')
         
-        self.cliente_widgets_criados = False   
+          
 
 
-    def buttons(self):
-        
- 
+    def buttons(self):         
         #Botão cliente
         self.img_cliente = PhotoImage(file='imagens/cliente.png')
         self.btn_clientes = Button(self.menu, text='Clientes', image=self.img_cliente, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2', command=self.cliente)
@@ -111,8 +138,6 @@ class Applicantion(Cliente, Home, Estoque):
         #home
         self.img_home = PhotoImage(file='imagens/home.png')
         self.btn_home = Button(self.header, image=self.img_home, bg=cor3, bd=0, font=('arial 12 bold'), cursor='hand2', command=self.home)
-        self.btn_home.place(relx=0, rely=0, relheight=1, relwidth=0.05)
-
-    
+        self.btn_home.place(relx=0, rely=0, relheight=1, relwidth=0.05)   
                
 Applicantion()

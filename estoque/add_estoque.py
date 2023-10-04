@@ -16,6 +16,8 @@ class AddEstoque():
     def __init__(self, frame):
         self.principal = frame
         self.add_estoque()
+        self.img = Image.open('imagens/pessoa.png')
+        self.filename = None
         
 
     def add_estoque(self):
@@ -133,7 +135,6 @@ class AddEstoque():
         self.img_voltar = PhotoImage(file='imagens/voltar.png')
         self.btn_voltar = Button(self.principal, image=self.img_voltar, bg='white', cursor='hand2', command=self.voltar, relief='flat')
         self.btn_voltar.place(relx=0.962, rely=0)
-
 
 
     def salvar_produto(self):
@@ -259,9 +260,9 @@ class AddEstoque():
         self.e_marca.configure(state='normal')
         self.btn_add_marca.place_forget()
         self.btn_exc_marca = Button(self.principal, image=self.img_excluir_marca, background='dark green', relief='flat', highlightthickness=0, bd=0, command=lambda: self.e_marca.set(""), cursor='hand2')
-        self.btn_exc_marca.place(relx=0.591, rely=0.50, relheight=0.04, relwidth=0.02)
+        self.btn_exc_marca.place(relx=0.591, rely=0.30, relheight=0.04, relwidth=0.02)
         self.btn_ok_marca = Button(self.principal, image=self.img_ok_marca, background='dark green', relief='flat', highlightthickness=0, bd=0, command=self.salvar_marca, cursor='hand2')
-        self.btn_ok_marca.place(relx=0.612, rely=0.50, relheight=0.04, relwidth=0.02)
+        self.btn_ok_marca.place(relx=0.612, rely=0.30, relheight=0.04, relwidth=0.02)
 
     def categoria(self):
         self.img_excluir = PhotoImage(file='imagens/excluir.png')
@@ -277,7 +278,7 @@ class AddEstoque():
         self.img_excluir = PhotoImage(file='imagens/excluir.png')
         self.img_ok = PhotoImage(file='imagens/ok.png')
         self.e_cor.configure(state='normal')
-        self.btn_add_cor.place_forget()
+        self.btn_add_cor.place_forget()        
         self.btn_exc_cor = Button(self.principal, image=self.img_excluir, background='dark green', relief='flat', highlightthickness=0, bd=0, command=lambda: self.e_cor.set(""), cursor='hand2')
         self.btn_exc_cor.place(relx=0.591, rely=0.50, relheight=0.04, relwidth=0.02)
         self.btn_ok_cor = Button(self.principal, image=self.img_ok, background='dark green', relief='flat', highlightthickness=0, bd=0, command=self.salvar_cor, cursor='hand2')
@@ -441,6 +442,10 @@ class AddEstoque():
 
     def voltar(self):
         self.principal.place_forget()
+        self.btn_ok_cor.place_forget()
+        self.btn_ok_marca.place_forget()
+        self.btn_ok_tamanho.place_forget()
+        self.btn_ok_categoria.place_forget()
 
     def resizer(self,e):
         global resized_img, new_img       

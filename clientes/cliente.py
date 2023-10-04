@@ -19,7 +19,7 @@ import os
 class Cliente(AddCliente, EditarCliente):
     def __init__(self, frame) -> None:
         self.janela = frame
-        self.principal = tk.Frame(frame, bg= 'white')
+        self.principal = tk.Frame(frame, bg= 'gray')
         self.f_editar_cliente = tk.Frame(frame, bg='white')
         self.f_add_cliente = tk.Frame(frame, bg= 'white')
         self.location = tk.Canvas(frame, bd=0, highlightthickness=0)        
@@ -66,7 +66,7 @@ class Cliente(AddCliente, EditarCliente):
         self.location.create_text(100,30, text='CLIENTE', anchor=NW, font=('arial 18 bold underline'))
         
         self.location.bind('<Configure>', self.resize_image)
-        self.principal.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.72)
+        self.principal.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.76)
         #Botão_adicionar_cliente        
         self.btn_addcliente = Button(self.principal, text='ADICIONAR\n Cliente', bg='light gray', compound='center',bd=0, font=('arial 14 bold'), foreground='black', cursor='hand2', command=self.novo_cliente)
         self.btn_addcliente.place(relx=0.9, rely=0, relheight=0.1, relwidth=0.1)
