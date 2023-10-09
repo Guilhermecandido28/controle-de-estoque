@@ -9,6 +9,7 @@ from tkinter import messagebox
 from home import Home
 from PIL import Image, ImageTk
 from estoque.estoque import Estoque
+from fornecedor.fornecedor import Fornecedor
 
 
 
@@ -25,7 +26,8 @@ class Applicantion(Cliente, Home, Estoque):
         self.buttons()
         self.home_widgets_criados = False
         self.cliente_widgets_criados = False
-        self.estoque_widgets_criados = False                
+        self.estoque_widgets_criados = False 
+        self.fornecedor_widgets_criados = False               
         janela.mainloop()
         
  
@@ -67,6 +69,15 @@ class Applicantion(Cliente, Home, Estoque):
         else:
             pass
     
+    def fornecedor(self):
+        global fornecedor
+        if not self.fornecedor_widgets_criados:
+            fornecedor = Fornecedor(self.janela)
+            fornecedor.fornecedores()
+            self.esquecer_functions()
+            self.fornecedor_widgets_criados = True
+        else:
+            pass
 
     def home(self):
         global home
@@ -85,18 +96,23 @@ class Applicantion(Cliente, Home, Estoque):
             cliente.location.place_forget()
             cliente.f_editar_cliente.place_forget()
             cliente.f_add_cliente.place_forget()
-            self.cliente_widgets_criados = False
-            print(self.cliente_widgets_criados, ', O cliente foi desligado') 
+            self.cliente_widgets_criados = False            
         if self.estoque_widgets_criados:          
             estoque.principal.place_forget()
             estoque.location_est.place_forget()
-            self.estoque_widgets_criados = False
-            print(self.estoque_widgets_criados, ', o estoque foi desligado')
+            estoque.f_add_estoque.place_forget()
+            estoque.f_editar_estoque.place_forget()
+            self.estoque_widgets_criados = False            
         if self.home_widgets_criados:
             home.home.place_forget()
             self.home_widgets_criados = False
-            print(self.home_widgets_criados, ', o home foi desligado')
-        
+        if self.fornecedor_widgets_criados:
+            fornecedor.principal.place_forget()
+            fornecedor.location_est.place_forget()
+            fornecedor.f_add_fornecedor.place_forget()
+            fornecedor.f_editar_fornecedor.place_forget()
+            self.fornecedor_widgets_criados = False
+                   
  
     def buttons(self):         
         #Botão cliente
@@ -109,7 +125,7 @@ class Applicantion(Cliente, Home, Estoque):
         self.btn_vendas.place(relx=0.14, rely=0, relwidth=0.14, relheight=1)
         # Fornecedor
         self.img_fornecedor = PhotoImage(file='imagens/fornecedor.png')
-        self.btn_fornecedor = Button(self.menu, text='Fornecedor', image=self.img_fornecedor, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2')
+        self.btn_fornecedor = Button(self.menu, text='Fornecedor', image=self.img_fornecedor, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2', command=self.fornecedor)
         self.btn_fornecedor.place(relx=0.28, rely=0, relwidth=0.14, relheight=1)
         #estoque
         self.img_estoque= PhotoImage(file='imagens/estoque.png')

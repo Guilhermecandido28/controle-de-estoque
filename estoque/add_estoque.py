@@ -7,6 +7,7 @@ from tkinter import ttk
 from PIL import Image, ImageTk
 from limpar import limpar
 from estoque.banco_dados_estoque import *
+from fornecedor.banco_dados_fornecedor import *
 from tkinter import messagebox
 from estoque.barcode import *
 
@@ -31,7 +32,7 @@ class AddEstoque():
         self.my_canvas.bind('<Configure>', self.resizer)
         #upload
         botao_upload = tk.Button(self.principal, text="Upload", font=('arial 12 bold'), background='green', foreground='white', cursor='hand2', command=self.upload)
-        botao_upload.place(relx=0.01, rely=0.50, relwidth=.14, relheight=0.04)
+        botao_upload.place(relx=0.01, rely=0.50, relwidth=.14, relheight=0.04)        
          # Entrys
             #codigo de barras
         self.title_barcode = Label(self.principal, text='CÓDIGO DE BARRAS:', font=('arial 12'), foreground= cor4, bg='white')
@@ -88,7 +89,13 @@ class AddEstoque():
         self.title_tamanho.place(relx=0.400, rely=0.45)
         self.e_tamanho = ttk.Combobox(self.principal, background=cor4, font=('arial 12'), state='readonly')
         self.e_tamanho['values'] = list(self.e_tamanho['values']) + self.ler_tamanhos_do_arquivo()
-        
+            #fornecedor
+        self.title_fonecedor = Label(self.principal, text='FORNECEDOR:', font=('arial 12'), foreground= cor4, bg='white')
+        self.title_fonecedor.place(relx=0.71, rely=.25)
+        self.e_fornecedor = ttk.Combobox(self.principal, background=cor4, font=('arial 12'), state='readonly')
+        query = "SELECT nome FROM fornecedor"
+        self.e_fornecedor['values'] = fornecedor_dql(query)
+        self.e_fornecedor.place(relx=0.71, rely=.3, relwidth=0.20, relheight=0.04)
         self.e_tamanho.place(relx=0.400, rely=0.50, relwidth=0.08, relheight=0.04)
         self.btn_add_tamanho = Button(self.principal, image=self.img_adicionar, background='dark green', relief='flat', highlightthickness=0, bd=0, command=self.tamanho, cursor='hand2')
         self.btn_add_tamanho.place(relx=0.482, rely=0.50, relheight=0.04, relwidth=0.02)
@@ -131,14 +138,11 @@ class AddEstoque():
         self.img_salvar = PhotoImage(file='imagens/salvar.png')
         self.btn_salvar = Button(self.principal, text='Salvar', image=self.img_salvar, compound=LEFT, bg=cor6, font=('arial 22 bold'), cursor='hand2', foreground='white', command=self.salvar_produto)
         self.btn_salvar.place(relx=.25, rely=.91, relwidth=.18)        
-        #botão voltar
-        self.img_voltar = PhotoImage(file='imagens/voltar.png')
-        self.btn_voltar = Button(self.principal, image=self.img_voltar, bg='white', cursor='hand2', command=self.voltar, relief='flat')
-        self.btn_voltar.place(relx=0.962, rely=0)
-
+        
+    
 
     def salvar_produto(self):
-        lista = [self.e_descricao, self.e_categoria, self.e_marca, self.e_estoque_min, self.e_estoque_max, self.e_tamanho, self.e_cor, self.preco_custo, self.preco_venda]
+        lista = [self.e_descricao, self.e_categoria, self.e_marca, self.e_estoque_min, self.e_estoque_max, self.e_tamanho, self.e_cor, self.preco_custo, self.preco_venda, self.e_fornecedor]
         for entry in lista:
             if entry.get() == "":
                 messagebox.showerror('Erro', f'Preencha todos os campos. O campo código de barras se deixado vazio, será gerado um código automaticamente.')
@@ -165,13 +169,14 @@ class AddEstoque():
         value_qtd_estoque = self.e_estoque_max.get()
         value_obs = self.e_obs.get()
         value_tamanho = self.e_tamanho.get()
+        value_fornecedor = self.e_fornecedor.get()
         value_cor = self.e_cor.get()
         value_custo = self.preco_custo.get()
         value_venda = self.preco_venda.get()
         
 
-        query = "INSERT INTO estoque (id, descricao, categoria, marca, estoque_minimo, quantidade, observacoes, tamanho, cor, custo, venda, imagem) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-        params = (self.value_id, value_descricao, value_categoria, value_marca, value_estoque_min, value_qtd_estoque, value_obs, value_tamanho, value_cor, value_custo, value_venda, value_imagem)
+        query = "INSERT INTO estoque (id, descricao, categoria, marca, estoque_minimo, quantidade, observacoes, tamanho, fornecedor, cor, custo, venda, imagem) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        params = (self.value_id, value_descricao, value_categoria, value_marca, value_estoque_min, value_qtd_estoque, value_obs, value_tamanho, value_fornecedor, value_cor, value_custo, value_venda, value_imagem)
         dml(query, params)
         print('cliente foi salvo')           
                                         
@@ -440,12 +445,7 @@ class AddEstoque():
         self.btn_ok_tamanho.place_forget()
         self.btn_add_tamanho.place(relx=0.482, rely=0.50, relheight=0.04, relwidth=0.02)
 
-    def voltar(self):
-        self.principal.place_forget()
-        self.btn_ok_cor.place_forget()
-        self.btn_ok_marca.place_forget()
-        self.btn_ok_tamanho.place_forget()
-        self.btn_ok_categoria.place_forget()
+
 
     def resizer(self,e):
         global resized_img, new_img       
@@ -463,3 +463,6 @@ class AddEstoque():
         self.img_tk = ImageTk.PhotoImage(resized_img2)
         self.img_id = self.my_canvas.create_image(0,0, image=self.img_tk, anchor='nw')
         return self.img_id 
+    
+
+

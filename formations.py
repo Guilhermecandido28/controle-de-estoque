@@ -56,6 +56,20 @@ def format_cpf(entry):
     entry.bind("<FocusOut>", lambda event: formatted_cpf)
     entry.bind("<FocusIn>", lambda event: formatted_cpf)
 
+def format_cnpj(entry):
+    cnpj_text = entry.get()    
+    formatted_cnpj = ''.join(cnpj_text.split()).replace('.', '').replace('-', ''). replace('/','')    
+    if not formatted_cnpj.isdigit():
+        formatted_cnpj = ''.join(filter(str.isdigit, formatted_cnpj))
+    if len(formatted_cnpj) > 14:        
+        formatted_cnpj = formatted_cnpj[:14]    
+    if len(formatted_cnpj) == 14:       
+        formatted_cnpj = f'{formatted_cnpj[:2]}.{formatted_cnpj[2:5]}.{formatted_cnpj[5:8]}/{formatted_cnpj[8:12]}-{formatted_cnpj[12:14]}'    
+    entry.delete(0, tk.END)
+    entry.insert(0, formatted_cnpj)
+    entry.bind("<FocusOut>", lambda event: formatted_cnpj)
+    entry.bind("<FocusIn>", lambda event: formatted_cnpj)
+
 def format_nome(entry):
     nome_text = entry.get()
     formatted_nome = nome_text.title()
@@ -94,6 +108,13 @@ def placeholder_cpf(entry):
     entry.insert(0, '  Digite apenas números')
     entry.bind("<FocusIn>", lambda event: entry.delete(0, "end"))        
     entry.bind("<KeyRelease>", lambda event: format_cpf(entry))
+
+def placeholder_cnpj(entry):
+    if entry.get() == '  Digite apenas números':
+        entry.delete(0, "end")    
+    entry.insert(0, '  Digite apenas números')
+    entry.bind("<FocusIn>", lambda event: entry.delete(0, "end"))        
+    entry.bind("<KeyRelease>", lambda event: format_cnpj(entry))
     
 
 def placeholder_celular(entry):

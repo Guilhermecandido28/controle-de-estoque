@@ -70,11 +70,15 @@ class Estoque(EditarEstoque):
         self.btn_exclestoque.place(relx=0.7, rely=0, relheight=0.1, relwidth=0.1)
         #botão voltar
         self.img_voltar = PhotoImage(file='imagens/voltar.png')
-        self.btn_voltar = Button(self.f_editar_estoque, image=self.img_voltar, bg='white', cursor='hand2', command=self.voltar, relief='flat')
-        self.btn_voltar.place(relx=0.962, rely=0.0)
+        self.btn_voltar_editar = Button(self.f_editar_estoque, image=self.img_voltar, bg='white', cursor='hand2', command=self.voltar, relief='flat')
+        self.btn_voltar_editar.place(relx=0.962, rely=0.0)
+        #botão voltar        
+        self.btn_voltar_add = Button(self.f_add_estoque, image=self.img_voltar, bg='white', cursor='hand2', command=self.voltar, relief='flat')
+        self.btn_voltar_add.place(relx=0.962, rely=0)
 
     def voltar(self):
         self.f_editar_estoque.place_forget()
+        self.f_add_estoque.place_forget()
         self.estoque_na_treeview()
 
     def resize_image(self, event):
@@ -109,21 +113,23 @@ class Estoque(EditarEstoque):
         style.configure("Treeview.Heading", font= ('arial 15 normal'), foreground='gray', padding=0 
                         )
         self.estoque_tree_scroll.config(command=self.estoque_treeview.yview)
-        self.estoque_treeview['columns'] = ('CÓD. BARRAS', 'DESCRIÇÃO','CATEGORIA','MARCA','COR', 'QUANTIDADE','TAMANHO', 'VENDA')
+        self.estoque_treeview['columns'] = ('CÓD. BARRAS', 'DESCRIÇÃO','CATEGORIA','MARCA','COR','FORNECEDOR', 'QUANTIDADE','TAMANHO', 'VENDA')
         self.estoque_treeview.heading('#1', text='CÓD. BARRAS', anchor=W)        
         self.estoque_treeview.heading('#2', text='DESCRIÇÃO')
         self.estoque_treeview.heading('#3', text='CATEGORIA')
         self.estoque_treeview.heading('#4', text='MARCA')
         self.estoque_treeview.heading('#5', text='COR')
-        self.estoque_treeview.heading('#6', text='QTD un.')
-        self.estoque_treeview.heading('#7', text='TAM' )
-        self.estoque_treeview.heading('#8', text='VENDA R$' )
+        self.estoque_treeview.heading('#6', text='FORNECEDOR')
+        self.estoque_treeview.heading('#7', text='QTD un.')
+        self.estoque_treeview.heading('#8', text='TAM' )
+        self.estoque_treeview.heading('#9', text='VENDA R$' )
         self.estoque_treeview.place(relx=0, rely=.1, relheight=.9, relwidth=.985)
         self.estoque_treeview.column("CÓD. BARRAS",width=160, stretch=FALSE, anchor='w')        
         self.estoque_treeview.column("DESCRIÇÃO", width=200, minwidth=250, stretch=TRUE, anchor='center')
         self.estoque_treeview.column("CATEGORIA", width=150, minwidth=150, stretch=TRUE, anchor='center')
         self.estoque_treeview.column("MARCA", width=100, minwidth=100, stretch=TRUE, anchor='center')
         self.estoque_treeview.column("COR", width=200, minwidth=250, stretch=TRUE, anchor='center')
+        self.estoque_treeview.column("FORNECEDOR", width=100, minwidth=100, stretch=TRUE, anchor='center')
         self.estoque_treeview.column("QUANTIDADE",minwidth=50, stretch=TRUE, anchor='center')
         self.estoque_treeview.column("TAMANHO", minwidth=100, stretch=TRUE, anchor='center')        
         self.estoque_treeview.column("VENDA", minwidth=100, stretch=TRUE, anchor='center')
@@ -134,7 +140,7 @@ class Estoque(EditarEstoque):
         self.estoque_treeview.tag_configure('evenrow', background='light gray') 
         if self.estoque_treeview:
             self.estoque_treeview.delete(*self.estoque_treeview.get_children())       
-        query ="SELECT ID, descricao, categoria, marca, cor, quantidade, tamanho, venda FROM estoque order by ID"
+        query ="SELECT ID, descricao, categoria, marca, cor, fornecedor, quantidade, tamanho, venda FROM estoque order by ID"
         linhas= dql(query)
         count=0
         
@@ -167,12 +173,13 @@ class Estoque(EditarEstoque):
 
     def estoque_buscado(self):        
         self.e_buscado = self.search_est.get()
-        consulta = f"SELECT id, descricao, categoria, marca, cor, quantidade, tamanho, venda FROM estoque " \
+        consulta = f"SELECT id, descricao, categoria, marca, cor, fornecedor, quantidade, tamanho, venda FROM estoque " \
         f"WHERE id LIKE '%{self.e_buscado}%' " \
         f"OR descricao LIKE '%{self.e_buscado}%' " \
         f"OR categoria LIKE '%{self.e_buscado}%' " \
         f"OR marca LIKE '%{self.e_buscado}%' " \
         f"OR cor LIKE '%{self.e_buscado}%' " \
+        f"OR fornecedor LIKE '%{self.e_buscado}%' " \
         f"OR quantidade LIKE '%{self.e_buscado}%' " \
         f"OR tamanho LIKE '%{self.e_buscado}%' " \
         f"OR venda LIKE '%{self.e_buscado}%'"

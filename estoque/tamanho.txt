@@ -21,4 +21,3 @@ GG
 M
 P
 PP
-TESTE
