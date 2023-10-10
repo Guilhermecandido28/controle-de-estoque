@@ -37,9 +37,7 @@ class Home():
         qtd_estoque = "SELECT quantidade from estoque"
         query_id = dql(id_produto)
         query_estoque_baixo = dql(estoque_baixo)
-        query_qtd_estoque = dql(qtd_estoque)
-        print(f'A quantidade em estoque baixa é {query_estoque_baixo}')
-        print(f'A quantidade é {query_qtd_estoque}')        
+        query_qtd_estoque = dql(qtd_estoque)       
         dic_estoque = {}
         contagem_estoque_baixo = 0
         if (
@@ -61,7 +59,6 @@ class Home():
             dic_estoque["estoque_min"] = ", ".join(map(str, dic_estoque["estoque_min"]))
             dic_estoque["quantidade"] = ", ".join(map(str, dic_estoque["quantidade"]))
 
-            print(dic_estoque)
             self.bx_estoque = Button(self.home, text=contagem_estoque_baixo, font=('arial 36 bold'), foreground='#B80502', bg='#A6A6A6', highlightthickness=0, bd=0, cursor='hand2')
             self.bx_estoque.config(activebackground=self.bx_estoque.cget("bg"))
         else:

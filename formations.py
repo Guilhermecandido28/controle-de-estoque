@@ -10,6 +10,8 @@ def format_celular(entry):
         formatted_celular = formatted_celular[:11]
     if len(formatted_celular) == 11:
         formatted_celular = f'({formatted_celular[:2]}) {formatted_celular[2:7]}-{formatted_celular[7:11]}'
+    if len(formatted_celular) == 10:
+        formatted_celular = f'({formatted_celular[:2]}) {formatted_celular[2:6]}-{formatted_celular[6:10]}'
     entry.delete(0, tk.END)
     entry.insert(0, formatted_celular)
     entry.bind("<FocusOut>", lambda event: formatted_celular)
@@ -18,7 +20,7 @@ def format_celular(entry):
 
 
 def format_estoque_minemax(entry):
-    estoque = entry.get()
+    estoque = entry.get().strip()
     formatted_estoque = ''.join(estoque.split()).replace(' ','').replace(' ','')
     if not formatted_estoque.isdigit():
         formatted_estoque = ''.join(filter(str.isdigit, formatted_estoque))
@@ -36,6 +38,8 @@ def format_custo(entry):
     if ',' in formatted_custo:
         pos = formatted_custo.index(',')        
         formatted_custo = f'{formatted_custo[:pos+3]}'    
+    if formatted_custo.count(',') > 1:
+        formatted_custo = formatted_custo.replace(',', '', formatted_custo.count(',')-1)
     entry.delete(0, tk.END)
     entry.insert(0, formatted_custo)
     entry.bind("<FocusOut>", lambda event: formatted_custo)
@@ -79,9 +83,8 @@ def format_nome(entry):
     entry.bind("<FocusIn>", lambda event: formatted_nome)
 
 def format_instagram(entry):
-    instagram_text = entry.get()
-    formatted_instagram = instagram_text.replace('@','')    
-    formatted_instagram = f'{formatted_instagram}'  
+    instagram_text = entry.get().strip()
+    formatted_instagram = instagram_text.replace('@','', 1)
     entry.delete(0, tk.END)
     entry.insert(0, formatted_instagram)
     entry.bind("<FocusOut>", lambda event:formatted_instagram)
@@ -102,16 +105,12 @@ def format_cep(entry):
     entry.bind("<FocusIn>", lambda event: formatted_cep)
 
 
-def placeholder_cpf(entry):
-    if entry.get() == '  Digite apenas números':
-        entry.delete(0, "end")    
+def placeholder_cpf(entry):   
     entry.insert(0, '  Digite apenas números')
     entry.bind("<FocusIn>", lambda event: entry.delete(0, "end"))        
     entry.bind("<KeyRelease>", lambda event: format_cpf(entry))
 
-def placeholder_cnpj(entry):
-    if entry.get() == '  Digite apenas números':
-        entry.delete(0, "end")    
+def placeholder_cnpj(entry):   
     entry.insert(0, '  Digite apenas números')
     entry.bind("<FocusIn>", lambda event: entry.delete(0, "end"))        
     entry.bind("<KeyRelease>", lambda event: format_cnpj(entry))
@@ -122,8 +121,7 @@ def placeholder_celular(entry):
     entry.bind("<FocusIn>", lambda event: entry.delete(0, "end"))        
     entry.bind("<KeyRelease>", lambda event: format_celular(entry))
 
-def placeholder_estoque(entry):
-    
+def placeholder_estoque(entry):    
     entry.bind("<FocusIn>", lambda event: entry.delete(0, "end"))        
     entry.bind("<KeyRelease>", lambda event: format_estoque_minemax(entry))
 

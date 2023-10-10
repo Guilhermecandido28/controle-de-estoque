@@ -185,11 +185,21 @@ class AddCliente():
         value_imagem = self.byte_img
         value_nome = self.e_nome.get().strip()
         value_sobrenome = self.e_sobrenome.get()
-        value_celular = self.e_celular.get()
-        value_cpf = self.e_cpf.get()
+        if len(self.e_celular.get()) < 13:
+            messagebox.showerror('Erro', 'Numero de telefone inválido.')
+        else:
+            value_celular = self.e_celular.get()
+        if len(self.e_cpf.get()) < 14:
+            messagebox.showerror('Erro', 'Numero de cpf inválido.')
+        else:
+            value_cpf = self.e_cpf.get()
         value_instagram = self.e_instagram.get()
         value_obs = self.e_comment.get()
         value_cep = self.e_cep.get()
+        if len(self.e_cep.get()) < 9:
+            messagebox.showerror('Erro', 'Numero de cep inválido.')
+        else:
+            value_cpf = self.e_cep.get()
         value_rua = self.e_rua.get()
         value_numero = self.e_numero.get()
         value_bairro = self.e_bairro.get()

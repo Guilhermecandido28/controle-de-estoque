@@ -2,36 +2,46 @@ from tkinter import *
 from styles.cores import *
 import tkinter as tk
 from formations import *
-from tkinter import filedialog
-from PIL import Image, ImageTk
 from tkinter import ttk
-from estoque.banco_dados_estoque import *
-import io
+from fornecedor.banco_dados_fornecedor import *
+from tkinter import messagebox
 
 
 class EditarFornecedor():
-    def __init__(self, frame, img, id) -> None:
+    def __init__(self, frame, id) -> None:
         self.f_editar_fornecedor = frame        
         self.id = id
-        self.img = img
+        self.make_listbox()
         self.entrys()
         self.titulos()
-        self.foto()
         self.botoes()
 
     def entrys(self): 
         self.ed_id = tk.Entry(self.f_editar_fornecedor, bg=cor4, font=('arial 12'), bd=0)       
         self.ed_nome = tk.Entry(self.f_editar_fornecedor, bg=cor4, font=('arial 12'), bd=0)
-        self.ed_categoria = tk.Entry(self.f_editar_fornecedor, bg=cor4, font=('arial 12'), bd=0)
+        placeholder_nome(self.ed_nome)
+        #CATEGORIA
+
+        self.ed_categoria = ttk.Combobox(self.f_editar_fornecedor, background=cor4, font=('arial 12'), state='readonly')
+        self.ed_categoria['values'] = list(self.ed_categoria['values']) + self.ler_categoria_do_arquivo()
+        self.img_adicionar = PhotoImage(file='imagens/adicionar.png')
+        
+       
         self.ed_cnpj = tk.Entry(self.f_editar_fornecedor, bg=cor4, font=('arial 12'), bd=0)
+        placeholder_cnpj(self.ed_cnpj)
         self.ed_email = tk.Entry(self.f_editar_fornecedor, bg=cor4, font=('arial 12'), bd=0)
         self.ed_telefone = tk.Entry(self.f_editar_fornecedor, bg=cor4, font=('arial 12'), bd=0)
+        placeholder_celular(self.ed_telefone)
         self.ed_obs = tk.Entry(self.f_editar_fornecedor, bg=cor4, font=('arial 12'), bd=0)
         self.ed_cep = tk.Entry(self.f_editar_fornecedor, bg=cor4, font=('arial 12'), bd=0)
+        placeholder_cep(self.ed_cep)
         self.ed_rua = tk.Entry(self.f_editar_fornecedor, bg=cor4, font=('arial 12'), bd=0)
+        placeholder_nome(self.ed_rua)
         self.ed_numero = tk.Entry(self.f_editar_fornecedor, bg=cor4, font=('arial 12'), bd=0)
         self.ed_bairro = tk.Entry(self.f_editar_fornecedor, bg=cor4, font=('arial 12'), bd=0)
+        placeholder_nome(self.ed_bairro)
         self.ed_cidade = tk.Entry(self.f_editar_fornecedor, bg=cor4, font=('arial 12'), bd=0)
+        placeholder_nome(self.ed_cidade)
         self.ed_estados = ttk.Combobox(self.f_editar_fornecedor, font=('arial 12'), takefocus=True, state='readonly')
         self.ed_estados['values'] = ['Acre', 'Alagoas', 'Amapá', 'Amazonas', 'Bahia', 'Ceará', 'Distrito Federal', 'Espírito Santo', 'Goiás', 'Maranhão', 'Mato Grosso', 'Mato Grosso do Sul', 'Minas Gerais', 'Pará', 'Paraíba', 'Paraná', 'Pernambuco', 'Piauí', 'Rio de Janeiro', 'Rio Grande do Norte', 'Rio Grande do Sul', 'Rondônia', 'Roraima', 'Santa Catarina', 'São Paulo', 'Sergipe', 'Tocantins']
         self.ed_estados.current(24)  # Pré-seleciona o estado de São Paulo       
@@ -90,53 +100,147 @@ class EditarFornecedor():
         self.t_ed_estado.place(relx=0.4, rely=.75,  relheight=0.04)
         
 
-
-    def foto(self):
-        self.my_canvas = Canvas(self.f_editar_fornecedor, bd=0, highlightthickness=0, relief='ridge')
-        self.my_canvas.place(relx=0.65, rely=0.1, relheight=.7, relwidth=.32)
-        self.my_canvas.bind('<Configure>', self.resizer)        
+     
         
     def botoes(self):
-        # self.botao_upload = tk.Button(self.f_editar_cliente, text="Upload", font=('arial 12 bold'), background='green', foreground='white', cursor='hand2', command=self.upload)
+        self.btn_add_categoria = Button(self.f_editar_fornecedor, image=self.img_adicionar, background='dark green', relief='flat', highlightthickness=0, bd=0, command=self.categoria, cursor='hand2')
         self.img_salvar = PhotoImage(file='imagens/salvar.png')
         self.btn_salvar = Button(self.f_editar_fornecedor, text='Salvar', image=self.img_salvar, compound=LEFT, bg=cor6, font=('arial 22 bold'), cursor='hand2', foreground='white', command=self.salvar_fornecedor)
-        self.btn_salvar.place(relx=.72, rely=.87, relwidth=.18)
-        # self.botao_upload.place(relx=0.65, rely=0.80, relwidth=.32, relheight=0.08)
+        self.btn_salvar.place(relx=.32, rely=.90, relwidth=.18)
+        self.btn_add_categoria.place(relx=.251, rely=.4, relheight=0.04, relwidth=0.02) 
 
-    def resizer(self,e):
-        global resized_img, new_img       
-        resized_img = self.img.resize((e.width, e.height))        
-        new_img = ImageTk.PhotoImage(resized_img)        
-        self.img_id_resizer = self.my_canvas.create_image(0,0, image=new_img, anchor='nw')
-        return self.img_id_resizer
+    def make_listbox(self):
+        self.scrollbar_list = Scrollbar(self.f_editar_fornecedor, orient=VERTICAL)
+        self.scrollbar_list_fornecedor = Scrollbar(self.f_editar_fornecedor, orient=VERTICAL)               
+        self.seta_cima = PhotoImage(file='imagens/seta_simples_cima.png')
+        self.seta_baixo = PhotoImage(file='imagens/seta_simples_baixo.png')
+        self.title_lista = Label(self.f_editar_fornecedor, text='LISTA DE PRODUTOS:', font=('arial 12'), foreground= cor4, bg='white')
+        self.title_lista.place(relx=0.71, rely=0.15)        
+        self.e_lista = Listbox(self.f_editar_fornecedor, font=('arial 12'), yscrollcommand=self.scrollbar_list.set, selectmode=MULTIPLE) 
+        self.e_lista.place(relx=0.71, rely=0.20, relwidth=0.20, relheight=0.3)
+        self.para_baixo = Button(self.f_editar_fornecedor, image=self.seta_baixo, command=self.mover_baixo_listbox)
+        self.para_baixo.place(relx=0.94, rely=.3, relwidth=.03, relheight=.1)
+        self.para_cima = Button(self.f_editar_fornecedor, image=self.seta_cima, command=self.mover_cima_listbox)
+        self.para_cima.place(relx=0.94, rely=.7, relwidth=.03, relheight=.1)
+        self.title_lista_fornecedor = Label(self.f_editar_fornecedor, text='PRODUTOS QUE O FORNECEDOR VENDE:', font=('arial 12'), foreground= cor4, bg='white')
+        self.title_lista_fornecedor.place(relx=0.71, rely=0.55)        
+        self.e_lista_fornecedor = Listbox(self.f_editar_fornecedor, font=('arial 12'), yscrollcommand=self.scrollbar_list_fornecedor.set, selectmode=(MULTIPLE)) 
+        self.e_lista_fornecedor.place(relx=0.71, rely=0.60, relwidth=0.20, relheight=0.3)
+        self.scrollbar_list.config(command=self.e_lista.yview)
+        self.scrollbar_list.place(relx=.91, rely=.2, relheight=.3)
+        self.scrollbar_list_fornecedor.config(command=self.e_lista_fornecedor.yview)
+        self.scrollbar_list_fornecedor.place(relx=.91, rely=.6, relheight=.3)
 
-    # def upload(self):                
-    #     self.filename = filedialog.askopenfilename(title="Selecione uma foto", filetypes=[("Imagens", "*.jpg *.png *.bmp")])               
-    #     self.img = Image.open(self.filename)
-    #     largura = self.my_canvas.winfo_width()
-    #     altura = self.my_canvas.winfo_height()
-    #     resized_img2 = self.img.resize((largura, altura))
-    #     self.img_tk = ImageTk.PhotoImage(resized_img2)
-    #     self.img_id = self.my_canvas.create_image(0,0, image=self.img_tk, anchor='nw')
-    #     return self.img_id 
+
+    def mover_baixo_listbox(self):
+        selected_indices = self.e_lista.curselection()
+
+        for item in selected_indices:
+            produto = self.e_lista.get(item)
+
+            # Verifica se o produto já existe na lista antes de inseri-lo
+            if produto not in self.e_lista_fornecedor.get(0, tk.END):
+                self.e_lista_fornecedor.insert(tk.END, produto)
+            else:
+                messagebox.showinfo('Erro', 'O produto já está na lista de produtos vendidos pelo fornecedor, escolha outro produto.')
+
+        for index in reversed(selected_indices):
+            self.e_lista.delete(index)
+
+
+    def mover_cima_listbox(self):
+        selected_indices = self.e_lista_fornecedor.curselection()
+
+        for item in selected_indices:
+            produto = self.e_lista_fornecedor.get(item)
+
+            # Verifica se o produto já existe na lista antes de inseri-lo
+            if produto not in self.e_lista.get(0, tk.END):
+                self.e_lista.insert(0, produto)
+            else:
+                pass
+
+        for index in reversed(selected_indices):
+            self.e_lista_fornecedor.delete(index)
     
-    def salvar_fornecedor(self):                
-
-        modify_barcode = self.ed_barcode.get()
-        
-        modify_descricao = self.ed_descricao.get().strip()
+    def salvar_fornecedor(self):            
+        modify_id = self.ed_id.get()
+        modify_nome = self.ed_nome.get().strip()
         modify_categoria = self.ed_categoria.get()
-        modify_marca = self.ed_marca.get()
-        modify_estoque_min = self.ed_estoque_min.get()
-        modify_quantidade = self.ed_quantidade.get()
+        modify_cnpj = self.ed_cnpj.get()
+        modify_email = self.ed_email.get()
+        modify_telefone = self.ed_telefone.get()
         modify_obs = self.ed_obs.get()
-        modify_tamanho = self.ed_tamanho.get()
-        modify_cor = self.ed_cor.get()
-        modify_preco_custo = self.ed_preco_custo.get()
-        modify_preco_venda = self.ed_preco_venda.get()
-        
-        query = f"UPDATE estoque SET id = ?, descricao = ?, categoria = ?, marca = ?, estoque_minimo = ?, quantidade = ?, observacoes = ?, tamanho = ?, cor = ?, custo = ?, venda = ? WHERE id = {self.id}"
-        params = (modify_barcode, modify_descricao, modify_categoria, modify_marca, modify_estoque_min, modify_quantidade, modify_obs, modify_tamanho, modify_cor, modify_preco_custo, modify_preco_venda)
-        dml(query, params)
-        print('produto foi salvo')
-        
+        modify_cep = self.ed_cep.get()
+        modify_rua = self.ed_rua.get()
+        modify_numero = self.ed_numero.get()
+        modify_bairro = self.ed_bairro.get()
+        modify_cidade = self.ed_cidade.get()
+        modify_estado = self.ed_estados.get()
+        lista_formatada_produtos = [str(tupla).replace('(', '').replace(')', '').replace("'", "") for tupla in self.e_lista_fornecedor.get(0, END)]
+        value_e_lista_fornecedor = '; '.join(lista_formatada_produtos)
+        query = f"UPDATE fornecedor SET id = ?, nome = ?, categoria = ?, cnpj = ?, email = ?, telefone = ?, OBS = ?, CEP = ?, rua = ?, numero = ?, bairro = ?, cidade = ?, estado = ?, lista_produtos = ? WHERE id = {self.id}"
+        params = (modify_id, modify_nome, modify_categoria, modify_cnpj, modify_email, modify_telefone, modify_obs, modify_cep, modify_rua, modify_numero, modify_bairro, modify_cidade, modify_estado, value_e_lista_fornecedor)
+        fornecedor_dml(query, params)
+        print('fornecedor foi salvo')
+
+    def ler_categoria_do_arquivo(self):
+            categorias = []
+            try:
+                with open('fornecedor/categoria.txt', 'r') as file:
+                    for line in file:
+                        categoria = line.strip().upper()  # Cada marca lida do arquivo
+                        if categoria:  # Verifica se a linha não está vazia
+                            categorias.append(categoria)
+            except FileNotFoundError:
+                print('Arquivo categoria.txt não encontrado.')
+
+            return categorias
+    
+
+
+    def categoria(self):
+        self.img_excluir = PhotoImage(file='imagens/excluir.png')
+        self.img_ok = PhotoImage(file='imagens/ok.png')
+        self.ed_categoria.configure(state='normal')
+        self.btn_add_categoria.place_forget()
+        self.btn_exc_categoria = Button(self.f_editar_fornecedor, image=self.img_excluir, background='dark green', relief='flat', highlightthickness=0, bd=0, command=lambda: self.ed_categoria.set(""), cursor='hand2')
+        self.btn_exc_categoria.place(relx=0.251, rely=0.40, relheight=0.04, relwidth=0.02)
+        self.btn_ok_categoria = Button(self.f_editar_fornecedor, image=self.img_ok, background='dark green', relief='flat', highlightthickness=0, bd=0, command=self.salvar_categoria, cursor='hand2')
+        self.btn_ok_categoria.place(relx=0.272, rely=0.40, relheight=0.04, relwidth=0.02)
+
+    def salvar_categoria(self):
+            nova_categoria = self.ed_categoria.get().upper()  # Obtém a nova categoria digitada e a converte para maiúsculas
+
+            # Lê as categorias existentes
+            categoria_existentes = []
+            try:
+                with open('fornecedor/categoria.txt', 'r') as file:
+                    categoria_existentes = [linha.strip() for linha in file]
+            except FileNotFoundError:
+                print('Arquivo categoria.txt não encontrado.')
+
+            # Verifica se a nova categoria já existe (insensível a maiúsculas/minúsculas)
+            if nova_categoria.upper() in (categoria.upper() for categoria in categoria_existentes):
+                messagebox.showinfo('Erro',f'A categoria {nova_categoria} já existe.')
+                return
+
+            # Adiciona a nova categoria à lista de categorias existentes
+            categoria_existentes.append(nova_categoria)
+            self.ed_categoria['values'] = list(self.ed_categoria['values']) + [nova_categoria]
+            self.ed_categoria.set(nova_categoria)
+
+            # Ordena as categorias em ordem alfabética (insensível a maiúsculas/minúsculas)
+            categoria_existentes.sort(key=lambda x: x.lower())
+
+            # Salva todas as categorias, uma por linha
+            try:
+                with open('fornecedor/categoria.txt', 'w') as file:
+                    for categoria in categoria_existentes:
+                        file.write(categoria + '\n')
+            except FileNotFoundError:
+                print('Arquivo categoria.txt não encontrado.')
+
+            self.btn_exc_categoria.place_forget()
+            self.btn_ok_categoria.place_forget()
+            self.btn_add_categoria.place(relx=.251, rely=.4, relheight=0.04, relwidth=0.02)

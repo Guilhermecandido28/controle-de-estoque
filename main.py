@@ -5,7 +5,7 @@ from formations import *
 from PIL import Image
 from limpar import limpar
 from clientes.cliente import Cliente
-from tkinter import messagebox
+
 from home import Home
 from PIL import Image, ImageTk
 from estoque.estoque import Estoque

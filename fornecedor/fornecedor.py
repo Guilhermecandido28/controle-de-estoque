@@ -35,20 +35,32 @@ class Fornecedor():
                 items_selecionado.append(item_values)            
             self.fornecedor_tree_scroll.place_forget()        
             self.limpar_treeview() 
-            query_img = f"SELECT imagem FROM fornecedor WHERE id = {items_selecionado[0][0]}"
-            img_em_bytes = fornecedor_dql(query_img)                       
-            img = Image.open(io.BytesIO(img_em_bytes[0][0]))                                   
-            self.ed_fornecedor = EditarFornecedor(self.f_editar_fornecedor, img, id=items_selecionado[0][0])
+                                  
+            self.ed_fornecedor = EditarFornecedor(self.f_editar_fornecedor, id=items_selecionado[0][0])
             lista_entrys = [ self.ed_fornecedor.ed_id, self.ed_fornecedor.ed_nome, self.ed_fornecedor.ed_categoria, self.ed_fornecedor.ed_cnpj, self.ed_fornecedor.ed_email, self.ed_fornecedor.ed_telefone, self.ed_fornecedor.ed_obs, self.ed_fornecedor.ed_cep, self.ed_fornecedor.ed_rua, self.ed_fornecedor.ed_numero, self.ed_fornecedor.ed_bairro, self.ed_fornecedor.ed_cidade, self.ed_fornecedor.ed_estados]        
             limpar(lista_entrys)            
-            query =f"SELECT id, nome, categoria, cnpj, email, telefone, OBS, CEP, rua, numero, cidade, estado, lista_produtos FROM fornecedor WHERE id = {items_selecionado[0][0]}"           
-
+            query =f"SELECT id, nome, categoria, cnpj, email, telefone, OBS, CEP, rua, numero, bairro, cidade, estado FROM fornecedor WHERE id = {items_selecionado[0][0]}"           
+            query_listbox = f"SELECT lista_produtos FROM fornecedor WHERE id = {items_selecionado[0][0]}"
+            dados_listbox = fornecedor_dql(query_listbox)
+            dados_listbox = str(dados_listbox).split('; ')
             dados = fornecedor_dql(query)            
             count=0
             for campo in lista_entrys:
                 campo.insert(0, dados[0][count])
                 count+=1
-        
+            for dado in dados_listbox:
+                dado = dado.replace("'", '').replace('[(', '').replace(')]', '').replace(',', '')
+                self.ed_fornecedor.e_lista_fornecedor.insert(0, dado)
+            self.preencher_listbox()   
+    def preencher_listbox(self):
+        produtos = "SELECT descricao, categoria, marca FROM estoque"
+        query = dql(produtos)               
+        for produto in query:
+            descricao = produto[0]
+            categoria = produto[1]
+            marca = produto[2]             
+            texto_formatado = f"{descricao} - {categoria} - {marca}"
+            self.ed_fornecedor.e_lista.insert(END, texto_formatado)      
     def add_fornecedor(self):
         self.adicionar_fornecedor = AddFornecedor(self.f_add_fornecedor)
         self.f_add_fornecedor.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.72)
@@ -168,24 +180,27 @@ class Fornecedor():
 
     def fornecedor_buscado(self):        
         self.e_buscado = self.search_est.get()
-        consulta = f"SELECT id, nome, categoria, cnpj, email, telefone FROM fornecedor " \
-        f"WHERE id LIKE '%{self.e_buscado}%' " \
-        f"OR nome LIKE '%{self.e_buscado}%' " \
-        f"OR categoria LIKE '%{self.e_buscado}%' " \
-        f"OR cnpj LIKE '%{self.e_buscado}%' " \
-        f"OR email LIKE '%{self.e_buscado}%' " \
-        f"OR telefone LIKE '%{self.e_buscado}%' " \
-        
-        linhas = dql(consulta)
-        count=0
-        for item in self.fornecedor_treeview.get_children():
-            self.fornecedor_treeview.delete(item)        
-        for i in linhas:
-            if count % 2 == 0:            
-                self.fornecedor_treeview.insert("", "end", values=i, tags=('oddrow',))
-            else:
-                self.fornecedor_treeview.insert("", "end", values=i, tags=('evenrow',))
-            count+=1
+        if self.e_buscado == 'Procure por fornecedor...':
+            pass
+        else:
+            consulta = f"SELECT id, nome, categoria, cnpj, email, telefone FROM fornecedor " \
+            f"WHERE id LIKE '%{self.e_buscado}%' " \
+            f"OR nome LIKE '%{self.e_buscado}%' " \
+            f"OR categoria LIKE '%{self.e_buscado}%' " \
+            f"OR cnpj LIKE '%{self.e_buscado}%' " \
+            f"OR email LIKE '%{self.e_buscado}%' " \
+            f"OR telefone LIKE '%{self.e_buscado}%' " \
+            
+            linhas = fornecedor_dql(consulta)
+            count=0
+            for item in self.fornecedor_treeview.get_children():
+                self.fornecedor_treeview.delete(item)        
+            for i in linhas:
+                if count % 2 == 0:            
+                    self.fornecedor_treeview.insert("", "end", values=i, tags=('oddrow',))
+                else:
+                    self.fornecedor_treeview.insert("", "end", values=i, tags=('evenrow',))
+                count+=1
     def on_enter_est(self,event):
         self.fornecedor_buscado()
 
