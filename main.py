@@ -5,11 +5,11 @@ from formations import *
 from PIL import Image
 from limpar import limpar
 from clientes.cliente import Cliente
-
 from home import Home
 from PIL import Image, ImageTk
 from estoque.estoque import Estoque
 from fornecedor.fornecedor import Fornecedor
+from compra.compra import Compra
 
 
 
@@ -17,7 +17,7 @@ janela = Tk()
 
 
 
-class Applicantion(Cliente, Home, Estoque):
+class Applicantion(Cliente, Home, Estoque, Compra):
     
     def __init__(self):
         self.janela = janela 
@@ -27,7 +27,8 @@ class Applicantion(Cliente, Home, Estoque):
         self.home_widgets_criados = False
         self.cliente_widgets_criados = False
         self.estoque_widgets_criados = False 
-        self.fornecedor_widgets_criados = False               
+        self.fornecedor_widgets_criados = False 
+        self.compra_widgets_criados = False              
         janela.mainloop()
         
  
@@ -58,7 +59,16 @@ class Applicantion(Cliente, Home, Estoque):
         else:
             pass          
           
-         
+    def compra(self):
+        global compra 
+        if not self.compra_widgets_criados:
+            compra = Compra(self.janela)
+            compra.filtro_busca_compra()
+            self.esquecer_functions()
+            self.compra_widgets_criados = True
+        else:
+            pass
+
     def estoque(self):
         global estoque
         if not self.estoque_widgets_criados:
@@ -112,6 +122,14 @@ class Applicantion(Cliente, Home, Estoque):
             fornecedor.f_add_fornecedor.place_forget()
             fornecedor.f_editar_fornecedor.place_forget()
             self.fornecedor_widgets_criados = False
+        if self.compra_widgets_criados:
+            compra.f_filtros_busca.place_forget()
+            compra.principal.place_forget()            
+            compra.location_compra.place_forget()
+            compra.f_add_compra.place_forget()
+            compra.f_editar_compra.place_forget()
+            self.compra_widgets_criados = False
+
                    
  
     def buttons(self):         
@@ -125,6 +143,7 @@ class Applicantion(Cliente, Home, Estoque):
         self.btn_vendas.place(relx=0.14, rely=0, relwidth=0.14, relheight=1)
         # Fornecedor
         self.img_fornecedor = PhotoImage(file='imagens/fornecedor.png')
+
         self.btn_fornecedor = Button(self.menu, text='Fornecedor', image=self.img_fornecedor, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2', command=self.fornecedor)
         self.btn_fornecedor.place(relx=0.28, rely=0, relwidth=0.14, relheight=1)
         #estoque
@@ -133,7 +152,7 @@ class Applicantion(Cliente, Home, Estoque):
         self.btn_estoque.place(relx=0.42, rely=0, relwidth=0.14, relheight=1)
         #compras
         self.img_compras= PhotoImage(file='imagens/compras.png')
-        self.btn_compras = Button(self.menu, text='Compras', image=self.img_compras, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2')
+        self.btn_compras = Button(self.menu, text='Compras', image=self.img_compras, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2', command=self.compra)
         self.btn_compras.place(relx=0.56, rely=0, relwidth=0.14, relheight=1)
         #financeiro
         self.img_financeiro= PhotoImage(file='imagens/financeiro.png')

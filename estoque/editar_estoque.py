@@ -7,6 +7,7 @@ from PIL import Image, ImageTk
 from tkinter import ttk
 from estoque.banco_dados_estoque import *
 import io
+from fornecedor.banco_dados_fornecedor import *
 
 
 class EditarEstoque():
@@ -31,7 +32,9 @@ class EditarEstoque():
         self.ed_cor = tk.Entry(self.f_editar_estoque, bg=cor4, font=('arial 12'), bd=0)
         self.ed_preco_custo = tk.Entry(self.f_editar_estoque, bg=cor4, font=('arial 12'), bd=0)
         self.ed_preco_venda = tk.Entry(self.f_editar_estoque, bg=cor4, font=('arial 12'), bd=0)       
-        
+        self.e_fornecedor = ttk.Combobox(self.f_editar_estoque, background=cor4, font=('arial 12'), state='readonly')
+        query = "SELECT nome FROM fornecedor"
+        self.e_fornecedor['values'] = fornecedor_dql(query)
         
         #----------------------------------------------------------------------------------#
         self.ed_barcode.place(relx=.05, rely=.2, relwidth=.2, relheight=0.04) 
@@ -45,11 +48,12 @@ class EditarEstoque():
         self.ed_cor.place(relx=.4, rely=.4, relwidth=.2, relheight=0.04)
         self.ed_preco_custo.place(relx=.4, rely=.5, relwidth=.2, relheight=0.04)
         self.ed_preco_venda.place(relx=.4, rely=.6, relwidth=.2, relheight=0.04)
+        self.e_fornecedor.place(relx=0.4, rely=.7, relwidth=0.20, relheight=0.04)
     
     def titulos(self):
         self.linha = Frame(self.f_editar_estoque, bg=cor5)
         self.linha.place(relx=0.01, rely=0.1, relwidth=0.605, relheight=0.004)
-        self.titulo_geral = Label(self.f_editar_estoque, text="Editor de Clientes", font=('arial 18'), bg='white')
+        self.titulo_geral = Label(self.f_editar_estoque, text="Editor de Produtos", font=('arial 18'), bg='white')
         self.titulo_geral.place(relx=0.01, rely=0.05)
         self.t_ed_barcode = Label(self.f_editar_estoque, text='CÓDIGO DE BARRAS:', font=('arial 14'), foreground=cor4, bg='white')
         self.t_ed_descricao = Label(self.f_editar_estoque, text='DESCRIÇÃO:', font=('arial 14'), foreground=cor4, bg='white')
@@ -62,6 +66,7 @@ class EditarEstoque():
         self.t_ed_cor = Label(self.f_editar_estoque, text='COR:', font=('arial 14'), foreground=cor4, bg='white')
         self.t_ed_preco_custo = Label(self.f_editar_estoque, text='CUSTO:', font=('arial 14'), foreground=cor4, bg='white')
         self.t_ed_preco_venda = Label(self.f_editar_estoque, text='VENDA:', font=('arial 14'), foreground=cor4, bg='white')
+        self.t_ed_fonecedor = Label(self.f_editar_estoque, text='FORNECEDOR:', font=('arial 12'), foreground= cor4, bg='white')
         
         
         #-------------------------------------------#
@@ -76,6 +81,7 @@ class EditarEstoque():
         self.t_ed_cor.place(relx=0.4, rely=.35,  relheight=0.04)
         self.t_ed_preco_custo.place(relx=0.4, rely=.45,  relheight=0.04)
         self.t_ed_preco_venda.place(relx=0.4, rely=.55,  relheight=0.04)
+        self.t_ed_fonecedor.place(relx=0.4, rely=.65)
 
 
     def foto(self):

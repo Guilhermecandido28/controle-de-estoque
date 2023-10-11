@@ -128,10 +128,10 @@ class Estoque(EditarEstoque):
         self.estoque_treeview.column("DESCRIÇÃO", width=200, minwidth=250, stretch=TRUE, anchor='center')
         self.estoque_treeview.column("CATEGORIA", width=150, minwidth=150, stretch=TRUE, anchor='center')
         self.estoque_treeview.column("MARCA", width=100, minwidth=100, stretch=TRUE, anchor='center')
-        self.estoque_treeview.column("COR", width=200, minwidth=250, stretch=TRUE, anchor='center')
-        self.estoque_treeview.column("FORNECEDOR", width=100, minwidth=100, stretch=TRUE, anchor='center')
-        self.estoque_treeview.column("QUANTIDADE",minwidth=50, stretch=TRUE, anchor='center')
-        self.estoque_treeview.column("TAMANHO", minwidth=100, stretch=TRUE, anchor='center')        
+        self.estoque_treeview.column("COR", width=75, minwidth=50, stretch=TRUE, anchor='center')
+        self.estoque_treeview.column("FORNECEDOR", width=225, minwidth=100, stretch=TRUE, anchor='center')
+        self.estoque_treeview.column("QUANTIDADE",width=75, minwidth=50, stretch=TRUE, anchor='center')
+        self.estoque_treeview.column("TAMANHO", width=75, minwidth=100, stretch=TRUE, anchor='center')        
         self.estoque_treeview.column("VENDA", minwidth=100, stretch=TRUE, anchor='center')
 
 

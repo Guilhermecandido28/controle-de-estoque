@@ -94,7 +94,9 @@ class AddEstoque():
         self.title_fonecedor.place(relx=0.71, rely=.25)
         self.e_fornecedor = ttk.Combobox(self.principal, background=cor4, font=('arial 12'), state='readonly')
         query = "SELECT nome FROM fornecedor"
-        self.e_fornecedor['values'] = fornecedor_dql(query)
+        self.fornecedores = fornecedor_dql(query)
+        self.fornecedores = [fornecedor[0] for fornecedor in self.fornecedores]
+        self.e_fornecedor['values'] = self.fornecedores
         self.e_fornecedor.place(relx=0.71, rely=.3, relwidth=0.20, relheight=0.04)
         self.e_tamanho.place(relx=0.400, rely=0.50, relwidth=0.08, relheight=0.04)
         self.btn_add_tamanho = Button(self.principal, image=self.img_adicionar, background='dark green', relief='flat', highlightthickness=0, bd=0, command=self.tamanho, cursor='hand2')

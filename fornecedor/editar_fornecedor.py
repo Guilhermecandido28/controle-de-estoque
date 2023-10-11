@@ -44,7 +44,8 @@ class EditarFornecedor():
         placeholder_nome(self.ed_cidade)
         self.ed_estados = ttk.Combobox(self.f_editar_fornecedor, font=('arial 12'), takefocus=True, state='readonly')
         self.ed_estados['values'] = ['Acre', 'Alagoas', 'Amapá', 'Amazonas', 'Bahia', 'Ceará', 'Distrito Federal', 'Espírito Santo', 'Goiás', 'Maranhão', 'Mato Grosso', 'Mato Grosso do Sul', 'Minas Gerais', 'Pará', 'Paraíba', 'Paraná', 'Pernambuco', 'Piauí', 'Rio de Janeiro', 'Rio Grande do Norte', 'Rio Grande do Sul', 'Rondônia', 'Roraima', 'Santa Catarina', 'São Paulo', 'Sergipe', 'Tocantins']
-        self.ed_estados.current(24)  # Pré-seleciona o estado de São Paulo       
+        self.ed_estados.current(24)  # Pré-seleciona o estado de São Paulo 
+  
         
         
         #----------------------------------------------------------------------------------#
