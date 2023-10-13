@@ -9,22 +9,39 @@ from estoque.banco_dados_estoque import *
 from PIL import Image, ImageTk
 from tkcalendar import DateEntry
 import customtkinter as ctk
+from compra.listadecompras import ListaCompras
 
 
 
 class Compra():
     def __init__(self, frame) -> None:
-        self.principal = tk.Frame(frame)
+        self.principal = tk.Frame(frame, background='black')
         self.f_editar_compra = tk.Frame(frame, bg='white')
         self.f_add_compra = tk.Frame(frame, bg= 'white')
         self.location_compra = tk.Canvas(frame, bd=0, highlightthickness=0)
         self.f_filtros_busca = tk.Frame(frame, bg='#8A8A8A')
         self.titulos = tk.Frame(frame, bg='#8A8A8A')
         self.nova_compra()
+        self.lista_compras()
         self.filtros_busca()
         self.onde_estou()
 
-
+    def lista_compras(self):
+        self.text_list = [
+    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+             ]
+        list_frame = ListaCompras(self.principal, self.text_list, 100)
     def onde_estou(self):
         #aqui coloca o frame de localização usando o metodo place
         self.location_compra.place(relx=0, rely=0.14, relwidth=1, relheight=0.09)
@@ -73,12 +90,12 @@ class Compra():
         # titulo numero
         self.n_compra = Label(self.titulos, text='N°', bg='#8A8A8A', font=('arial 10 bold'),  borderwidth=2, relief='solid')
             #aqui é posto o titulo numero no layout
-        self.n_compra.place(relx=0, rely=0, relheight=1, relwidth=.1)
+        self.n_compra.place(relx=0, rely=0, relheight=1, relwidth=.08)
 
         #titulo fornecedor
         self.fornecedor_compra = Label(self.titulos, text='FORNECEDOR', bg='#8A8A8A', font=('arial 10 bold'),  borderwidth=2, relief='solid')
             #aqui é posto o titulo fornecedor no layout
-        self.fornecedor_compra.place(relx=0.1, rely=0, relheight=1, relwidth=.3)
+        self.fornecedor_compra.place(relx=0.08, rely=0, relheight=1, relwidth=.32)
 
         #titulo data de emissão
         self.data_emissao = Label(self.titulos, text='DATA EMISSÃO', bg='#8A8A8A', font=('arial 10 bold'),  borderwidth=2, relief='solid')
