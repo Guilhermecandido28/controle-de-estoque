@@ -63,6 +63,14 @@ def fornecedor_dql(query): #select
     vcon.close()
     return res
 
+def fornecedor_dql_arg(query, var): #select
+    vcon=conexao_banco()
+    c=vcon.cursor()
+    c.execute(query, var)
+    res=c.fetchall()
+    vcon.close()
+    return res
+
 def fornecedor_dml(query, params=None): # insert, update, delete
     try:
         vcon=conexao_banco()

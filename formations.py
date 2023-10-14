@@ -18,6 +18,15 @@ def format_celular(entry):
     entry.bind("<FocusIn>", lambda event: formatted_celular)
 
 
+def format_qtde(entry):
+    qtde = entry.get().strip()
+    if not qtde.isdigit():
+        qtde = ''.join(filter(str.isdigit, qtde))
+    entry.delete(0, tk.END)
+    entry.insert(0, qtde)
+    entry.bind('<FocusOut>', lambda event: qtde)
+    entry.bind('<FocusIn>', lambda event: qtde)
+
 
 def format_estoque_minemax(entry):
     estoque = entry.get().strip()
@@ -104,6 +113,9 @@ def format_cep(entry):
     entry.bind("<FocusOut>", lambda event: formatted_cep)
     entry.bind("<FocusIn>", lambda event: formatted_cep)
 
+def placeholder_qtde(entry):    
+    entry.bind('<FocusIn>', lambda event: entry.delete(0,'end'))
+    entry.bind('<KeyRelease>', lambda event: format_qtde(entry))
 
 def placeholder_cpf(entry):   
     entry.insert(0, '  Digite apenas números')

@@ -185,8 +185,8 @@ class AddEstoque():
         messagebox.showinfo("Sucesso", "Operação realizada com sucesso!")   
 
     def calcular_lucro_e_porcentagem(self):
-        preco_custo = self.preco_custo.get()
-        preco_venda = self.preco_venda.get()
+        preco_custo = self.preco_custo.get().replace(',','.')
+        preco_venda = self.preco_venda.get().replace(',','.')
 
         if preco_custo and preco_venda:
             try:

@@ -10,6 +10,7 @@ from PIL import Image, ImageTk
 from tkcalendar import DateEntry
 import customtkinter as ctk
 from compra.listadecompras import ListaCompras
+from compra.add_compra import AddCompra
 
 
 
@@ -41,7 +42,7 @@ class Compra():
     ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
     ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
              ]
-        list_frame = ListaCompras(self.principal, self.text_list, 100)
+        ListaCompras(self.principal, self.text_list, 100)
     def onde_estou(self):
         #aqui coloca o frame de localização usando o metodo place
         self.location_compra.place(relx=0, rely=0.14, relwidth=1, relheight=0.09)
@@ -80,7 +81,7 @@ class Compra():
         self.btn_print_compra.place(relx=0.35, rely=0.15)
         
         # botão de adicionar compra
-        self.btn_addcompra = Button(self.f_filtros_busca, text='ADICIONAR\n Compra', bg='light gray', compound='center',bd=0, font=('arial 14 bold'), foreground='black', cursor='hand2')
+        self.btn_addcompra = Button(self.f_filtros_busca, text='ADICIONAR\n Compra', bg='light gray', compound='center',bd=0, font=('arial 14 bold'), foreground='black', cursor='hand2', command=self.adicionar_compra)
             # coloca o botão no layout
         self.btn_addcompra.place(relx=0.9, rely=0, relheight=1, relwidth=0.1)
 
@@ -124,7 +125,11 @@ class Compra():
         self.principal.place(relx=0.01, rely=0.32, relwidth=0.98, relheight=0.65)
         
 
-
+    def adicionar_compra(self):
+        self.add_compra = AddCompra(self.f_add_compra)
+        self.principal.place_forget()
+        self.f_filtros_busca.place_forget()
+        self.titulos.place_forget()
 
     def resize_image(self, event):
         self.nova_imagem_compra = self.img_location_compra.resize((event.width, event.height))
