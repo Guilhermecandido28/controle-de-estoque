@@ -17,16 +17,13 @@ class ListaCompras(ttk.Frame):
         self.canvas.pack(expand= True, fill='both')
 
         self.frame = ttk.Frame(self)
-
-        for index, item in enumerate(self.text_data):
-            self.creat_item(index, item).pack(expand= True, fill='both', padx=10)
         
         self.scrollbar = ttk.Scrollbar(self, orient='vertical', command=self.canvas.yview)
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
         self.scrollbar.place(relx=1, rely=0, relheight=1, anchor='ne')
         self.canvas.bind_all('<MouseWheel>', lambda event: self.canvas.yview_scroll(-int(event.delta/60), "units" ))
         self.bind('<Configure>', self.update_size)
-
+        
     def update_size(self, event):
         if self.list_height >= self.winfo_height():
             height = self.list_height
@@ -43,7 +40,8 @@ class ListaCompras(ttk.Frame):
         width= self.winfo_width(),
         height= self.list_height
         )
-    def creat_item(self, index, item):
+        
+    def creat_compra(self, index, item):
         frame = ttk.Frame(self.frame)
         image = Image.open('imagens/editar.png')
         tk_image = ImageTk.PhotoImage(image)
@@ -71,5 +69,5 @@ class ListaCompras(ttk.Frame):
         ttk.Separator(frame, orient='horizontal').pack(expand=True, fill='x')
 
         return frame
-
-
+    
+       

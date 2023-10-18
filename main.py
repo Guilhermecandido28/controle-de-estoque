@@ -10,6 +10,7 @@ from PIL import Image, ImageTk
 from estoque.estoque import Estoque
 from fornecedor.fornecedor import Fornecedor
 from compra.compra import Compra
+from vendas.vendas import Vendas
 
 
 
@@ -17,7 +18,7 @@ janela = Tk()
 
 
 
-class Applicantion(Cliente, Home, Estoque, Compra):
+class Applicantion(Cliente, Home, Estoque, Compra, Vendas):
     
     def __init__(self):
         self.janela = janela 
@@ -28,7 +29,8 @@ class Applicantion(Cliente, Home, Estoque, Compra):
         self.cliente_widgets_criados = False
         self.estoque_widgets_criados = False 
         self.fornecedor_widgets_criados = False 
-        self.compra_widgets_criados = False              
+        self.compra_widgets_criados = False 
+        self.venda_widgets_criados = False              
         janela.mainloop()
         
  
@@ -58,7 +60,15 @@ class Applicantion(Cliente, Home, Estoque, Compra):
             self.cliente_widgets_criados = True 
         else:
             pass          
-          
+    def venda(self):
+        global venda
+        if not self.venda_widgets_criados:                        
+            venda = Vendas(self.janela)
+            self.esquecer_functions()
+            self.venda_widgets_criados = True 
+        else:
+            pass
+
     def compra(self):
         global compra 
         if not self.compra_widgets_criados:
@@ -129,6 +139,10 @@ class Applicantion(Cliente, Home, Estoque, Compra):
             compra.f_add_compra.place_forget()
             compra.f_editar_compra.place_forget()
             self.compra_widgets_criados = False
+        if self.venda_widgets_criados:            
+            venda.principal.place_forget()        
+           
+            self.venda_widgets_criados = False
 
                    
  
@@ -139,7 +153,7 @@ class Applicantion(Cliente, Home, Estoque, Compra):
         self.btn_clientes.place(relx=0, rely=0, relwidth=0.14, relheight=1)
         #botão vendas
         self.img_vendas = PhotoImage(file='imagens/vendas.png')
-        self.btn_vendas = Button(self.menu, text='Vendas', image=self.img_vendas, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2')
+        self.btn_vendas = Button(self.menu, text='Vendas', image=self.img_vendas, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2', command=self.venda)
         self.btn_vendas.place(relx=0.14, rely=0, relwidth=0.14, relheight=1)
         # Fornecedor
         self.img_fornecedor = PhotoImage(file='imagens/fornecedor.png')

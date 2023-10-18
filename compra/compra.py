@@ -29,20 +29,23 @@ class Compra():
 
     def lista_compras(self):
         self.text_list = [
-    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
-    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
-    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
-    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
-    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
-    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
-    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
-    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
-    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
-    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
-    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
-    ('Guilherme empresas', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
              ]
-        ListaCompras(self.principal, self.text_list, 100)
+        lista_compras = ListaCompras(self.principal, self.text_list, 100)
+        for index, item in enumerate(self.text_list):
+            lista_compras.creat_compra(index, item).pack(expand= True, fill='both', padx=10)
+
     def onde_estou(self):
         #aqui coloca o frame de localização usando o metodo place
         self.location_compra.place(relx=0, rely=0.14, relwidth=1, relheight=0.09)
@@ -94,7 +97,7 @@ class Compra():
         self.n_compra.place(relx=0, rely=0, relheight=1, relwidth=.08)
 
         #titulo fornecedor
-        self.fornecedor_compra = Label(self.titulos, text='FORNECEDOR', bg='#8A8A8A', font=('arial 10 bold'),  borderwidth=2, relief='solid')
+        self.fornecedor_compra = Label(self.titulos, text='Produto', bg='#8A8A8A', font=('arial 10 bold'),  borderwidth=2, relief='solid')
             #aqui é posto o titulo fornecedor no layout
         self.fornecedor_compra.place(relx=0.08, rely=0, relheight=1, relwidth=.32)
 

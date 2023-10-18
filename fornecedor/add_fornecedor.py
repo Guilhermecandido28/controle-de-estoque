@@ -195,13 +195,15 @@ class AddFornecedor():
         messagebox.showinfo("Sucesso", "Operação realizada com sucesso!")   
 
     def preencher_listbox(self):
-        produtos = "SELECT descricao, categoria, marca FROM estoque"
+        produtos = "SELECT descricao, categoria, marca, tamanho, cor FROM estoque"
         query = dql(produtos)               
         for produto in query:
             descricao = produto[0]
             categoria = produto[1]
-            marca = produto[2]             
-            texto_formatado = f"{descricao} - {categoria} - {marca}"
+            marca = produto[2]
+            tamanho = produto[3]
+            cor = produto[4]             
+            texto_formatado = f"{descricao} - {categoria} - {marca} - {tamanho} - {cor}"
             self.e_lista.insert(END, texto_formatado)
         
         
