@@ -44,14 +44,39 @@ class ListaCompras(ttk.Frame):
     def creat_compra(self, index, item):
         frame = ttk.Frame(self.frame)
         image = Image.open('imagens/editar.png')
-        tk_image = ImageTk.PhotoImage(image)
-        # ctk.set_default_color_theme('black')        
-        ttk.Label(frame, text=f'{index}', font=('Arial', 14)).place(relx=0.025, rely=0.1)
-        ttk.Label(frame, text=f'{item[0]}', font=('Arial', 14)).place(relx=.08, rely=0.1)
-        ttk.Label(frame, text=f'{item[1]}', font=('Arial', 14)).place(relx=.43, rely=0.1)
-        ttk.Label(frame, text=f'{item[2]}', font=('Arial', 14)).place(relx=.59, rely=0.1)
-        ttk.Label(frame, text='R$ 48,50', font=('Arial', 14, 'bold')).place(relx=.745, rely=0.05)
-        ttk.Label(frame, text=f'{item[3]}', font='bold', foreground='orange').place(relx=.75, rely=0.3)
+        tk_image = ctk.CTkImage(image)
+                
+        ttk.Label(
+            frame,
+            text=f'{index}',
+            font=('Arial', 14)).place(relx=0.025, rely=0.1)
+        
+        ttk.Label(
+            frame,
+            text=f'{item[0]}',
+            font=('Arial', 14)).place(relx=.08, rely=0.1)
+        
+        ttk.Label(
+            frame,
+            text=f'{item[1]}',
+            font=('Arial', 14)).place(relx=.43, rely=0.1)
+        
+        ttk.Label(
+            frame,
+            text=f'{item[2]}',
+            font=('Arial', 14)).place(relx=.59, rely=0.1)
+        
+        ttk.Label(
+            frame,
+            text='R$ 48,50',
+            font=('Arial', 14, 'bold')).place(relx=.745, rely=0.05)
+        
+        ttk.Label(
+            frame,
+            text=f'{item[3]}',
+            font='bold',
+            foreground='orange').place(relx=.75, rely=0.3)
+        
         ctk.CTkButton(frame,
                     text=f'{item[4].upper()}',
                     image=tk_image,

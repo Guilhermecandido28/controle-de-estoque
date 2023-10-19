@@ -30,82 +30,360 @@ class AddCompra():
         ttk.Separator(self.principal, orient='vertical').place(relx=0.05, rely=.07, relwidth=.9) 
 
         #--------------------------Frames secundários-----------------------------#        
-        self.frame_pedido = Frame(self.principal, background='light gray' ,bd=0)        
-        self.frame_lista_pedidos = Frame(self.principal, background='light gray')
-        self.frame_info = Frame(self.principal, background=cor4, bd=0) 
-        self.frame_info.place(relx=0.05, rely=.45, relwidth=.5, relheight=.45)      
-        self.frame_pedido.place(relx=0.05, rely=.3, relwidth=.5, relheight=.15)
-        self.frame_lista_pedidos.place(relx=.6, rely=.3, relwidth=.39, relheight=.6)
+        self.frame_pedido = Frame(
+            self.principal,
+            background='light gray',
+            bd=0) 
+               
+        self.frame_lista_pedidos = Frame(
+            self.principal,
+            background='light gray')
+        
+        self.frame_info = Frame(
+            self.principal,
+            background=cor4,
+            bd=0)
+         
+        self.frame_info.place(
+            relx=0.05,
+            rely=.45,
+            relwidth=.5,
+            relheight=.45)
+              
+        self.frame_pedido.place(
+            relx=0.05,
+            rely=.3,
+            relwidth=.5,
+            relheight=.15)
+        
+        self.frame_lista_pedidos.place(
+            relx=.6,
+            rely=.3,
+            relwidth=.39,
+            
+            relheight=.6)
         
 
         
         #------------------------------Labels -------------------------------------------#
-        ttk.Label(self.principal, text='Fornecedor:', font=('arial 14 bold'), foreground=cor4, background='white').place(relx=.35, rely=.1)
-        ttk.Label(self.principal, text='Produto:', font=('arial 14 bold'), foreground=cor4, background='white').place(relx=.60, rely=.1)
-        ttk.Label(self.principal, text='Valores:', font=('arial 14 bold'), foreground=cor4, background='white').place(relx=.05, rely=.25)
-        self.msg_erro = ttk.Label(self.principal, text='Selecione um fornecedor primeiro.', foreground='red', background='white')
+        ttk.Label(
+            self.principal,
+            text='Fornecedor:',
+            font=('arial 14 bold'),
+            foreground=cor4,
+            background='white').place(relx=.35, rely=.1)
+        
+        ttk.Label(
+            self.principal,
+            text='Produto:',
+            font=('arial 14 bold'),
+            foreground=cor4,
+            background='white').place(relx=.60, rely=.1)
+        
+        ttk.Label(
+            self.principal,
+            text='Valores:',
+            font=('arial 14 bold'),
+            foreground=cor4,
+            background='white').place(relx=.05, rely=.25)
+        
+        self.msg_erro = ttk.Label(
+            self.principal,
+            text='Selecione um fornecedor primeiro.',
+            foreground='red',
+            background='white')
         self.msg_erro.place(relx=0.6, rely=.2)
-        ttk.Label(self.frame_pedido, text='Cod. Barras:', background='light gray', font=('arial 12 bold')).place(relx=0, rely=0)
-        ttk.Label(self.frame_pedido, text='Item:', background='light gray', font=('arial 12 bold')).place(relx=.2, rely=0)
-        ttk.Label(self.frame_pedido, text='Tam.:', background='light gray', font=('arial 10 bold')).place(relx=.14, rely=.35)
-        ttk.Label(self.frame_pedido, text='Cor:', background='light gray', font=('arial 10 bold')).place(relx=.153, rely=.5)
-        ttk.Label(self.frame_pedido, text='QTDE:', background='light gray', font=('arial 12 bold')).place(relx=.4, rely=0)
-        ttk.Label(self.frame_pedido, text='Preço:', background='light gray', font=('arial 12 bold')).place(relx=.55, rely=0)
-        ttk.Label(self.frame_pedido, text='Total:', background='light gray', font=('arial 12 bold')).place(relx=.7, rely=0)
-        ttk.Label(self.principal, text="N°", background='white', font=('arial 12 bold'), foreground=cor4).place(relx=.605, rely=.27)
-        ttk.Label(self.principal, text="Produto", background='white', font=('arial 12 bold'), foreground=cor4).place(relx=.65, rely=.27)
-        ttk.Label(self.principal, text="QTD", background='white', font=('arial 12 bold'), foreground=cor4).place(relx=.85, rely=.27)
-        ttk.Label(self.principal, text="Total", background='white', font=('arial 12 bold'), foreground=cor4).place(relx=.9, rely=.27)
-        ttk.Label(self.principal, text="Excluir", background='white', font=('arial 12 bold'), foreground=cor4).place(relx=.95, rely=.27)
-        ttk.Label(self.principal, text='PRAZO ENTREGA:', background='white', font=('arial 12 bold'), foreground=cor4).place(relx=0.05, rely=.1)
-        ttk.Label(self.principal, text='DATA DA COMPRA', background='white', font=('arial 12 bold'), foreground=cor4).place(relx=.2, rely=.1)
-        ttk.Separator(self.principal, orient='vertical').place(relx=.6, rely=.3, relwidth=.39)
-        ttk.Label(self.frame_info, text='SubTotal:', background=cor4, font=('arial 12 bold')).place(relx=0, rely=0)
-        ttk.Label(self.frame_info, text='Frete:', background=cor4, font=('arial 12 bold')).place(relx=0.15, rely=0)
-        ttk.Label(self.frame_info, text='Desconto:', background=cor4, font=('arial 12 bold')).place(relx=0.30, rely=0)
-        ttk.Label(self.frame_info, text='Total Final:', background=cor4, font=('arial 12 bold')).place(relx=0.46, rely=0)
-        ttk.Label(self.frame_info, text='Valor Pago:', background=cor4, font=('arial 12 bold')).place(relx=0.63, rely=0)
-        ttk.Label(self.frame_info, text='Valor Pendente:', background=cor4, font=('arial 12 bold')).place(relx=0.82, rely=0)
-        ttk.Label(self.frame_info, text='Forma de Pagamento:', background=cor4, font=('arial 12 bold')).place(relx=0.0, rely=.23)
-        ttk.Label(self.frame_info, text='Parcelamento:', background=cor4, font=('arial 12 bold')).place(relx=0.28, rely=.23)
-        ttk.Label(self.frame_info, text='Vencimento:', background=cor4, font=('arial 12 bold')).place(relx=0.48, rely=.23)
+
+        ttk.Label(
+            self.frame_pedido,
+            text='Cod. Barras:',
+            background='light gray',
+            font=('arial 12 bold')).place(relx=0, rely=0)
+        
+        ttk.Label(
+            self.frame_pedido,
+            text='Item:',
+            background='light gray',
+            font=('arial 12 bold')).place(relx=.2, rely=0)
+        
+        ttk.Label(
+            self.frame_pedido,
+            text='Tam.:',
+            background='light gray',
+            font=('arial 10 bold')).place(relx=.14, rely=.35)
+        
+        ttk.Label(
+            self.frame_pedido,
+            text='Cor:',
+            background='light gray',
+            font=('arial 10 bold')).place(relx=.153, rely=.5)
+        
+        ttk.Label(
+            self.frame_pedido, text='QTDE:',
+            background='light gray',
+            font=('arial 12 bold')).place(relx=.4, rely=0)
+        
+        ttk.Label(
+            self.frame_pedido,
+            text='Preço:',
+            background='light gray',
+            font=('arial 12 bold')).place(relx=.55, rely=0)
+        
+        ttk.Label(
+            self.frame_pedido,
+            text='Total:',
+            background='light gray',
+            font=('arial 12 bold')).place(relx=.7, rely=0)
+        
+        ttk.Label(
+            self.principal,
+            text="N°",
+            background='white',
+            font=('arial 12 bold'),
+            foreground=cor4).place(relx=.605, rely=.27)
+        
+        ttk.Label(
+            self.principal,
+            text="Produto",
+            background='white',
+            font=('arial 12 bold'), foreground=cor4).place(relx=.65, rely=.27)
+        
+        ttk.Label(
+            self.principal,
+            text="QTD",
+            background='white',
+            font=('arial 12 bold'),
+            foreground=cor4).place(relx=.85, rely=.27)
+        
+        ttk.Label(
+            self.principal,
+            text="Total",
+            background='white',
+            font=('arial 12 bold'),
+            foreground=cor4).place(relx=.9, rely=.27)
+        
+        ttk.Label(
+            self.principal,
+            text="Excluir",
+            background='white',
+            font=('arial 12 bold'),
+            foreground=cor4).place(relx=.95, rely=.27)
+        
+        ttk.Label(
+            self.principal,
+            text='PRAZO ENTREGA:',
+            background='white',
+            font=('arial 12 bold'),
+            foreground=cor4).place(relx=0.05, rely=.1)
+        
+        ttk.Label(
+            self.principal,
+            text='DATA DA COMPRA',
+            background='white',
+            font=('arial 12 bold'),
+            foreground=cor4).place(relx=.2, rely=.1)
+        
+        ttk.Separator(
+            self.principal,
+            orient='vertical').place(relx=.6, rely=.3, relwidth=.39)
+        
+        ttk.Label(
+            self.frame_info,
+            text='SubTotal:',
+            background=cor4,
+            font=('arial 12 bold')).place(relx=0, rely=0)
+        
+        ttk.Label(
+            self.frame_info,
+            text='Frete:',
+            background=cor4,
+            font=('arial 12 bold')).place(relx=0.15, rely=0)
+        
+        ttk.Label(
+            self.frame_info,
+            text='Desconto:',
+            background=cor4,
+            font=('arial 12 bold')).place(relx=0.30, rely=0)
+        
+        ttk.Label(
+            self.frame_info,
+            text='Total Final:',
+            background=cor4,
+            font=('arial 12 bold')).place(relx=0.46, rely=0)
+        
+        ttk.Label(
+            self.frame_info,
+            text='Valor Pago:',
+            background=cor4,
+            font=('arial 12 bold')).place(relx=0.63, rely=0)
+        
+        ttk.Label(
+            self.frame_info,
+            text='Valor Pendente:',
+            background=cor4,
+            font=('arial 12 bold')).place(relx=0.82, rely=0)
+        
+        ttk.Label(
+            self.frame_info,
+            text='Forma de Pagamento:',
+            background=cor4,
+            font=('arial 12 bold')).place(relx=0.0, rely=.23)
+        
+        ttk.Label(
+            self.frame_info,
+            text='Parcelamento:',
+            background=cor4,
+            font=('arial 12 bold')).place(relx=0.28, rely=.23)
+        
+        ttk.Label(
+            self.frame_info,
+            text='Vencimento:',
+            background=cor4,
+            font=('arial 12 bold')).place(relx=0.48, rely=.23)
 
         
 
         #------------------------------- Entrys -----------------------------------------#        
-        self.fornecedores = ttk.Combobox(self.principal, values=self.obter_fornecedores(), font=('Arial', 14), state='readonly')
+        self.fornecedores = ttk.Combobox(self.principal,
+        values=self.obter_fornecedores(),
+        font=('Arial', 14),
+        state='readonly')
         self.fornecedores.place(relx=0.35, rely=.15, relwidth=.20, relheight=.04)
-        self.fornecedores.bind('<<ComboboxSelected>>', lambda event: self.obter_produtos(event))
-        self.produtos = ttk.Combobox(self.principal, font=('Arial', 12), state='readonly')
+
+        self.fornecedores.bind(
+            '<<ComboboxSelected>>',
+            lambda event: self.obter_produtos(event))
+
+        self.produtos = ttk.Combobox(
+            self.principal,
+            font=('Arial', 12),
+            state='readonly')        
         self.produtos.place(relx=0.60, rely=.15, relwidth=.20, relheight=.04)
-        self.produtos.bind('<<ComboboxSelected>>', lambda event: self.obter_info_produtos(event))
-        self.qtde = Spinbox(self.frame_pedido, background='light gray', font=('arial 12 bold'), bd=0, highlightthickness=0, from_=0, to=1000, command=self.total_relativo)
-        self.qtde.bind('<KeyRelease>', lambda event: self.chamar_função(event))
+
+        self.produtos.bind(
+            '<<ComboboxSelected>>',
+            lambda event: self.obter_info_produtos(event))
+        
+        self.qtde = Spinbox(
+            self.frame_pedido,
+            background='light gray',
+            font=('arial 12 bold'),
+            bd=0,
+            highlightthickness=0,
+            from_=0,
+            to=1000,
+            command=self.total_relativo)
         self.qtde.place(relx=.425, rely=.20, relheight=.25, relwidth=.06)
-        self.data_hoje = DateEntry(self.principal, justify= 'center', font=('arial', 12))
+
+        self.qtde.bind(
+            '<KeyRelease>',
+            lambda event: self.chamar_função(event))
+        
+        
+        self.data_hoje = DateEntry(
+            self.principal,
+            justify= 'center',
+            font=('arial', 12))
         self.data_hoje.set_date(date.today())
         self.data_hoje.place(relx=0.05, rely=.15, relwidth= .11, relheight=.04)
-        self.data_entrega = DateEntry(self.principal, justify= 'center', font=('arial', 12))
+
+        self.data_entrega = DateEntry(
+            self.principal,
+            justify= 'center',
+            font=('arial', 12))
         self.data_entrega.set_date(date.today())
         self.data_entrega.place(relx=0.2, rely=.15, relwidth= .11, relheight=.04)
-        self.desconto = Entry(self.frame_info, bd=0, highlightthickness=0, background='light gray', justify='right', font=('arial 10'))
+
+        placeholderdesconto = StringVar(value='0')
+        self.desconto = Entry(
+            self.frame_info,
+            bd=0,
+            highlightthickness=0,
+            background='light gray',
+            justify='right',
+            font=('arial 10'),
+            textvariable=placeholderdesconto
+            )
         self.desconto.place(relx=.3, rely=.1, relheight=.08, relwidth=.11)
-        self.frete = Entry(self.frame_info, bd=0, highlightthickness=0, background='light gray', justify='right', font=('arial 10'))
+        self.desconto.bind('<KeyRelease>', lambda event: self.chamar_desconto(event))
+
+        placeholderfrete = StringVar(value='0')
+        self.frete = Entry(
+            self.frame_info,
+            bd=0,
+            highlightthickness=0,
+            background='light gray',
+            justify='right',
+            font=('arial 10'),
+            textvariable=placeholderfrete)
         self.frete.place(relx=.15, rely=.1, relheight=.08, relwidth=.11)
-        placeholder_custo(self.frete)        
-        self.forma_pag = ttk.Combobox(self.frame_info, font=('Arial', 12), state='readonly')
+        placeholder_custo(self.frete)
+        self.frete.bind('<KeyRelease>', lambda event: self.chamar_frete(event))
+
+        self.forma_pag = ttk.Combobox(
+            self.frame_info,
+            font=('Arial', 12),
+            state='readonly',
+            takefocus=True)
         self.forma_pag.place(relx=0.0, rely=.33, relwidth=.23, relheight=.08)
-        self.parcelamento = ttk.Combobox(self.frame_info, font=('Arial', 12), state='readonly')
+        self.forma_pag['values'] = ['Crédito', 'Débito', 'PIX', 'Dinheiro', 'Boleto']
+        self.forma_pag.current(0)
+
+        self.parcelamento = ttk.Combobox(
+            self.frame_info,
+            font=('Arial', 12),
+            state='readonly')
         self.parcelamento.place(relx=0.28, rely=.33, relwidth=.15, relheight=.08)
-        self.data_vencimento = DateEntry(self.frame_info, justify= 'center', font=('arial', 12))
+        self.parcelamento['values']= ['À vista', '2 vezes', '3 vezes', '4 vezes', '5 vezes', '6 vezes', '7 vezes', '8 vezes', '9 vezes', '10 vezes', '11 vezes', '12 vezes',]
+        self.parcelamento.current(0)
+
+        self.data_vencimento = DateEntry(
+            self.frame_info,
+            justify= 'center',
+            font=('arial', 12))
         self.data_vencimento.set_date(date.today())
         self.data_vencimento.place(relx=0.48, rely=.33, relwidth= .15, relheight=.08)
 
 
         #-----------------------------------Botões ----------------------------------------#
-        Button(self.frame_pedido, bg='gray', text='Incluir\n Pedido', cursor='hand2', font=('arial 12 bold'), command=self.lista_pedidos).place(relx=.85, rely=0, relwidth=.15, relheight=1)
-        Button(self.frame_info, bg='light gray', font=('arial 12 bold'), text='Gerar Contas', cursor='hand2').place(relx=.68, rely=.26, relheight=.15, relwidth=.28)
+        Button(
+            self.frame_pedido,
+            bg='gray',
+            text='Incluir\n Pedido',
+            cursor='hand2',
+            font=('arial 12 bold'),
+            command=self.lista_pedidos
+            ).place(relx=.85, rely=0, relwidth=.15, relheight=1)
         
+        Button(
+            self.frame_info,
+            bg='light gray',
+            font=('arial 12 bold'),
+            text='Gerar Contas',
+            cursor='hand2'
+            ).place(relx=.68, rely=.26, relheight=.15, relwidth=.28)
+        
+        self.r = StringVar(value='outro')
+        self.radio_p = Radiobutton(
+            self.frame_info,
+            text='%',
+            variable=self.r,
+            value='%',
+            background=cor4,
+            command=self.total
+        )
+        self.radio_p.place(relx=.29, rely=.18, relheight=0.05)
+
+        self.radio_r = Radiobutton(
+            self.frame_info,
+            text='R$',
+            variable=self.r,
+            value='R$',
+            background=cor4,
+            command=self.total
+        )
+        self.radio_r.place(relx=.36, rely=.18, relheight=0.05)
+        self.r.set("%")
     def chamar_função(self, event):        
         self.total_relativo()
         
@@ -155,7 +433,6 @@ class AddCompra():
             self.lista_produtos.append(produto)
         self.produtos['values'] = self.lista_produtos
 
-
     def reorganizar_labels(self):
         rely=.02
         count = 0
@@ -166,7 +443,6 @@ class AddCompra():
             if count == 5:            
                 rely+=0.1
                 count = 0
-
 
     def lista_pedidos(self):
         if self.qtde.get() == '0':
@@ -179,18 +455,41 @@ class AddCompra():
                 image = Image.open('imagens/excluir.png')
                 tk_image = ImageTk.PhotoImage(image)
                 self.lista_preços.append(self.preço)
-                index_label = Label(self.frame_lista_pedidos, text=f'{self.index}', font=('arial 12'), background='light gray')
-                index_label.place(relx=0.0, rely=self.rely)
-                produto_label = Label(self.frame_lista_pedidos, text=f'{info[0][1]} - {info[0][3]} - {info[0][4]}', font=('arial 12'), background='light gray')
-                produto_label.place(relx=.125, rely=self.rely)
-                qtd_label = Label(self.frame_lista_pedidos, text=f'{self.qtde.get()}', font=('arial 12'), background='light gray')
-                qtd_label.place(relx=.65, rely=self.rely)
                 preco = tk.StringVar(value=f'R$ {self.preço:.2f}')
-                entry_total = Label(self.frame_lista_pedidos, textvariable=preco, font=('arial 12'), bg='light gray')
+
+                index_label = Label(
+                    self.frame_lista_pedidos,
+                    text=f'{self.index}',
+                    font=('arial 12'),
+                    background='light gray')
+
+                produto_label = Label(
+                    self.frame_lista_pedidos,
+                    text=f'{info[0][1]} - {info[0][3]} - {info[0][4]}',
+                    font=('arial 12'),
+                    background='light gray')
+                
+                qtd_label = Label(
+                    self.frame_lista_pedidos,
+                    text=f'{self.qtde.get()}',
+                    font=('arial 12'),
+                    background='light gray')
+                
+                entry_total = Label(
+                    self.frame_lista_pedidos,
+                    textvariable=preco,
+                    font=('arial 12'),
+                    bg='light gray')
+
+                index_label.place(relx=0.0, rely=self.rely)               
+                produto_label.place(relx=.125, rely=self.rely)                
+                qtd_label.place(relx=.65, rely=self.rely)
+                
+                
                 entry_total.place(relx=.75, rely=self.rely)
                 self.subtotal()
                 # Botão "Excluir" com a função de remover a entrada correspondente
-                def excluir_item():                             
+                def excluir_item(preco):                             
                     index_label.destroy()
                     produto_label.destroy()
                     qtd_label.destroy()
@@ -198,40 +497,88 @@ class AddCompra():
                     excluir_button.destroy()
                     self.reorganizar_labels()
                     self.rely-=.1
-                                           
-                      
+                    preco_str = preco.get()
+                    preco_float = float(preco_str.replace('R$', '').replace(',', '.'))
+                    self.lista_preços.remove(preco_float)
                     self.subtotal()
-                excluir_button = ctk.CTkButton(self.frame_lista_pedidos,
-                                            text='',
-                                            image=tk_image,
-                                            compound='right',
-                                            font=('Arial', 18, 'bold'),
-                                            text_color="white",
-                                            hover=True,
-                                            hover_color="#454545",
-                                            height=20,
-                                            width=40,
-                                            border_width=2,
-                                            corner_radius=10,
-                                            border_color="#161616",
-                                            fg_color="#363636",
-                                            command=excluir_item)
+
+                excluir_button = ctk.CTkButton(
+                    self.frame_lista_pedidos,
+                    text='',
+                    image=tk_image,
+                    compound='right',
+                    font=('Arial', 18, 'bold'),
+                    text_color="white",
+                    hover=True,
+                    hover_color="#454545",
+                    height=20,
+                    width=40,
+                    border_width=2,
+                    corner_radius=10,
+                    border_color="#161616",
+                    fg_color="#363636",
+                    command=lambda preco=preco: excluir_item(preco))
                 excluir_button.place(relx=.9, rely=self.rely)
 
                 self.index += 1
                 self.rely += .1
             
-    def subtotal(self):                   
+    def subtotal(self):                           
         soma_valores = sum(self.lista_preços)
         valor= f'R${soma_valores:.2f}'.replace('.', ',')
-        label_valor = ttk.Label(self.frame_info, text=valor, background=cor4, font=('arial 14 bold'), foreground='#3738EB')
-        label_valor.place(relx=0, rely=.075)
+
+        label_valor = ttk.Label(
+            self.frame_info,
+            text=valor,
+            background=cor4,
+            font=('arial 14 bold'),
+            foreground='#3738EB')
         
-         
+        if len(valor) <=8 :
+            label_valor.place(relx=0, rely=.083, relwidth=.15)
+        else:
+            label_valor.place(relx=0, rely=.083)
+        self.total()
 
-               
+    def chamar_desconto(self, event):
+        self.total()
+
+    def chamar_frete(self, event):
+        self.total()
+
+    def obter_desconto(self):
+        if self.r.get() == '%':
+            porcentagem = int(self.desconto.get())/100
+            return porcentagem
+        if self.r.get() == 'R$':
+            real = int(self.desconto.get())
+            return real
         
+    def total(self):
+        total = 'R$0,00'
+        try:
+            if self.r.get() == '%':
+                if self.obter_desconto() == 0:
+                    total = sum(self.lista_preços) + float(self.frete.get())
+                    total = f'R${total:.2f}'.replace('.', ',')
+                else:
+                    total= (sum(self.lista_preços) - (sum(self.lista_preços)*self.obter_desconto())) + float(self.frete.get())
+                    total = f'R${total:.2f}'.replace('.', ',')
+            elif self.r.get() == 'R$':
+                total= (sum(self.lista_preços)-self.obter_desconto()) + float(self.frete.get())
+                total = f'R${total:.2f}'.replace('.', ',')
+        except ValueError:
+            pass
 
 
+        label_valor = ttk.Label(
+        self.frame_info,
+        text=total,
+        background=cor4,
+        font=('arial 14 bold'),
+        foreground='#3738EB')
 
-
+        if len(total) <=8 :
+            label_valor.place(relx=0.46, rely=.083, relwidth=.15)
+        else:
+            label_valor.place(relx=0.46, rely=.083)
