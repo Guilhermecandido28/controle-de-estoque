@@ -26,25 +26,26 @@ class Compra():
         self.lista_compras()
         self.filtros_busca()
         self.onde_estou()
+        self.cabecalho()
 
     def lista_compras(self):
         self.text_list = [
     ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
     ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
-    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
-    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
-    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
-    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
-    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
-    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
-    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
-    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
-    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
-    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
+
              ]
         lista_compras = ListaCompras(self.principal, self.text_list, 100)
         for index, item in enumerate(self.text_list):
             lista_compras.creat_compra(index, item).pack(expand= True, fill='both', padx=10)
+        self.img_voltar = PhotoImage(file='imagens/voltar.png')
+        self.btn_voltar_add = Button(
+            self.f_add_compra,
+            image=self.img_voltar,
+            bg='white',
+            cursor='hand2',
+            command=self.voltar,
+            relief='flat')
+        self.btn_voltar_add.place(relx=0.962, rely=0)
 
     def onde_estou(self):
         #aqui coloca o frame de localização usando o metodo place
@@ -133,7 +134,7 @@ class Compra():
             relwidth=0.1
             )
         
-
+    def cabecalho(self):
         # titulo numero
         self.n_compra = Label(
             self.titulos,
@@ -442,3 +443,10 @@ class Compra():
 
     def on_enter_compra(self,event):
         pass
+
+    def voltar(self):        
+        self.f_add_compra.place_forget()  
+        self.nova_compra()        
+        self.filtros_busca()
+        self.cabecalho()
+        

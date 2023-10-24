@@ -12,6 +12,7 @@ from estoque.banco_dados_estoque import dql
 import customtkinter as ctk
 from tkcalendar import DateEntry
 from datetime import date
+from dateutil.relativedelta import relativedelta
 
 
 class AddCompra():
@@ -22,7 +23,6 @@ class AddCompra():
         self.rely = 0.02 
         self.lista_preços = []
                
-        
     def layout_add_compra(self):
         #-------------------------Cabecalho------------------------------#
         self.principal.place(relx=0.01, rely=.25, relwidth = .98, relheight = .72)
@@ -209,19 +209,8 @@ class AddCompra():
             self.frame_info,
             text='Total Final:',
             background=cor4,
-            font=('arial 12 bold')).place(relx=0.46, rely=0)
-        
-        ttk.Label(
-            self.frame_info,
-            text='Valor Pago:',
-            background=cor4,
-            font=('arial 12 bold')).place(relx=0.63, rely=0)
-        
-        ttk.Label(
-            self.frame_info,
-            text='Valor Pendente:',
-            background=cor4,
-            font=('arial 12 bold')).place(relx=0.82, rely=0)
+            font=('arial 12 bold')).place(relx=0.46, rely=0)       
+
         
         ttk.Label(
             self.frame_info,
@@ -241,7 +230,47 @@ class AddCompra():
             background=cor4,
             font=('arial 12 bold')).place(relx=0.48, rely=.23)
 
+        ttk.Label(
+            self.frame_info,
+            text='Vencimento',
+            background=cor4,
+            font=('arial 10 bold')
+            ).place(relx=.0, rely=.44)
         
+        ttk.Label(
+            self.frame_info,
+            text='Vencimento',
+            background=cor4,
+            font=('arial 10 bold')
+            ).place(relx=.5, rely=.44)
+        
+        ttk.Label(
+            self.frame_info,
+            text='Parcela',
+            background=cor4,
+            font=('arial 10 bold')
+            ).place(relx=.2, rely=.44)
+        
+        ttk.Label(
+            self.frame_info,
+            text='Parcela',
+            background=cor4,
+            font=('arial 10 bold')           
+        ).place(relx=.7, rely=.44)
+        
+        ttk.Label(
+            self.frame_info,
+            text='Saldo',
+            background=cor4,
+            font=('arial 10 bold')
+        ).place(relx=.35, rely=.44)
+
+        ttk.Label(
+            self.frame_info,
+            text='Saldo',
+            background=cor4,
+            font=('arial 10 bold')
+        ).place(relx=.85, rely=.44)
 
         #------------------------------- Entrys -----------------------------------------#        
         self.fornecedores = ttk.Combobox(self.principal,
@@ -280,19 +309,20 @@ class AddCompra():
             lambda event: self.chamar_função(event))
         
         
-        self.data_hoje = DateEntry(
-            self.principal,
-            justify= 'center',
-            font=('arial', 12))
-        self.data_hoje.set_date(date.today())
-        self.data_hoje.place(relx=0.05, rely=.15, relwidth= .11, relheight=.04)
-
         self.data_entrega = DateEntry(
             self.principal,
             justify= 'center',
-            font=('arial', 12))
-        self.data_entrega.set_date(date.today())
-        self.data_entrega.place(relx=0.2, rely=.15, relwidth= .11, relheight=.04)
+            font=('arial', 12),
+            state='readonly')        
+        self.data_entrega.place(relx=0.05, rely=.15, relwidth= .11, relheight=.04)
+
+        self.data_hoje = DateEntry(
+            self.principal,
+            justify= 'center',
+            font=('arial', 12),
+            state='readonly')
+        self.data_hoje.set_date(date.today())
+        self.data_hoje.place(relx=0.2, rely=.15, relwidth= .11, relheight=.04)
 
         placeholderdesconto = StringVar(value='0')
         self.desconto = Entry(
@@ -332,7 +362,8 @@ class AddCompra():
         self.parcelamento = ttk.Combobox(
             self.frame_info,
             font=('Arial', 12),
-            state='readonly')
+            state='readonly'
+            )
         self.parcelamento.place(relx=0.28, rely=.33, relwidth=.15, relheight=.08)
         self.parcelamento['values']= ['À vista', '2 vezes', '3 vezes', '4 vezes', '5 vezes', '6 vezes', '7 vezes', '8 vezes', '9 vezes', '10 vezes', '11 vezes', '12 vezes',]
         self.parcelamento.current(0)
@@ -340,7 +371,9 @@ class AddCompra():
         self.data_vencimento = DateEntry(
             self.frame_info,
             justify= 'center',
-            font=('arial', 12))
+            font=('arial', 12),
+            state='readonly'
+            )
         self.data_vencimento.set_date(date.today())
         self.data_vencimento.place(relx=0.48, rely=.33, relwidth= .15, relheight=.08)
 
@@ -360,7 +393,8 @@ class AddCompra():
             bg='light gray',
             font=('arial 12 bold'),
             text='Gerar Contas',
-            cursor='hand2'
+            cursor='hand2',
+            command=self.gerar_conta
             ).place(relx=.68, rely=.26, relheight=.15, relwidth=.28)
         
         self.r = StringVar(value='outro')
@@ -370,7 +404,7 @@ class AddCompra():
             variable=self.r,
             value='%',
             background=cor4,
-            command=self.total
+            command=self.calcular_total
         )
         self.radio_p.place(relx=.29, rely=.18, relheight=0.05)
 
@@ -380,10 +414,11 @@ class AddCompra():
             variable=self.r,
             value='R$',
             background=cor4,
-            command=self.total
+            command=self.calcular_total
         )
         self.radio_r.place(relx=.36, rely=.18, relheight=0.05)
         self.r.set("%")
+
     def chamar_função(self, event):        
         self.total_relativo()
         
@@ -392,7 +427,7 @@ class AddCompra():
         try:      
             self.preço = info[0][2]
             self.preço = float(self.preço)*int(self.qtde.get())
-            self.label_total = ttk.Label(self.frame_pedido, text=f'R${self.preço:.2f}', background='light gray', font=('arial 10 '))
+            self.label_total = ttk.Label(self.frame_pedido, text=f'R${self.preço:.2f}'.replace(".",","), background='light gray', font=('arial 10 '))
             if self.preço < 100:
                 self.label_total.place(relx=0.7, rely=.2,relwidth=.1)
             else: 
@@ -409,7 +444,7 @@ class AddCompra():
         info = dql_args(query, (info_produtos[0].strip(), info_produtos[1].strip(), info_produtos[2].strip()))
         ttk.Label(self.frame_pedido, text=info[0][0], background='light gray', font=('arial 10 ')).place(relx=0, rely=.2)
         ttk.Label(self.frame_pedido, text=f'{info[0][1]}\n{info[0][3]}\n{info[0][4]}', background='light gray', font=('arial 10 ')).place(relx=0.2, rely=.2)
-        ttk.Label(self.frame_pedido, text=f'R${info[0][2]}', background='light gray', font=('arial 10 ')).place(relx=0.55, rely=.2)
+        ttk.Label(self.frame_pedido, text=f'R${float(info[0][2]):.2f}'.replace(".",","), background='light gray', font=('arial 10 ')).place(relx=0.55, rely=.2)
         if int(self.qtde.get()) > 0:
             self.label_total = ttk.Label(self.frame_pedido, text=f'R${float(info[0][2])*int(self.qtde.get()):.2f}', background='light gray', font=('arial 10 '))
             self.label_total.place(relx=0.7, rely=.2)
@@ -453,9 +488,9 @@ class AddCompra():
                 messagebox.showerror('Erro', "No máximo 10 itens por compra.")
             else:
                 image = Image.open('imagens/excluir.png')
-                tk_image = ImageTk.PhotoImage(image)
+                tk_image = ctk.CTkImage(image)
                 self.lista_preços.append(self.preço)
-                preco = tk.StringVar(value=f'R$ {self.preço:.2f}')
+                preco = tk.StringVar(value=f'R$ {self.preço:.2f}'.replace('.',','))
 
                 index_label = Label(
                     self.frame_lista_pedidos,
@@ -538,13 +573,13 @@ class AddCompra():
             label_valor.place(relx=0, rely=.083, relwidth=.15)
         else:
             label_valor.place(relx=0, rely=.083)
-        self.total()
+        self.calcular_total()
 
     def chamar_desconto(self, event):
-        self.total()
+        self.calcular_total()
 
     def chamar_frete(self, event):
-        self.total()
+        self.calcular_total()
 
     def obter_desconto(self):
         if self.r.get() == '%':
@@ -554,31 +589,146 @@ class AddCompra():
             real = int(self.desconto.get())
             return real
         
-    def total(self):
-        total = 'R$0,00'
+    def calcular_total(self):        
+        self.total = 'R$0,00'
         try:
             if self.r.get() == '%':
                 if self.obter_desconto() == 0:
-                    total = sum(self.lista_preços) + float(self.frete.get())
-                    total = f'R${total:.2f}'.replace('.', ',')
+                    self.total = sum(self.lista_preços) + float(self.frete.get())
+                    self.total = f'R${self.total:.2f}'.replace('.', ',')
                 else:
-                    total= (sum(self.lista_preços) - (sum(self.lista_preços)*self.obter_desconto())) + float(self.frete.get())
-                    total = f'R${total:.2f}'.replace('.', ',')
+                    self.total= (sum(self.lista_preços) - (sum(self.lista_preços)*self.obter_desconto())) + float(self.frete.get())
+                    self.total = f'R${self.total:.2f}'.replace('.', ',')
             elif self.r.get() == 'R$':
-                total= (sum(self.lista_preços)-self.obter_desconto()) + float(self.frete.get())
-                total = f'R${total:.2f}'.replace('.', ',')
+                self.total= (sum(self.lista_preços)-self.obter_desconto()) + float(self.frete.get())
+                self.total = f'R${self.total:.2f}'.replace('.', ',')
         except ValueError:
             pass
 
 
         label_valor = ttk.Label(
         self.frame_info,
-        text=total,
+        text=self.total,
         background=cor4,
         font=('arial 14 bold'),
         foreground='#3738EB')
 
-        if len(total) <=8 :
+        if len(self.total) <=8 :
             label_valor.place(relx=0.46, rely=.083, relwidth=.15)
         else:
             label_valor.place(relx=0.46, rely=.083)
+
+    def gerar_conta(self):
+        try:
+            rely = .55
+            relx = 0
+            tempo = 0 
+            data = self.data_vencimento.get_date()
+            ttk.Separator(
+                self.frame_info,
+                orient='vertical'
+            ).place(relx=.475, rely=.45, relheight=.525)                  
+            if self.parcelamento.get() == 'À vista':
+                        
+                vezes = 1
+                total = f'{float(self.total[2:-1].replace(",","."))/int(vezes):.2f}'
+                total_formatado = f"R${str(total).replace('.',',')}"            
+                saldo = float(self.total[2:-1].replace(',','.'))-float(total)
+            elif self.parcelamento.get() == '2 vezes':
+                        
+                vezes = 2
+                total = f'{float(self.total[2:-1].replace(",","."))/int(vezes):.2f}'
+                total_formatado = f"R${str(total).replace('.',',')}"            
+                saldo = float(self.total[2:-1].replace(',','.'))-float(total)
+            elif self.parcelamento.get() == '3 vezes':            
+                vezes = 3
+                total = f'{float(self.total[2:-1].replace(",","."))/int(vezes):.2f}'
+                total_formatado = f"R${str(total).replace('.',',')}"            
+                saldo = float(self.total[2:-1].replace(',','.'))-float(total)
+            elif self.parcelamento.get() == '4 vezes':
+                
+                vezes = 4
+                total = f'{float(self.total[2:-1].replace(",","."))/int(vezes):.2f}'
+                total_formatado = f"R${str(total).replace('.',',')}"            
+                saldo = float(self.total[2:-1].replace(',','.'))-float(total)
+            elif self.parcelamento.get() == '5 vezes':
+                
+                vezes = 5
+                total = f'{float(self.total[2:-1].replace(",","."))/int(vezes):.2f}'
+                total_formatado = f"R${str(total).replace('.',',')}"            
+                saldo = float(self.total[2:-1].replace(',','.'))-float(total)
+            elif self.parcelamento.get() == '6 vezes':
+                
+                vezes = 6
+                total = f'{float(self.total[2:-1].replace(",","."))/int(vezes):.2f}'
+                total_formatado = f"R${str(total).replace('.',',')}"            
+                saldo = float(self.total[2:-1].replace(',','.'))-float(total)
+            elif self.parcelamento.get() == '7 vezes':
+                
+                vezes = 7
+                total = f'{float(self.total[2:-1].replace(",","."))/int(vezes):.2f}'
+                total_formatado = f"R${str(total).replace('.',',')}"            
+                saldo = float(self.total[2:-1].replace(',','.'))-float(total)
+            elif self.parcelamento.get() == '8 vezes':
+                
+                vezes = 8
+                total = f'{float(self.total[2:-1].replace(",","."))/int(vezes):.2f}'
+                total_formatado = f"R${str(total).replace('.',',')}"            
+                saldo = float(self.total[2:-1].replace(',','.'))-float(total)
+            elif self.parcelamento.get() == '9 vezes':
+                
+                vezes = 9
+                total = f'{float(self.total[2:-1].replace(",","."))/int(vezes):.2f}'
+                total_formatado = f"R${str(total).replace('.',',')}"            
+                saldo = float(self.total[2:-1].replace(',','.'))-float(total)
+            elif self.parcelamento.get() == '10 vezes':
+                
+                vezes = 10
+                total = f'{float(self.total[2:-1].replace(",","."))/int(vezes):.2f}'
+                total_formatado = f"R${str(total).replace('.',',')}"            
+                saldo = float(self.total[2:-1].replace(',','.'))-float(total)
+            elif self.parcelamento.get() == '11 vezes':
+                
+                vezes = 11
+                total = f'{float(self.total[2:-1].replace(",","."))/int(vezes):.2f}'
+                total_formatado = f"R${str(total).replace('.',',')}"            
+                saldo = float(self.total[2:-1].replace(',','.'))-float(total)
+            elif self.parcelamento.get() == '12 vezes':
+                
+                vezes = 12
+                total = f'{float(self.total[2:-1].replace(",","."))/int(vezes):.2f}'
+                total_formatado = f"R${str(total).replace('.',',')}"            
+                saldo = float(self.total[2:-1].replace(',','.'))-float(total)
+        
+            
+            for i in range(vezes):
+                ttk.Label(
+                    self.frame_info,
+                    text=(data+relativedelta(months=tempo)).strftime("%d-%m-%Y"),
+                    background=cor4,
+                    font=('arial 12')
+                ).place(relx=relx, rely=rely)
+
+                ttk.Label(
+                    self.frame_info,
+                    text=total_formatado,
+                    background=cor4,
+                    font=('arial 12')
+                ).place(relx=relx+.2, rely=rely)
+
+                ttk.Label(
+                    self.frame_info,
+                    text=f'R${saldo:.2f}'.replace(".",","),
+                    background=cor4,
+                    font=('arial 12')
+                ).place(relx=relx+.35, rely=rely)
+                rely+=.07
+                saldo -= float(total)
+                tempo+=1
+                if i==5:
+                    rely=.55
+                    relx =.5
+        except TypeError:
+            messagebox.showerror('Erro!', 'Você precisa incluir um produto primeiro.')
+                      
+
