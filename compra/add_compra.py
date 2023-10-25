@@ -11,8 +11,9 @@ from fornecedor.banco_dados_fornecedor import fornecedor_dql, fornecedor_dql_arg
 from estoque.banco_dados_estoque import dql
 import customtkinter as ctk
 from tkcalendar import DateEntry
-from datetime import date
+from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
+from compra.bancodedadoscompra import *
 
 
 class AddCompra():
@@ -22,6 +23,8 @@ class AddCompra():
         self.index = 1
         self.rely = 0.02 
         self.lista_preços = []
+        self.lista_compras = []
+        self.lista_quantidades = []
                
     def layout_add_compra(self):
         #-------------------------Cabecalho------------------------------#
@@ -272,6 +275,22 @@ class AddCompra():
             font=('arial 10 bold')
         ).place(relx=.85, rely=.44)
 
+        ttk.Label(
+            self.frame_info,
+            text='Status da Compra',
+            background=cor4,
+            font=('arial 12 bold')
+        ).place(relx=.62, rely=0)
+        
+
+        self.switch_label = ttk.Label(
+            self.frame_info,
+            text='Concluído',
+            background=cor4,
+            font=('arial 10 bold')
+        )
+        self.switch_label.place(relx=.62, rely=.1)
+
         #------------------------------- Entrys -----------------------------------------#        
         self.fornecedores = ttk.Combobox(self.principal,
         values=self.obter_fornecedores(),
@@ -397,7 +416,7 @@ class AddCompra():
             command=self.gerar_conta
             ).place(relx=.68, rely=.26, relheight=.15, relwidth=.28)
         
-        self.r = StringVar(value='outro')
+        self.r = StringVar(value='%')
         self.radio_p = Radiobutton(
             self.frame_info,
             text='%',
@@ -418,6 +437,27 @@ class AddCompra():
         )
         self.radio_r.place(relx=.36, rely=.18, relheight=0.05)
         self.r.set("%")
+
+        self.btn_salvar = Button(
+            self.principal,
+            text='Concluir',
+            font=('arial 14 bold'),
+            cursor='hand2',
+            command=self.salvar
+        )
+        self.btn_salvar.place(relx=.05, rely=.9, relwidth=.5, relheight=.05)
+
+        self.switch_var = ctk.StringVar(value='Concluído')
+        self.switch = ctk.CTkSwitch(
+            self.frame_info,
+            text='',
+            command= self.status,
+            variable=self.switch_var, onvalue='Concluído',
+            offvalue='Pendente'
+        )
+        self.switch.place(relx=0.62, rely=.15)
+    def status(self):
+        self.switch_label.configure(text=self.switch_var.get())
 
     def chamar_função(self, event):        
         self.total_relativo()
@@ -467,6 +507,7 @@ class AddCompra():
         for produto in produtos:
             self.lista_produtos.append(produto)
         self.produtos['values'] = self.lista_produtos
+        
 
     def reorganizar_labels(self):
         rely=.02
@@ -478,6 +519,9 @@ class AddCompra():
             if count == 5:            
                 rely+=0.1
                 count = 0
+    def preencher_listas_para_salvar(self):
+        self.lista_compras.append(f'{info[0][1]} - {info[0][3]} - {info[0][4]}')
+        self.lista_quantidades.append(int(self.qtde.get()))
 
     def lista_pedidos(self):
         if self.qtde.get() == '0':
@@ -491,7 +535,7 @@ class AddCompra():
                 tk_image = ctk.CTkImage(image)
                 self.lista_preços.append(self.preço)
                 preco = tk.StringVar(value=f'R$ {self.preço:.2f}'.replace('.',','))
-
+                self.preencher_listas_para_salvar()                
                 index_label = Label(
                     self.frame_lista_pedidos,
                     text=f'{self.index}',
@@ -730,5 +774,22 @@ class AddCompra():
                     relx =.5
         except TypeError:
             messagebox.showerror('Erro!', 'Você precisa incluir um produto primeiro.')
-                      
+
+    def salvar(self):     
+        data_compra = self.data_hoje.get_date().strftime("%d/%m/%Y") # data da compra
+        data_entrega = self.data_entrega.get_date().strftime("%d/%m/%Y") # data de entrega
+        cod_barras = info[0][0] # código de barras
+        produto = ", ".join(self.lista_compras) #produto         
+        fornecedor = self.fornecedores.get() # fornecedor
+        forma_pag = self.forma_pag.get() #forma de pagamento
+        parcelamento = self.parcelamento.get() #parcelamento
+        data_vencimento = self.data_vencimento.get_date().strftime("%d/%m/%Y") #data de vencimento
+        quantidade = sum(self.lista_quantidades) #quantidade
+        frete = f'{float(self.frete.get()):.2f}'.replace('.',',') #frete
+        desconto = self.desconto.get() + self.r.get() #desconto
+        status = self.switch.get() #status
+        total = self.total
+        query = '''INSERT INTO compras (data_compra, data_entrega, codigo_de_barras, produto, fornecedor, forma_de_pagamento, parcelamento, vencimento, quantidade, frete, desconto, status, total ) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'''
+        params = (data_compra, data_entrega, cod_barras, produto, fornecedor, forma_pag, parcelamento, data_vencimento, quantidade, frete, desconto, status, total)
+        compra_dml(query, params)         
 

@@ -11,6 +11,8 @@ from tkcalendar import DateEntry
 import customtkinter as ctk
 from compra.listadecompras import ListaCompras
 from compra.add_compra import AddCompra
+from compra.bancodedadoscompra import *
+
 
 
 
@@ -29,11 +31,9 @@ class Compra():
         self.cabecalho()
 
     def lista_compras(self):
-        self.text_list = [
-    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
-    ('Produtos', '13/10/2023', '17/10/2023', 'pendente', 'editar'),
-
-             ]
+        query = '''SELECT id, fornecedor, data_compra, data_entrega, total, status FROM compras ORDER BY id'''
+        self.text_list = compra_dql(query)       
+        
         lista_compras = ListaCompras(self.principal, self.text_list, 100)
         for index, item in enumerate(self.text_list):
             lista_compras.creat_compra(index, item).pack(expand= True, fill='both', padx=10)
