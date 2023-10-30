@@ -1,7 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
 import customtkinter as ctk
-from PIL import ImageTk, Image
+from PIL import Image
+from compra.editar_compra import EditarCompra
+
 
 
 class ListaCompras(ttk.Frame):
@@ -40,45 +42,53 @@ class ListaCompras(ttk.Frame):
         width= self.winfo_width(),
         height= self.list_height
         )
-        
+
     def creat_compra(self, index, item):
         frame = ttk.Frame(self.frame)
         image = Image.open('imagens/editar.png')
         tk_image = ctk.CTkImage(image)
-                
-        ttk.Label(
-            frame,
-            text=f'{index}',
-            font=('Arial', 14)).place(relx=0.025, rely=0.1)
-        
-        ttk.Label(
-            frame,
+        self.id = tk.StringVar(value=f'{item[0]}')     
+        self.label_id = ttk.Label(
+            frame,            
             text=f'{item[0]}',
-            font=('Arial', 14)).place(relx=.08, rely=0.1)
+            font=('Arial', 14))
+        self.label_id.place(relx=0.025, rely=0.1)
         
         ttk.Label(
             frame,
             text=f'{item[1]}',
-            font=('Arial', 14)).place(relx=.43, rely=0.1)
+            font=('Arial', 14)).place(relx=.08, rely=0.1)
+
         
         ttk.Label(
             frame,
             text=f'{item[2]}',
-            font=('Arial', 14)).place(relx=.59, rely=0.1)
-        
-        ttk.Label(
-            frame,
-            text='R$ 48,50',
-            font=('Arial', 14, 'bold')).place(relx=.745, rely=0.05)
+            font=('Arial', 14)).place(relx=.43, rely=0.1)
         
         ttk.Label(
             frame,
             text=f'{item[3]}',
-            font='bold',
-            foreground='orange').place(relx=.75, rely=0.3)
+            font=('Arial', 14)).place(relx=.59, rely=0.1)
         
+        ttk.Label(
+            frame,
+            text=f'{item[4]}',
+            font=('Arial', 14, 'bold')).place(relx=.745, rely=0.05)
+        if item[5] == 'Pendente':
+            ttk.Label(
+                frame,
+                text=f'{item[5]}',
+                font='bold',
+                foreground='orange').place(relx=.75, rely=0.3)
+        else:
+            ttk.Label(
+                frame,
+                text=f'{item[5]}',
+                font='bold',
+                foreground='green').place(relx=.75, rely=0.3) 
+                   
         ctk.CTkButton(frame,
-                    text=f'{item[4].upper()}',
+                    text='EDITAR',
                     image=tk_image,
                     compound='right',
                     font=('Arial', 18, 'bold'),
@@ -90,9 +100,17 @@ class ListaCompras(ttk.Frame):
                     border_width=2,
                     corner_radius=10,
                     border_color= "#161616",                     
-                    fg_color= "#363636").place(relx=.86, rely=0, relwidth=.1335, relheight=0.5)
+                    fg_color= "#363636",
+                    command=lambda id=self.id.get(): self.editar_compra(id)).place(relx=.86, rely=0, relwidth=.1335, relheight=0.5)
         ttk.Separator(frame, orient='horizontal').pack(expand=True, fill='x')
 
         return frame
     
+    def clear_frame(self):
+        for widget in self.frame.winfo_children():
+            widget.destroy()
+
+    def editar_compra(self, id):
+        EditarCompra(id)
+
        

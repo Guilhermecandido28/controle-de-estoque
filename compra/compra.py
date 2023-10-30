@@ -3,23 +3,16 @@ from styles.cores import *
 import tkinter as tk
 from formations import *
 from limpar import limpar
-from tkinter import ttk
-from tkinter import messagebox
 from estoque.banco_dados_estoque import *
 from PIL import Image, ImageTk
-from tkcalendar import DateEntry
-import customtkinter as ctk
 from compra.listadecompras import ListaCompras
 from compra.add_compra import AddCompra
 from compra.bancodedadoscompra import *
 
 
-
-
 class Compra():
     def __init__(self, frame) -> None:
         self.principal = tk.Frame(frame, background='black')
-        self.f_editar_compra = tk.Frame(frame, bg='white')
         self.f_add_compra = tk.Frame(frame, bg= 'white')
         self.location_compra = tk.Canvas(frame, bd=0, highlightthickness=0)
         self.f_filtros_busca = tk.Frame(frame, bg='#8A8A8A')
@@ -34,9 +27,9 @@ class Compra():
         query = '''SELECT id, fornecedor, data_compra, data_entrega, total, status FROM compras ORDER BY id'''
         self.text_list = compra_dql(query)       
         
-        lista_compras = ListaCompras(self.principal, self.text_list, 100)
+        self.lista_compra = ListaCompras(self.principal, self.text_list, 100)
         for index, item in enumerate(self.text_list):
-            lista_compras.creat_compra(index, item).pack(expand= True, fill='both', padx=10)
+            self.lista_compra.creat_compra(self.text_list[index][0], item).pack(expand= True, fill='both', padx=10)
         self.img_voltar = PhotoImage(file='imagens/voltar.png')
         self.btn_voltar_add = Button(
             self.f_add_compra,
@@ -92,27 +85,28 @@ class Compra():
             image=self.img_search_compra,
             bg="#8A8A8A",
             bd=0,
-            cursor='hand2'
+            cursor='hand2',
+            command=self.procurar
             )
         self.btn_search_compra.place(
-            relx=0.3,
+            relx=0.85,
             rely=0.15
             )        
         self.search_compra.bind('<Return>', self.on_enter_compra)
 
-        #Botão_imprimir
-        self.img_print_compra = PhotoImage(file='imagens/impressora.png')
-        self.btn_print_compra = Button(
-            self.f_filtros_busca,
-            image=self.img_print_compra,
-            bg="#8A8A8A",
-            bd=0,
-            cursor='hand2'
-            )
-        self.btn_print_compra.place(
-            relx=0.35,
-            rely=0.15
-            )
+        # #Botão_imprimir
+        # self.img_print_compra = PhotoImage(file='imagens/impressora.png')
+        # self.btn_print_compra = Button(
+        #     self.f_filtros_busca,
+        #     image=self.img_print_compra,
+        #     bg="#8A8A8A",
+        #     bd=0,
+        #     cursor='hand2'
+        #     )
+        # self.btn_print_compra.place(
+        #     relx=0.35,
+        #     rely=0.15
+        #     )
         
         
         # botão de adicionar compra
@@ -154,7 +148,7 @@ class Compra():
         #titulo fornecedor
         self.fornecedor_compra = Label(
             self.titulos,
-            text='Produto',
+            text='Fornecedor',
             bg='#8A8A8A',
             font=('arial 10 bold'),
               borderwidth=2,
@@ -171,7 +165,7 @@ class Compra():
         #titulo data de emissão
         self.data_emissao = Label(
             self.titulos,
-            text='DATA EMISSÃO',
+            text='DATA COMPRA',
             bg='#8A8A8A',
             font=('arial 10 bold'),
             borderwidth=2,
@@ -262,8 +256,6 @@ class Compra():
         self.add_compra = AddCompra(self.f_add_compra)
         self.principal.place_forget()
         self.f_filtros_busca.place_forget()
-        self.calendario_fim.destroy()
-        self.calendario_inicio.destroy()
         self.titulos.place_forget()
 
     def resize_image(self, event):
@@ -282,164 +274,8 @@ class Compra():
             rely=0.23,
             relheight=0.07,
             relwidth=0.98
-            )
+            )                                      
 
-        # titulo da data de inicio
-        self.title_data_inicio = Label(
-            self.f_filtros_busca,
-            text='Data de Início',
-            bg="#8A8A8A",
-            font=('arial 10 bold')
-            )
-
-        #titulo da data fim 
-        self.title_data_fim = Label(
-            self.f_filtros_busca,
-            text='Data Fim',
-            bg="#8A8A8A",
-            font=('arial 10 bold')
-            )
-
-        # a entry da do calendario de inicio      
-        self.calendario_inicio = DateEntry(
-            self.f_filtros_busca,
-            selectmode= 'day',
-            background="#8A8A8A",
-            font=('arial 14 bold')
-            )
-
-        #a entry do calendario fim
-        self.calendario_fim = DateEntry(
-            self.f_filtros_busca,
-            selectmode= 'day',
-            background="#8A8A8A",
-            font=('arial 14 bold')
-            )
-
-        # aqui pega a data de inicio selecionada e formata a data de inicio
-        self.fdata_inicio = self.calendario_inicio.get_date()
-        self.fdata_inicio = self.fdata_inicio.strftime('%d/%m/%Y')
-
-        # label da data de inicio
-        self.data_inicio = Label(
-            self.f_filtros_busca,
-            text=self.fdata_inicio,
-            bg='#8A8A8A',
-            font=('arial 14 bold')
-            )
-
-        #aqui pega a data fim selecionada e formata
-        self.fdata_fim = self.calendario_fim.get_date()
-        self.fdata_fim = self.fdata_fim.strftime('%d/%m/%Y')
-
-        # label da data fim
-        self.data_fim = Label(
-            self.f_filtros_busca,
-            text=self.fdata_fim,
-            bg='#8A8A8A',
-            font=('arial 14 bold')
-            )
-
-        # label pagamento 
-        self.pagamentos = Label(
-            self.f_filtros_busca,
-            text='Pagamentos',
-            bg='#8A8A8A',
-            font=('arial 10 bold')
-            )
-
-        #combobox para o status do pagamento
-        self.pagamento_way = ctk.CTkComboBox(
-            self.f_filtros_busca,
-            values=['Pendente', 'Concluído', 'Ambos']
-            ) 
-
-        #label entrega
-        self.entrega = Label(
-            self.f_filtros_busca,
-            text='Entrega',
-            bg='#8A8A8A',
-            font=('arial 10 bold'))
-
-        #combobox para filtrar o status da entrega
-        self.entrega_way = ctk.CTkComboBox(
-            self.f_filtros_busca,
-            values=['Entregue', 'Pendente', 'Ambos']
-            )                                            
-
-
-        #metodo bind para atualizar a data assim que for selecionada
-        self.calendario_inicio.bind("<<DateEntrySelected>>", self.atualizar_label_data_inicio)
-        self.calendario_fim.bind("<<DateEntrySelected>>", self.atualizar_label_data_fim)
-
-        # aqui coloca os widgets no frame
-        self.calendario_fim.place(
-            relx=0.62,
-            rely=0.55,
-            relheight=0.3,
-            relwidth=.010
-            )
-        
-        self.calendario_inicio.place(
-            relx=0.5,
-            rely=0.55,
-            relheight=0.3,
-            relwidth=.010
-            )
-        
-        self.title_data_inicio.place(
-            relx=.42,
-            rely=0
-            )
-        
-        self.title_data_fim.place(
-            relx=.55,
-            rely=0
-            )
-        
-        self.data_inicio.place(
-            relx=.42,
-            rely=0.50
-            )
-        
-        self.data_fim.place(
-            relx=.54,
-            rely=.5
-            )
-        
-        self.pagamentos.place(
-            relx=.66,
-            rely=0
-            )
-        
-        self.pagamento_way.place(
-            relx=.66,
-            rely=.5,
-            relwidth=.07
-            )
-        
-        self.entrega.place(
-            relx=.76,
-            rely=0
-            )
-        
-        self.entrega_way.place(
-            relx=.76,
-            rely=.5,
-            relwidth=.07
-            )
-
-
-
-    def atualizar_label_data_inicio(self, event):
-        nova_data = self.calendario_inicio.get_date()
-        nova_data_formatada = nova_data.strftime('%d/%m/%Y')
-        self.data_inicio.config(text=nova_data_formatada)
-
-    def atualizar_label_data_fim(self, event):
-        nova_data = self.calendario_fim.get_date()
-        nova_data_formatada = nova_data.strftime('%d/%m/%Y')
-        self.data_fim.config(text=nova_data_formatada)
 
     def on_enter_compra(self,event):
         pass
@@ -449,4 +285,21 @@ class Compra():
         self.nova_compra()        
         self.filtros_busca()
         self.cabecalho()
-        
+
+    def procurar(self):
+        palavra_chave = self.search_compra.get().capitalize()
+        if palavra_chave == 'Procure por compra...':
+            pass     
+        else:
+            consulta = f"SELECT id, fornecedor, data_compra, data_entrega, total, status FROM compras " \
+                        f"WHERE id LIKE '%{palavra_chave}%' " \
+                        f"OR fornecedor LIKE '%{palavra_chave}%' " \
+                        f"OR data_compra LIKE '%{palavra_chave}%' " \
+                        f"OR data_entrega LIKE '%{palavra_chave}%' " \
+                        f"OR total LIKE '%{palavra_chave}%' " \
+                        f"OR status LIKE '%{palavra_chave}%' " \
+            
+            linhas = compra_dql(consulta)            
+            self.lista_compra.clear_frame()
+            for index, item in enumerate(linhas):
+                self.lista_compra.creat_compra(linhas[index][0], item).pack(expand= True, fill='both', padx=10)

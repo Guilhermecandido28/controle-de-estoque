@@ -53,6 +53,14 @@ def compra_dql(query): #select
     vcon.close()
     return res
 
+def compra_dql_args(query, params): #select
+    vcon=conexao_banco()
+    c=vcon.cursor()
+    c.execute(query, params)
+    res=c.fetchall()
+    vcon.close()
+    return res
+
 def compra_dml(query, params=None): # insert, update, delete
     try:
         vcon=conexao_banco()

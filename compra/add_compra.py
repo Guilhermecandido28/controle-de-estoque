@@ -6,12 +6,11 @@ from limpar import limpar
 from tkinter import ttk
 from tkinter import messagebox
 from estoque.banco_dados_estoque import *
-from PIL import Image, ImageTk
+from PIL import Image
 from fornecedor.banco_dados_fornecedor import fornecedor_dql, fornecedor_dql_arg
-from estoque.banco_dados_estoque import dql
 import customtkinter as ctk
 from tkcalendar import DateEntry
-from datetime import date, datetime
+from datetime import date
 from dateutil.relativedelta import relativedelta
 from compra.bancodedadoscompra import *
 
