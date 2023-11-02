@@ -137,10 +137,11 @@ class Applicantion(Cliente, Home, Estoque, Compra, Vendas):
             compra.principal.place_forget()            
             compra.location_compra.place_forget()
             compra.f_add_compra.place_forget()
-            compra.f_editar_compra.place_forget()
+            compra.titulos.place_forget()
             self.compra_widgets_criados = False
         if self.venda_widgets_criados:            
-            venda.principal.place_forget()        
+            venda.principal.place_forget() 
+            venda.location_venda.place_forget()       
            
             self.venda_widgets_criados = False
 

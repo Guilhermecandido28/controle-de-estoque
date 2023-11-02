@@ -4,8 +4,6 @@ import customtkinter as ctk
 from PIL import Image
 from compra.editar_compra import EditarCompra
 
-
-
 class ListaCompras(ttk.Frame):
     def __init__(self, parent, text_data, item_height):
         super().__init__(master= parent)
@@ -106,11 +104,80 @@ class ListaCompras(ttk.Frame):
 
         return frame
     
+    def creat_venda(self, item, index):
+        frame = ttk.Frame(self.frame)
+        image = Image.open('imagens/excluir.png')
+        tk_image = ctk.CTkImage(image)
+        self.id = tk.StringVar(value=f'{index}')     
+        self.label_id = ttk.Label(
+            frame,            
+            text=f'{item[0]}', #codigo de barras
+            font=('Arial', 14))
+        self.label_id.place(relx=0, rely=0.1)        
+        
+        ttk.Label(
+            frame,
+            text=f'{item[1]}', #produto
+            font=('Arial', 14)).place(relx=.12, rely=0.1)
+
+        
+        ttk.Label(
+            frame,
+            text=f'{item[2]}', #categoria
+            font=('Arial', 14)).place(relx=.25, rely=0.1)
+        
+        ttk.Label(
+            frame,
+            text=f'{item[3]}', #marca
+            font=('Arial', 14)).place(relx=.38, rely=0.1)
+        
+        ttk.Label(
+            frame,
+            text=f'{item[4]}', #tamanho
+            font=('Arial', 14, 'bold')).place(relx=.55, rely=0.1)
+
+        ttk.Label(
+            frame,
+            text=f'{item[5]}', #cor
+            font=('Arial', 14, 'bold')).place(relx=.68, rely=0.1)
+        
+        ttk.Label(
+            frame,
+            text=f'{item[6]}',
+            font=('Arial', 14, 'bold')).place(relx=.77, rely=0.1)
+        
+        # ttk.Label(
+        #     frame,
+        #     text=f'{item[7]}', #preço
+        #     font=('Arial', 14, 'bold')).place(relx=.85, rely=0.1)
+        
+                   
+        ctk.CTkButton(frame,
+                    text='',
+                    image=tk_image,
+                    text_color="white",
+                    hover= True,
+                    hover_color= "#454545",
+                    height=40,
+                    width= 120,
+                    border_width=2,
+                    corner_radius=10,
+                    border_color= "#161616",                     
+                    fg_color= "#363636",
+                    command=lambda id=self.id.get(): self.editar_compra(id)).place(relx=.945, rely=0, relwidth=.055, relheight=0.4)
+        ttk.Separator(frame, orient='horizontal').pack(expand=True, fill='x', pady=10)
+
+        return frame
+    
     def clear_frame(self):
         for widget in self.frame.winfo_children():
             widget.destroy()
 
     def editar_compra(self, id):
         EditarCompra(id)
+
+    def excluir_venda(self, id):
+        pass
+        
 
        

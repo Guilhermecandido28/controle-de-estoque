@@ -521,6 +521,7 @@ class AddCompra():
     def preencher_listas_para_salvar(self):
         self.lista_compras.append(f'{info[0][1]} - {info[0][3]} - {info[0][4]}')
         self.lista_quantidades.append(int(self.qtde.get()))
+        print(self.lista_compras)
 
     def lista_pedidos(self):
         if self.qtde.get() == '0':
@@ -783,12 +784,13 @@ class AddCompra():
         forma_pag = self.forma_pag.get() #forma de pagamento
         parcelamento = self.parcelamento.get() #parcelamento
         data_vencimento = self.data_vencimento.get_date().strftime("%d/%m/%Y") #data de vencimento
+        qtd_parcial = ','.join(map(str, self.lista_quantidades))
         quantidade = sum(self.lista_quantidades) #quantidade
         frete = f'{float(self.frete.get()):.2f}'.replace('.',',') #frete
         desconto = self.desconto.get() + self.r.get() #desconto
         status = self.switch.get() #status
         total = self.total
-        query = '''INSERT INTO compras (data_compra, data_entrega, codigo_de_barras, produto, fornecedor, forma_de_pagamento, parcelamento, vencimento, quantidade, frete, desconto, status, total ) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'''
-        params = (data_compra, data_entrega, cod_barras, produto, fornecedor, forma_pag, parcelamento, data_vencimento, quantidade, frete, desconto, status, total)
+        query = '''INSERT INTO compras (data_compra, data_entrega, codigo_de_barras, produto, fornecedor, forma_de_pagamento, parcelamento, vencimento, qtd_parcial, quantidade, frete, desconto, status, total ) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'''
+        params = (data_compra, data_entrega, cod_barras, produto, fornecedor, forma_pag, parcelamento, data_vencimento, qtd_parcial, quantidade, frete, desconto, status, total)
         compra_dml(query, params)         
 

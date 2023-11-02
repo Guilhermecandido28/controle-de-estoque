@@ -25,7 +25,8 @@ class Compra():
 
     def lista_compras(self):
         query = '''SELECT id, fornecedor, data_compra, data_entrega, total, status FROM compras ORDER BY id'''
-        self.text_list = compra_dql(query)       
+        self.text_list = compra_dql(query)
+               
         
         self.lista_compra = ListaCompras(self.principal, self.text_list, 100)
         for index, item in enumerate(self.text_list):
