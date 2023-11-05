@@ -14,6 +14,8 @@ class Vendas():
         self.frame_codigo = Frame(frame, background='light gray')
         self.titulos = Frame(frame)
         self.count = 0
+        self.total = 0
+        self.stringvar = StringVar()
         self.lista_vendas = []
         self.vendas = False
         self.onde_estou()
@@ -168,10 +170,12 @@ class Vendas():
             bg='light gray',
             font=('arial 12 bold')
         ).place(relx=.65, rely=.25)
-    
+
+
+
         Label(
             self.frame_codigo,
-            text='R$1000,00',
+            textvariable=self.stringvar,
             bg='light gray',
             font=('arial 26 bold'),
             foreground='green'
@@ -194,34 +198,49 @@ class Vendas():
 
     def mostrar_vendas(self):
 
-        self.clear_frame() 
-                
-        self.vendas = ListaCompras(self.principal, self.lista_vendas, 100)     
+        self.clear_frame()       
+        self.vendas = ListaCompras(self.principal, self.lista_vendas, 100)             
         for index, item in enumerate(self.lista_vendas):
-            self.vendas.creat_venda(self.lista_vendas[index], item).pack(expand= True, fill='both', padx=10)
+            self.vendas.creat_venda(self.lista_vendas[index], index).pack(expand= True, fill='both', padx=10)
 
     def manter_foco_entry(self):
         self.codigo.focus_set()
         self.codigo.after(100, self.manter_foco_entry)
 
-    def excluir_venda(self, id):
-        pass
+
     
     def info_produto(self, event):
-        
+
         codigo_barras = self.codigo.get()
 
         if len(codigo_barras) == 13:
             if self.count == 0:                
                 query = 'SELECT ID, descricao, categoria, marca, tamanho, cor, venda FROM estoque WHERE ID = ?'
                 produto = dql_args(query, (codigo_barras,))
-                self.lista_vendas.append(produto[0])                                
-                self.mostrar_vendas()
+                self.lista_temporaria = []
+                for item in produto[0]:
+                    self.lista_temporaria.append(item)                                
+                self.lista_temporaria.insert(6, self.quantidade.get())
+                self.lista_vendas.append(self.lista_temporaria)                                                
+                self.mostrar_vendas()                
                 self.codigo.delete(0, END)
+                self.total_da_venda()
                 
-                
+       
 
+    def total_da_venda(self):        
+        if self.total == 0:
+            for item in self.lista_vendas:
+                self.total += int(item[-2])*float(item[-1])
+                self.stringvar.set(f'R${self.total:.2f}'.replace('.',','))
 
-        
+            return self.stringvar
+        else:
+            self.total -= self.total
+            for item in self.lista_vendas:
+                self.total += int(item[-2])*float(item[-1])
+                self.stringvar.set(f'R${self.total:.2f}'.replace('.',','))
+            return self.stringvar
+
                 
         

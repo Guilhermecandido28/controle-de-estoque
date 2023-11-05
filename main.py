@@ -141,7 +141,8 @@ class Applicantion(Cliente, Home, Estoque, Compra, Vendas):
             self.compra_widgets_criados = False
         if self.venda_widgets_criados:            
             venda.principal.place_forget() 
-            venda.location_venda.place_forget()       
+            venda.location_venda.place_forget()  
+            venda.frame_codigo.place_forget()     
            
             self.venda_widgets_criados = False
 

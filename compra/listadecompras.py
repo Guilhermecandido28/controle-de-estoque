@@ -104,7 +104,7 @@ class ListaCompras(ttk.Frame):
 
         return frame
     
-    def creat_venda(self, item, index):
+    def creat_venda(self, item, index, ):
         frame = ttk.Frame(self.frame)
         image = Image.open('imagens/excluir.png')
         tk_image = ctk.CTkImage(image)
@@ -143,16 +143,16 @@ class ListaCompras(ttk.Frame):
         
         ttk.Label(
             frame,
-            text=f'{item[6]}',
+            text=f'{item[6]}', #quantidade
             font=('Arial', 14, 'bold')).place(relx=.77, rely=0.1)
         
-        # ttk.Label(
-        #     frame,
-        #     text=f'{item[7]}', #preço
-        #     font=('Arial', 14, 'bold')).place(relx=.85, rely=0.1)
+        ttk.Label(
+            frame,
+            text=f'R${item[7]}', #preço
+            font=('Arial', 14, 'bold')).place(relx=.85, rely=0.1)
         
                    
-        ctk.CTkButton(frame,
+        self.btn_excluir = ctk.CTkButton(frame,
                     text='',
                     image=tk_image,
                     text_color="white",
@@ -164,7 +164,8 @@ class ListaCompras(ttk.Frame):
                     corner_radius=10,
                     border_color= "#161616",                     
                     fg_color= "#363636",
-                    command=lambda id=self.id.get(): self.editar_compra(id)).place(relx=.945, rely=0, relwidth=.055, relheight=0.4)
+                    command=lambda id=self.id.get(): self.excluir_venda(id))
+        self.btn_excluir.place(relx=.945, rely=0, relwidth=.055, relheight=0.4)
         ttk.Separator(frame, orient='horizontal').pack(expand=True, fill='x', pady=10)
 
         return frame
@@ -177,7 +178,15 @@ class ListaCompras(ttk.Frame):
         EditarCompra(id)
 
     def excluir_venda(self, id):
-        pass
-        
-
-       
+        index = int(id)  # Converta o id em um índice numérico
+        if 0 <= index < len(self.text_data):
+            # Remova o item de venda da lista
+            del self.text_data[index]
+            # Limpe o quadro atual
+            self.clear_frame()
+            # Recrie os quadros com os itens atualizados
+            for i, item in enumerate(self.text_data):
+                self.creat_venda(item, i).pack(expand=True, fill='both', padx=10)
+            # Recalcule o tamanho da lista e a exibição
+            self.update_size(None)
+            
