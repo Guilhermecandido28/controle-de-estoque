@@ -28,7 +28,7 @@ class Compra():
         self.text_list = compra_dql(query)
                
         
-        self.lista_compra = ListaCompras(self.principal, self.text_list, 100)
+        self.lista_compra = ListaCompras(self.principal, self.text_list, 100, self)
         for index, item in enumerate(self.text_list):
             self.lista_compra.creat_compra(self.text_list[index][0], item).pack(expand= True, fill='both', padx=10)
         self.img_voltar = PhotoImage(file='imagens/voltar.png')

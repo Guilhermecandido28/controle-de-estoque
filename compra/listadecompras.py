@@ -5,14 +5,14 @@ from PIL import Image
 from compra.editar_compra import EditarCompra
 
 class ListaCompras(ttk.Frame):
-    def __init__(self, parent, text_data, item_height):
+    def __init__(self, parent, text_data, item_height, instance):
         super().__init__(master= parent)
         self.pack(expand= True, fill='both')
 
         self.text_data = text_data
         self.item_number = len(text_data)
         self.list_height = self.item_number*item_height
-
+        self.instance = instance
         self.canvas = tk.Canvas(self, scrollregion= (0,0,self.winfo_width(), self.list_height))
         self.canvas.pack(expand= True, fill='both')
 
@@ -164,7 +164,7 @@ class ListaCompras(ttk.Frame):
                     corner_radius=10,
                     border_color= "#161616",                     
                     fg_color= "#363636",
-                    command=lambda id=self.id.get(): self.excluir_venda(id))
+                    command=lambda id=self.id.get(): (self.excluir_venda(id), self.item_excluido(id)))
         self.btn_excluir.place(relx=.945, rely=0, relwidth=.055, relheight=0.4)
         ttk.Separator(frame, orient='horizontal').pack(expand=True, fill='x', pady=10)
 
@@ -177,16 +177,36 @@ class ListaCompras(ttk.Frame):
     def editar_compra(self, id):
         EditarCompra(id)
 
+    def item_excluido(self, id):
+        index = int(id)  # Converta o id em um índice numérico
+        deleted_item = None
+
+        if 0 <= index < len(self.text_data):
+            # Guarde o item de venda que será excluído
+            
+            deleted_item = self.text_data[index]
+            self.exclusao = deleted_item[-1]*int(deleted_item[-2])
+            
+        
     def excluir_venda(self, id):
         index = int(id)  # Converta o id em um índice numérico
-        if 0 <= index < len(self.text_data):
-            # Remova o item de venda da lista
-            del self.text_data[index]
-            # Limpe o quadro atual
-            self.clear_frame()
-            # Recrie os quadros com os itens atualizados
-            for i, item in enumerate(self.text_data):
-                self.creat_venda(item, i).pack(expand=True, fill='both', padx=10)
-            # Recalcule o tamanho da lista e a exibição
-            self.update_size(None)
+        # Remova o item de venda da lista
+        del self.text_data[index]
+
+        # Limpe o quadro atual
+        self.clear_frame()
+
+        # Recrie os quadros com os itens atualizados
+        for i, item in enumerate(self.text_data):
+            self.creat_venda(item, i).pack(expand=True, fill='both', padx=10)
+
+        # Recalcule o tamanho da lista e a exibição
+        self.update_size(None)
+        self.instance.total_da_venda()
+        
+        
+
+        
+    
+
             
