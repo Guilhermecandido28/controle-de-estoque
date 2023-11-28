@@ -6,7 +6,7 @@ from limpar import limpar
 from clientes.add_cliente import AddCliente
 from clientes.editar_cliente import EditarCliente
 from tkinter import ttk
-from clientes.banco_dados_cliente import *
+from bancodedados.banco_dados import *
 from tkinter import messagebox
 import io
 from PIL import Image, ImageTk
@@ -22,7 +22,8 @@ class Cliente(AddCliente, EditarCliente):
         self.principal = tk.Frame(frame, bg= 'gray')
         self.f_editar_cliente = tk.Frame(frame, bg='white')
         self.f_add_cliente = tk.Frame(frame, bg= 'white')
-        self.location = tk.Canvas(frame, bd=0, highlightthickness=0)        
+        self.location = tk.Canvas(frame, bd=0, highlightthickness=0) 
+        self.banco = BancoDeDados('clientes.db')       
         self.inserir_dados()
         self.clientes_na_treeview()              
 
@@ -45,14 +46,14 @@ class Cliente(AddCliente, EditarCliente):
             self.tree_scroll.place_forget()        
             self.limpar_treeview() 
             query_img = f"SELECT imagem FROM clientes WHERE id = {items_selecionado[0][0]}"
-            img_em_bytes = dql(query_img)                       
+            img_em_bytes = self.banco.dql(query_img)                       
             img = Image.open(io.BytesIO(img_em_bytes[0][0]))                                   
             self.ed_cliente = EditarCliente(self.f_editar_cliente, img, id=items_selecionado[0][0])
             lista_entrys = [self.ed_cliente.ed_id, self.ed_cliente.ed_nome, self.ed_cliente.ed_sobrenome, self.ed_cliente.ed_cpf, self.ed_cliente.ed_celular, self.ed_cliente.ed_instagram, self.ed_cliente.ed_comment, self.ed_cliente.ed_cep, self.ed_cliente.ed_rua, self.ed_cliente.ed_numero, self.ed_cliente.ed_bairro, self.ed_cliente.ed_cidade, self.ed_cliente.ed_estados]        
             limpar(lista_entrys)            
             query =f"SELECT id, nome, sobrenome, cpf, celular, instagram, OBS, CEP, rua, numero, bairro, cidade, estado FROM clientes WHERE id = {items_selecionado[0][0]}"           
 
-            dados = dql(query)            
+            dados = self.banco.dql(query)            
             count=0
             for campo in lista_entrys:
                 campo.insert(0, dados[0][count])
@@ -148,7 +149,7 @@ class Cliente(AddCliente, EditarCliente):
         if self.ins_treeview:
             self.ins_treeview.delete(*self.ins_treeview.get_children())       
         query ="SELECT id, nome, sobrenome, celular, valor_gasto FROM clientes order by id"
-        linhas= dql(query)
+        linhas= self.banco.dql(query)
         count=0
         
         for i in linhas:
@@ -175,7 +176,7 @@ class Cliente(AddCliente, EditarCliente):
                 item_id.append(ids)
             for cliente in item_id:
                 query = "DELETE FROM clientes WHERE id=?"
-                dml(query, (cliente,))
+                self.banco.dml(query, (cliente,))
             self.clientes_na_treeview()
             print('cliente excluido')
         
@@ -188,7 +189,7 @@ class Cliente(AddCliente, EditarCliente):
         f"OR nome LIKE '%{self.c_buscado}%' " \
         f"OR celular LIKE '%{self.c_buscado}%' " \
         f"OR sobrenome LIKE '%{self.c_buscado}%'"
-        linhas = dql(consulta)
+        linhas = self.banco.dql(consulta)
         count=0
         for item in self.ins_treeview.get_children():
             self.ins_treeview.delete(item)        

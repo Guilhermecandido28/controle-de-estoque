@@ -3,26 +3,27 @@ from io import BytesIO
 from PIL import Image
 from docx import Document
 from docx.shared import Inches
-from clientes.banco_dados_cliente import *
+from bancodedados.banco_dados import *
 from datetime import datetime
 import subprocess
 
 class ImprimirFicha():
     def __init__(self, documento, id):
+        self.banco = BancoDeDados('clientes.db')
         self.documento = Document(documento)
         self.id = id
-        self.nome = dql(f"SELECT nome FROM clientes WHERE id = {self.id}")
-        self.sobrenome = dql(f"SELECT sobrenome FROM clientes WHERE id = {self.id}")
-        self.rua = dql(f"SELECT rua FROM clientes WHERE id = {self.id}")
-        self.numero = dql(f"SELECT numero FROM clientes WHERE id = {self.id}")
-        self.bairro = dql(f"SELECT bairro FROM clientes WHERE id = {self.id}")
-        self.cep = dql(f"SELECT CEP FROM clientes WHERE id = {self.id}")
-        self.cidade = dql(f"SELECT cidade FROM clientes WHERE id = {self.id}")
-        self.estado = dql(f"SELECT estado FROM clientes WHERE id = {self.id}")
-        self.cpf = dql(f"SELECT cpf FROM clientes WHERE id = {self.id}")
-        self.celular = dql(f"SELECT celular FROM clientes WHERE id = {self.id}")
-        self.obs = dql(f"SELECT OBS FROM clientes WHERE id = {self.id}")
-        self.imagem = dql(f"SELECT imagem FROM clientes WHERE id = {self.id}")
+        self.nome = self.banco.dql(f"SELECT nome FROM clientes WHERE id = {self.id}")
+        self.sobrenome = self.banco.dql(f"SELECT sobrenome FROM clientes WHERE id = {self.id}")
+        self.rua = self.banco.dql(f"SELECT rua FROM clientes WHERE id = {self.id}")
+        self.numero = self.banco.dql(f"SELECT numero FROM clientes WHERE id = {self.id}")
+        self.bairro = self.banco.dql(f"SELECT bairro FROM clientes WHERE id = {self.id}")
+        self.cep = self.banco.dql(f"SELECT CEP FROM clientes WHERE id = {self.id}")
+        self.cidade = self.banco.dql(f"SELECT cidade FROM clientes WHERE id = {self.id}")
+        self.estado = self.banco.dql(f"SELECT estado FROM clientes WHERE id = {self.id}")
+        self.cpf = self.banco.dql(f"SELECT cpf FROM clientes WHERE id = {self.id}")
+        self.celular = self.banco.dql(f"SELECT celular FROM clientes WHERE id = {self.id}")
+        self.obs = self.banco.dql(f"SELECT OBS FROM clientes WHERE id = {self.id}")
+        self.imagem = self.banco.dql(f"SELECT imagem FROM clientes WHERE id = {self.id}")
         self.converter_bytes_para_png(self.imagem[0][0])
         
         

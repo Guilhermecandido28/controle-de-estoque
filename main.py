@@ -11,6 +11,8 @@ from estoque.estoque import Estoque
 from fornecedor.fornecedor import Fornecedor
 from compra.compra import Compra
 from vendas.vendas import Vendas
+from financeiro.financeiro import Financeiro
+from trocas.troca import Troca
 
 
 
@@ -18,7 +20,7 @@ janela = Tk()
 
 
 
-class Applicantion(Cliente, Home, Estoque, Compra, Vendas):
+class Applicantion(Cliente, Home, Estoque, Compra, Vendas, Financeiro, Troca):
     
     def __init__(self):
         self.janela = janela 
@@ -30,7 +32,9 @@ class Applicantion(Cliente, Home, Estoque, Compra, Vendas):
         self.estoque_widgets_criados = False 
         self.fornecedor_widgets_criados = False 
         self.compra_widgets_criados = False 
-        self.venda_widgets_criados = False              
+        self.venda_widgets_criados = False  
+        self.financeiro_widgets_criados = False  
+        self.troca_widgets_criados = False            
         janela.mainloop()
         
  
@@ -109,6 +113,27 @@ class Applicantion(Cliente, Home, Estoque, Compra, Vendas):
         else:
             pass
 
+    def financa(self):
+        global financeiro
+        if not self.financeiro_widgets_criados:
+            financeiro = Financeiro(self.janela)
+            financeiro.financeiro()
+            self.esquecer_functions()
+            self.financeiro_widgets_criados = True
+        else:
+            pass
+
+
+    def trocas(self):
+        global troca
+        if not self.troca_widgets_criados:
+            troca = Troca(self.janela)
+            troca.troca()
+            self.esquecer_functions()
+            self.financeiro_widgets_criados = True
+        else:
+            pass
+
             
     def esquecer_functions(self):
         if self.cliente_widgets_criados:        
@@ -143,9 +168,16 @@ class Applicantion(Cliente, Home, Estoque, Compra, Vendas):
             venda.principal.place_forget() 
             venda.location_venda.place_forget()  
             venda.frame_codigo.place_forget() 
-            venda.titulos.place_forget()   
-           
+            venda.titulos.place_forget() 
             self.venda_widgets_criados = False
+        if self.financeiro_widgets_criados:
+            financeiro.principal.place_forget()
+            financeiro.location_financeiro.place_forget()
+            self.financeiro_widgets_criados = False
+        if self.troca_widgets_criados:
+            troca.principal.place_forget()
+            troca.location_troca.place_forget()
+            self.troca_widgets_criados = False
 
                    
  
@@ -173,11 +205,11 @@ class Applicantion(Cliente, Home, Estoque, Compra, Vendas):
         self.btn_compras.place(relx=0.56, rely=0, relwidth=0.14, relheight=1)
         #financeiro
         self.img_financeiro= PhotoImage(file='imagens/financeiro.png')
-        self.btn_financeiro = Button(self.menu, text='Financeiro', image=self.img_financeiro, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2')
+        self.btn_financeiro = Button(self.menu, text='Financeiro', image=self.img_financeiro, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2', command=self.financa)
         self.btn_financeiro.place(relx=0.7, rely=0, relwidth=0.14, relheight=1)
-        #configurações
-        self.img_settings= PhotoImage(file='imagens/settings.png')
-        self.btn_settings = Button(self.menu, text='Configurações', image=self.img_settings, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2')
+        #troca
+        self.img_settings= PhotoImage(file='imagens/troca.png')
+        self.btn_settings = Button(self.menu, text='Trocas', image=self.img_settings, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2', command=self.trocas)
         self.btn_settings.place(relx=0.84, rely=0, relwidth=0.14, relheight=1)
         #home
         self.img_home = PhotoImage(file='imagens/home.png')

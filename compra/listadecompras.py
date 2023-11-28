@@ -203,7 +203,8 @@ class ListaCompras(ttk.Frame):
         # Recalcule o tamanho da lista e a exibição
         self.update_size(None)
         self.instance.total_da_venda()
-        
+
+
         
 
         

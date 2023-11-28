@@ -8,8 +8,8 @@ from tkinter import messagebox
 import io
 from fornecedor.add_fornecedor import AddFornecedor
 from fornecedor.editar_fornecedor import EditarFornecedor
-from estoque.banco_dados_estoque import *
-from fornecedor.banco_dados_fornecedor import *
+from bancodedados.banco_dados import *
+from bancodedados.banco_dados import *
 from PIL import Image, ImageTk
 import subprocess
 import os
@@ -20,6 +20,8 @@ class Fornecedor():
         self.f_editar_fornecedor = tk.Frame(frame, bg='white')
         self.f_add_fornecedor = tk.Frame(frame, bg= 'white')
         self.location_est = tk.Canvas(frame, bd=0, highlightthickness=0)
+        self.banco_fornecedor = BancoDeDados('fornecedores.db')
+        self.banco_estoque = BancoDeDados('estoques.db')
         self.buscar_fornecedor_est()
         self.tree_fornecedor()
         self.fornecedor_na_treeview()
@@ -41,9 +43,9 @@ class Fornecedor():
             limpar(lista_entrys)            
             query =f"SELECT id, nome, categoria, cnpj, email, telefone, OBS, CEP, rua, numero, bairro, cidade, estado FROM fornecedor WHERE id = {items_selecionado[0][0]}"           
             query_listbox = f"SELECT lista_produtos FROM fornecedor WHERE id = {items_selecionado[0][0]}"
-            dados_listbox = fornecedor_dql(query_listbox)
+            dados_listbox = self.banco_fornecedor.dql(query_listbox)
             dados_listbox = str(dados_listbox).split('; ')
-            dados = fornecedor_dql(query)            
+            dados = self.banco_fornecedor.dql(query)            
             count=0
             for campo in lista_entrys:
                 campo.insert(0, dados[0][count])
@@ -54,7 +56,7 @@ class Fornecedor():
             self.preencher_listbox()   
     def preencher_listbox(self):
         produtos = "SELECT descricao, categoria, marca FROM estoque"
-        query = dql(produtos)               
+        query = self.banco_estoque.dql(produtos)               
         for produto in query:
             descricao = produto[0]
             categoria = produto[1]
@@ -148,7 +150,7 @@ class Fornecedor():
         if self.fornecedor_treeview:
             self.fornecedor_treeview.delete(*self.fornecedor_treeview.get_children())       
         query ="SELECT ID, nome, categoria, cnpj, email, telefone FROM fornecedor order by ID"
-        linhas= fornecedor_dql(query)
+        linhas= self.banco_fornecedor.dql(query)
         count=0
         
         for i in linhas:
@@ -174,7 +176,7 @@ class Fornecedor():
                 item_id.append(ids)
             for produto in item_id:
                 query = "DELETE FROM fornecedor WHERE id=?"
-                fornecedor_dml(query, (produto,))
+                self.banco_fornecedor.dml(query, (produto,))
             self.fornecedor_na_treeview()
             print('produto excluido')
 
@@ -191,7 +193,7 @@ class Fornecedor():
             f"OR email LIKE '%{self.e_buscado}%' " \
             f"OR telefone LIKE '%{self.e_buscado}%' " \
             
-            linhas = fornecedor_dql(consulta)
+            linhas = self.banco_fornecedor.dql(consulta)
             count=0
             for item in self.fornecedor_treeview.get_children():
                 self.fornecedor_treeview.delete(item)        

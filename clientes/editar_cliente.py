@@ -5,7 +5,7 @@ from formations import *
 from tkinter import filedialog
 from PIL import Image, ImageTk
 from tkinter import ttk
-from clientes.banco_dados_cliente import *
+from bancodedados.banco_dados import *
 import io
 
 
@@ -14,7 +14,7 @@ class EditarCliente():
         self.f_editar_cliente = frame
         self.img = img
         self.id = id
-        
+        self.banco = BancoDeDados('clientes.db')
         self.entrys()
         self.titulos()
         self.foto()
@@ -143,7 +143,7 @@ class EditarCliente():
 
         query = f"UPDATE clientes SET id = ?, nome = ?, sobrenome = ?, celular = ?, cpf = ?, instagram = ?, OBS = ?, CEP = ?, rua = ?, numero = ?, bairro = ?, cidade = ?, estado = ? WHERE id = {self.id}"
         params = (modify_id, modify_nome, modify_sobrenome, modify_celular, modify_cpf, modify_instagram, modify_obs, modify_cep, modify_rua, modify_numero, modify_bairro, modify_cidade, modify_estados)
-        dml(query, params)
+        self.banco.dml(query, params)
         print('cliente foi salvo')
         
 

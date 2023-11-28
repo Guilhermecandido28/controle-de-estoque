@@ -5,25 +5,27 @@ from formations import *
 from limpar import limpar
 from tkinter import ttk
 from tkinter import messagebox
-from estoque.banco_dados_estoque import *
 from PIL import Image
-from fornecedor.banco_dados_fornecedor import fornecedor_dql, fornecedor_dql_arg
 import customtkinter as ctk
 from tkcalendar import DateEntry
 from datetime import date
 from dateutil.relativedelta import relativedelta
-from compra.bancodedadoscompra import *
+from bancodedados.banco_dados import *
 
 
 class AddCompra():
     def __init__(self, frame):
         self.principal = frame
-        self.layout_add_compra()
+        self.banco_fornecedor = BancoDeDados('fornecedores.db')
+        self.banco_compra = BancoDeDados('compra.db')
+        self.banco_estoque = BancoDeDados('estoques.db')
+        self.layout_add_compra() 
         self.index = 1
         self.rely = 0.02 
         self.lista_preços = []
         self.lista_compras = []
         self.lista_quantidades = []
+        self.lista_cod_barras = []
                
     def layout_add_compra(self):
         #-------------------------Cabecalho------------------------------#
@@ -480,18 +482,21 @@ class AddCompra():
         info_produtos = self.produtos.get()
         info_produtos = info_produtos.split(' - ')        
         query = 'SELECT ID, descricao, custo, tamanho, cor FROM estoque WHERE descricao = ? AND categoria = ? AND marca = ?'
-        info = dql_args(query, (info_produtos[0].strip(), info_produtos[1].strip(), info_produtos[2].strip()))
+        info = self.banco_estoque.dql_args(query, (info_produtos[0].strip(), info_produtos[1].strip(), info_produtos[2].strip()))
         ttk.Label(self.frame_pedido, text=info[0][0], background='light gray', font=('arial 10 ')).place(relx=0, rely=.2)
         ttk.Label(self.frame_pedido, text=f'{info[0][1]}\n{info[0][3]}\n{info[0][4]}', background='light gray', font=('arial 10 ')).place(relx=0.2, rely=.2)
         ttk.Label(self.frame_pedido, text=f'R${float(info[0][2]):.2f}'.replace(".",","), background='light gray', font=('arial 10 ')).place(relx=0.55, rely=.2)
         if int(self.qtde.get()) > 0:
             self.label_total = ttk.Label(self.frame_pedido, text=f'R${float(info[0][2])*int(self.qtde.get()):.2f}', background='light gray', font=('arial 10 '))
             self.label_total.place(relx=0.7, rely=.2)
+        self.lista_cod_barras.append(str(info[0][0]))
+       
+        
 
     def obter_fornecedores(self):
         lista_fornecedores = []
         query = "SELECT nome FROM fornecedor"
-        fornecedores = fornecedor_dql(query)
+        fornecedores = self.banco_fornecedor.dql(query)
         for fornecedor in fornecedores:
             lista_fornecedores.append(fornecedor[0])
         return lista_fornecedores
@@ -501,7 +506,7 @@ class AddCompra():
         fornecedor = self.fornecedores.get()
         self.lista_produtos = []
         query = "SELECT lista_produtos FROM fornecedor WHERE nome = ?"
-        produtos = fornecedor_dql_arg(query, (fornecedor,))
+        produtos = self.banco_fornecedor.dql_args(query, (fornecedor,))
         produtos = produtos[0][0].split(';')
         for produto in produtos:
             self.lista_produtos.append(produto)
@@ -521,7 +526,9 @@ class AddCompra():
     def preencher_listas_para_salvar(self):
         self.lista_compras.append(f'{info[0][1]} - {info[0][3]} - {info[0][4]}')
         self.lista_quantidades.append(int(self.qtde.get()))
-        print(self.lista_compras)
+        
+
+        
 
     def lista_pedidos(self):
         if self.qtde.get() == '0':
@@ -792,5 +799,10 @@ class AddCompra():
         total = self.total
         query = '''INSERT INTO compras (data_compra, data_entrega, codigo_de_barras, produto, fornecedor, forma_de_pagamento, parcelamento, vencimento, qtd_parcial, quantidade, frete, desconto, status, total ) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'''
         params = (data_compra, data_entrega, cod_barras, produto, fornecedor, forma_pag, parcelamento, data_vencimento, qtd_parcial, quantidade, frete, desconto, status, total)
-        compra_dml(query, params)         
+        self.banco_compra.dml(query, params)
+        for index, produto in enumerate(self.lista_cod_barras):
+            query_estoque = """UPDATE estoque SET quantidade = quantidade + ? WHERE ID = ?"""
+            params_estoque = (self.lista_quantidades[index], produto,)
+            self.banco_estoque.dml(query_estoque, params_estoque)
+        messagebox.showinfo('Sucesso!', 'Itens adicionados com sucesso.')         
 

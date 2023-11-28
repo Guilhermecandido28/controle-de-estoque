@@ -1,14 +1,15 @@
 from tkinter import *
 from tkcalendar import DateEntry
 from tkinter import ttk
-from compra.bancodedadoscompra import*
-from estoque.banco_dados_estoque import dql_args
+from bancodedados.banco_dados import *
 from tkinter import messagebox
 class EditarCompra():
     def __init__(self, id):
         self.janela = Tk()
         self.janela.title("Editar Compra")
         self.janela.geometry('500x800')
+        self.banco_compra = BancoDeDados('compra.db')
+        self.banco_estoque = BancoDeDados('estoques.db')
         self.id = id
         self.label_frames()
         self.labels()
@@ -18,57 +19,57 @@ class EditarCompra():
        
     def data_compra(self):
         query = f'SELECT data_compra FROM compras WHERE id = ?' 
-        data = compra_dql_args(query, self.id)
+        data = self.banco_compra.dql_args(query, (self.id,))
         return data[0][0]
     
     
     def data_entrega(self):
         query = f'SELECT data_entrega FROM compras WHERE id = ?' 
-        data = compra_dql_args(query, self.id)
+        data = self.banco_compra.dql_args(query, (self.id,))
         return data[0][0]
     
     
     def data_vencimento(self):
         query = f'SELECT vencimento FROM compras WHERE id = ?' 
-        data = compra_dql_args(query, self.id)
+        data = self.banco_compra.dql_args(query, (self.id,))
         return data[0][0]
     
     def info_produtos(self):
         query = f'SELECT produto FROM compras WHERE id = ?' 
-        produtos = compra_dql_args(query, self.id)
+        produtos = self.banco_compra.dql_args(query, (self.id,))
         produtos = produtos[0][0].split(',')        
         return produtos
     
     def info_fornecedor(self):
         query = f'SELECT fornecedor FROM compras WHERE id = ?'
-        fornecedor = compra_dql_args(query, self.id)
+        fornecedor = self.banco_compra.dql_args(query, (self.id,))
         return fornecedor[0][0]
         
     def info_quantidade(self):
         query = f'SELECT quantidade FROM compras WHERE id = ?'
-        quantidade = compra_dql_args(query, self.id)        
+        quantidade = self.banco_compra.dql_args(query, (self.id,))        
         return quantidade[0][0]
     
     def info_qtd_parcial(self):
         index = self.produtos.current()
         query = f'SELECT qtd_parcial FROM compras WHERE id = ?'
-        qtd_parcial = compra_dql_args(query, self.id)
+        qtd_parcial = self.banco_compra.dql_args(query, (self.id,))
         qtd_parcial = qtd_parcial[0][0].split(',')
         return qtd_parcial
 
     def info_frete(self):
         query = f'SELECT frete FROM compras WHERE id = ?'
-        frete = compra_dql_args(query, self.id)
+        frete = self.banco_compra.dql_args(query, (self.id,))
         return frete[0][0]
 
     def info_desconto(self):
         query = f'SELECT desconto FROM compras WHERE id = ?'
-        desconto = compra_dql_args(query, self.id)
+        desconto = self.banco_compra.dql_args(query, (self.id,))
         return desconto[0][0]
     
     def info_status(self):
         query = 'SELECT status FROM compras WHERE id = ?'
-        status = compra_dql_args(query, self.id)
+        status = self.banco_compra.dql_args(query, (self.id,))
         if status[0][0] == 'Concluído':
             return 0
         else:
@@ -79,7 +80,7 @@ class EditarCompra():
         query = f'SELECT ID FROM estoque WHERE descricao = ? AND tamanho = ? AND cor = ?'
         produto = self.produtos.get()
         produto = produto.split('- ')        
-        cod_barras = dql_args(query, (produto[0].strip(), produto[1].strip(), produto[2].strip()))
+        cod_barras = self.banco_estoque.dql_args(query, (produto[0].strip(), produto[1].strip(), produto[2].strip()))
         Label(
             self.frame_produtos,
             text=cod_barras,
@@ -111,12 +112,12 @@ class EditarCompra():
     
     def info_total(self):
         query = 'SELECT total FROM compras WHERE id = ?'
-        total = compra_dql_args(query, self.id)
+        total = self.banco_compra.dql_args(query, (self.id,))
         return total
     
     def info_forma_pagamento(self):
         query = 'SELECT forma_de_pagamento FROM compras WHERE id = ?'
-        pagto = compra_dql_args(query, self.id) 
+        pagto = self.banco_compra.dql_args(query, (self.id,)) 
         return pagto       
        
     def transformar_pagamento(self):
@@ -307,7 +308,7 @@ class EditarCompra():
         query = f"UPDATE compras SET data_compra = ?, data_entrega = ?, vencimento = ?, total = ?, forma_de_pagamento = ?, frete = ?, desconto = ?, status = ? WHERE id = {self.id}"
         params = (m_data_compra,m_data_entrega,m_vencimento,m_total,m_forma_pagamento,m_frete,m_desconto,m_status)
         try:
-            compra_dml(query, params)
+            self.banco_compra.dml(query, params)
             messagebox.showinfo("Sucesso", "Compra atualizada com sucesso!")
         except:
             messagebox.showerror("Erro", "Ocorreu um erro ao atualizar a compra")

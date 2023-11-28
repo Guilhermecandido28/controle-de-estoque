@@ -6,8 +6,7 @@ from formations import *
 from tkinter import ttk
 from PIL import Image, ImageTk
 from limpar import limpar
-from fornecedor.banco_dados_fornecedor import *
-from estoque.banco_dados_estoque import *
+from bancodedados.banco_dados import *
 from tkinter import messagebox
 from estoque.barcode import *
 
@@ -16,6 +15,8 @@ from estoque.barcode import *
 class AddFornecedor():
     def __init__(self, frame):
         self.principal = frame
+        self.banco_estoque = BancoDeDados('estoques.db')
+        self.banco_fornecedor = BancoDeDados('fornecedores.db')
         self.add_fornecedor()
         self.make_listbox()
         self.preencher_listbox()
@@ -189,14 +190,14 @@ class AddFornecedor():
 
         query = "INSERT INTO fornecedor (nome, categoria, cnpj, email, telefone, OBS, CEP, rua, numero, bairro, cidade, estado, lista_produtos, imagem) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         params = (value_nome, value_categoria, value_cnpj, value_email, value_celular, value_obs, value_cep, value_rua, value_numero, value_bairro, value_cidade, value_estado, value_e_lista_fornecedor, value_imagem)
-        fornecedor_dml(query, params)
+        self.banco_fornecedor.dml(query, params)
         print('fornecedor foi salvo')           
                                         
         messagebox.showinfo("Sucesso", "Operação realizada com sucesso!")   
 
     def preencher_listbox(self):
         produtos = "SELECT descricao, categoria, marca, tamanho, cor FROM estoque"
-        query = dql(produtos)               
+        query = self.banco_estoque.dql(produtos)               
         for produto in query:
             descricao = produto[0]
             categoria = produto[1]

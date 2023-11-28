@@ -8,10 +8,9 @@ from tkinter import messagebox
 import io
 from estoque.add_estoque import AddEstoque
 from estoque.editar_estoque import EditarEstoque
-from estoque.banco_dados_estoque import *
+from bancodedados.banco_dados import *
 from PIL import Image, ImageTk
-import subprocess
-import os
+from estoque.barcode import imprimir_barcode
 
 class Estoque(EditarEstoque):
     def __init__(self, frame):
@@ -19,6 +18,8 @@ class Estoque(EditarEstoque):
         self.f_editar_estoque = tk.Frame(frame, bg='white')
         self.f_add_estoque = tk.Frame(frame, bg= 'white')
         self.location_est = tk.Canvas(frame, bd=0, highlightthickness=0)
+        self.banco_estoque = BancoDeDados('estoques.db')
+        
         self.buscar_estoque_est()
         self.tree_estoque()
         self.estoque_na_treeview()
@@ -35,14 +36,14 @@ class Estoque(EditarEstoque):
             self.estoque_tree_scroll.place_forget()        
             self.limpar_treeview() 
             query_img = f"SELECT imagem FROM estoque WHERE id = {items_selecionado[0][0]}"
-            img_em_bytes = dql(query_img)                       
+            img_em_bytes = self.banco_estoque.dql(query_img)                       
             img = Image.open(io.BytesIO(img_em_bytes[0][0]))                                   
             self.ed_estoque = EditarEstoque(self.f_editar_estoque, img, id=items_selecionado[0][0])
             lista_entrys = [self.ed_estoque.ed_barcode, self.ed_estoque.ed_descricao, self.ed_estoque.ed_categoria, self.ed_estoque.ed_marca, self.ed_estoque.ed_estoque_min, self.ed_estoque.ed_quantidade, self.ed_estoque.ed_obs, self.ed_estoque.ed_tamanho, self.ed_estoque.ed_cor, self.ed_estoque.ed_preco_custo, self.ed_estoque.ed_preco_venda]        
             limpar(lista_entrys)            
             query =f"SELECT id, descricao, categoria, marca, estoque_minimo, quantidade, observacoes, tamanho, cor, custo, venda FROM estoque WHERE id = {items_selecionado[0][0]}"           
 
-            dados = dql(query)            
+            dados = self.banco_estoque.dql(query)            
             count=0
             for campo in lista_entrys:
                 campo.insert(0, dados[0][count])
@@ -98,8 +99,8 @@ class Estoque(EditarEstoque):
         self.btn_search_est.place(relx=0.6, rely=0, relheight=0.1, relwidth=0.05)
         self.search_est.bind('<Return>', self.on_enter_est)
         #Botão_imprimir
-        self.img_print_est = PhotoImage(file='imagens/impressora.png')
-        self.btn_print_est = Button(self.principal, image=self.img_print_est, bg="#8A8A8A", bd=0, cursor='hand2')
+        self.img_print_est = PhotoImage(file='imagens/impressora.png')        
+        self.btn_print_est = Button(self.principal, image=self.img_print_est, bg="#8A8A8A", bd=0, cursor='hand2', command=self.imprimir_cod_barras)
         self.btn_print_est.place(relx=0.65, rely=0, relheight=0.1, relwidth=0.05)
 
     def tree_estoque(self):        
@@ -141,7 +142,7 @@ class Estoque(EditarEstoque):
         if self.estoque_treeview:
             self.estoque_treeview.delete(*self.estoque_treeview.get_children())       
         query ="SELECT ID, descricao, categoria, marca, cor, fornecedor, quantidade, tamanho, venda FROM estoque order by ID"
-        linhas= dql(query)
+        linhas= self.banco_estoque.dql(query)
         count=0
         
         for i in linhas:
@@ -155,7 +156,8 @@ class Estoque(EditarEstoque):
 
     def excluir_estoque(self):
         items_selecionados = []
-        item_id=[]        
+        item_id=[]
+               
         if self.estoque_treeview.selection() == ():
             messagebox.showerror('Erro', "Selecione um ou mais produto(s) primeiro! ")
         else:
@@ -167,9 +169,18 @@ class Estoque(EditarEstoque):
                 item_id.append(ids)
             for produto in item_id:
                 query = "DELETE FROM estoque WHERE id=?"
-                dml(query, (produto,))
+                self.banco_estoque.dml(query, (produto,))
             self.estoque_na_treeview()
-            print('produto excluido')
+            print(self.estoque_treeview.selection())
+
+    def imprimir_cod_barras(self):
+        if self.estoque_treeview.selection() == ():
+            messagebox.showerror('Erro', "Selecione um ou mais produto(s) primeiro! ")
+        else:
+            for item in self.estoque_treeview.selection():
+                item_values = self.estoque_treeview.item(item, 'values')
+                imprimir_barcode(item_values[0])
+
 
     def estoque_buscado(self):        
         self.e_buscado = self.search_est.get()
@@ -183,7 +194,7 @@ class Estoque(EditarEstoque):
         f"OR quantidade LIKE '%{self.e_buscado}%' " \
         f"OR tamanho LIKE '%{self.e_buscado}%' " \
         f"OR venda LIKE '%{self.e_buscado}%'"
-        linhas = dql(consulta)
+        linhas = self.banco_estoque.dql(consulta)
         count=0
         for item in self.estoque_treeview.get_children():
             self.estoque_treeview.delete(item)        

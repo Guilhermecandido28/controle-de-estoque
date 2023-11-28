@@ -6,7 +6,7 @@ from formations import *
 from tkinter import ttk
 from PIL import Image, ImageTk
 from limpar import limpar
-from clientes.banco_dados_cliente import *
+from bancodedados.banco_dados import *
 import sqlite3
 from clientes.foto_instagram import *
 from tkinter import messagebox
@@ -23,6 +23,7 @@ class AddCliente():
         self.img = Image.open('imagens/pessoa.png')               
         self.principal = frame
         self.filename = None
+        self.banco = BancoDeDados('clientes.db')
         self.add_client()               
         self.tvw_hist()
         self.inserir_na_treeview()             
@@ -206,10 +207,10 @@ class AddCliente():
         value_bairro = self.e_bairro.get()
         value_cidade = self.e_cidade.get()
         value_estados = self.e_estados.get()
-
+        
         query = "INSERT INTO clientes (imagem, nome, sobrenome, celular, cpf, instagram, OBS, CEP, rua, numero, bairro, cidade, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         params = (sqlite3.Binary(value_imagem), value_nome, value_sobrenome, value_celular, value_cpf, value_instagram, value_obs, value_cep, value_rua, value_numero, value_bairro, value_cidade, value_estados)
-        dml(query, params)
+        self.banco.dml(query, params)
         print('cliente foi salvo')
         self.e_nome.delete(0, "end")
         placeholder_nome(self.e_nome)
@@ -266,7 +267,7 @@ class AddCliente():
         if self.tvw_hist:
             self.tvw_hist.delete(*self.tvw_hist.get_children())       
         query ="SELECT nome, valor_gasto FROM clientes order by id"
-        linhas= dql(query)
+        linhas= self.banco.dql(query)
         count=0
         data_atual = datetime.now().strftime('%d/%m/%Y')
         for i in linhas:

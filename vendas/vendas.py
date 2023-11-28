@@ -4,11 +4,11 @@ import tkinter as tk
 from formations import *
 from PIL import Image, ImageTk
 from compra.listadecompras import *
-from estoque.banco_dados_estoque import dql_args
 from tkinter import simpledialog
 from tkinter import messagebox
 import datetime
-from vendas.bancodedadosvenda import vendas_dml
+from impressora.impressora import ConectorV3
+from bancodedados.banco_dados import *
 import pywhatkit as kt
 
 
@@ -18,6 +18,9 @@ class Vendas():
         self.location_venda = tk.Canvas(frame, bd=0, highlightthickness=0)
         self.frame_codigo = Frame(frame, background='light gray')
         self.titulos = Frame(frame)
+        self.banco_cliente = BancoDeDados('clientes.db')
+        self.banco_estoque = BancoDeDados('estoques.db')
+        self.banco_vendas = BancoDeDados('vendas.db')
         self.count = 0
         self.total = 0
         self.stringvar = StringVar()
@@ -254,15 +257,14 @@ class Vendas():
         if len(codigo_barras) == 13:
             if self.count == 0:
                 query = 'SELECT ID, descricao, categoria, marca, tamanho, cor, venda FROM estoque WHERE ID = ?'
-                produto = dql_args(query, (codigo_barras,))
+                produto = self.banco_estoque.dql_args(query, (codigo_barras,))
                 self.lista_temporaria = []
                 for item in produto[0]:
                     self.lista_temporaria.append(item)
-                self.lista_temporaria.insert(6, self.quantidade.get())
-                print(self.lista_temporaria)
+                self.lista_temporaria.insert(6, self.quantidade.get())               
 
                 self.lista_vendas.append(self.lista_temporaria)
-                print(self.lista_vendas)
+                
                 self.mostrar_vendas()
                 self.codigo.delete(0, END)
                 self.total_da_venda()
@@ -285,7 +287,14 @@ class Vendas():
         self.codigo.after_cancel(self.manter_foco_entry)
         cliente = simpledialog.askstring(
             "Vincular Cliente", 'Digite o Nome e Sobrenome do Cliente:').title()
-
+        query_cliente = f"SELECT valor_gasto FROM clientes WHERE nome LIKE '%{cliente}%' " 
+        self.nome_do_cliente = cliente
+        cliente_buscado = self.banco_cliente.dql(query_cliente)
+        if cliente_buscado[0][0] == None:
+            cliente_buscado = 0
+        query_modificacao = "UPDATE clientes SET valor_gasto = ? WHERE nome = ?"
+        valor_gasto = (cliente_buscado[0][0]+self.total)
+        self.banco_cliente.dml(query_modificacao, ((valor_gasto, cliente)))
         return cliente
 
     def mostrar_dialogo_forma_pagamento(self):
@@ -317,13 +326,17 @@ class Vendas():
         itens_formatados = []
         for sublista in self.lista_vendas:
             if len(sublista) >= 4:
+                item0 = sublista[0]
                 item1 = sublista[1]
                 item2 = sublista[2]
                 item4 = sublista[4]
-                item6 = sublista[6]
+                item6 = sublista[6]                
 
                 item_formatado = f"{item1} - {item2} - {item4} - {item6} unidade(s)"
                 itens_formatados.append(item_formatado)
+                query_estoque = "UPDATE estoque SET quantidade = quantidade - ? WHERE ID = ?"
+                params_estoque = (item6, item0)
+                self.banco_estoque.dml(query_estoque, params_estoque)
 
         self.resultado = ', '.join(itens_formatados)
 
@@ -332,13 +345,57 @@ class Vendas():
         self.info_desconto = f'{self.desconto.get()}%'
         self.total_bd = self.stringvar.get()
 
-        query = "INSERT INTO venda (data, produtos, cliente, desconto, total, forma_pagamento) VALUES (?, ?, ?, ?, ?, ?)"
-        vendas_dml(query, (self.data, self.resultado, self.cliente,
-                   self.info_desconto, self.total_bd, self.valor_forma_pagamento))
-        self.mensagem_whats()
+        query = "INSERT INTO venda (data, produtos, cliente, desconto, total, forma_pagamento) VALUES (?, ?, ?, ?, ?, ?)"  
+        self.banco_vendas.dml(query, (self.data, self.resultado, self.cliente, self.info_desconto, self.total_bd, self.valor_forma_pagamento))
+        
+        # self.mensagem_whats()
+        self.imprimir_recibo()
 
     def mensagem_whats(self):
         mensagem = f'Em {self.data} foi realizada a venda de {self.total_bd} do(s) produto(s) {self.resultado} para o(a)  cliente {self.cliente}. Parabéns pela venda!'
         kt.sendwhatmsg_instantly(
             '+5511985518059', mensagem, tab_close=True, wait_time=10)
         messagebox.showinfo('Sucesso!', "Venda realizada com sucesso!")
+
+    def imprimir_recibo(self):
+        total = sum(float(item[7]) * int(item[6]) for item in self.lista_vendas)
+
+        texto_recibo = 'LOJA JK MODAS E VARIEDADES\n'
+        texto_recibo += f"============= Recibo de Compra =============\n\n"
+        texto_recibo += f"Cliente: {self.nome_do_cliente}\n"
+        texto_recibo += "---------------------------------\n"
+        texto_recibo += "Produtos\t\tPreco\tQtd\n"
+        texto_recibo += "---------------------------------\n"
+
+        for item in self.lista_vendas:
+            texto_recibo += f"{item[1].ljust(30)}{item[7]:.2f}\tx{item[6]}\n"
+
+        texto_recibo += "---------------------------------\n"
+        if self.desconto.get() != '0':
+            texto_recibo += f"Desconto: {self.desconto.get()}%\n"
+        texto_recibo += f"Total: {self.stringvar.get()}\n"
+        texto_recibo += "----------------------------------\n"
+        texto_recibo += "Trocas somente serao realizadas mediante a      apresentacao deste cupom e em 10 dias corridos.\n\n\n"
+        texto_recibo += 'Nos siga no Instagram:\n'
+        texto_recibo += 'jk_modas_e_variedades\n\n\n'
+        texto_recibo += 'Nos chame no Whatsapp:\n'
+        texto_recibo += "(11)93482-2157\n\n\n"
+        texto_recibo += 'VOLTE SEMPRE!'
+
+        conector = ConectorV3()
+        
+        conector.DeshabilitarCaracteresPersonalizados()
+
+        conector.texto(texto_recibo)
+
+        conector.Feed(3)
+        conector.Corte(20)
+
+
+        nome_impressora = "cupom"
+
+
+        resposta = conector.imprimirEn(nome_impressora)
+
+
+        print(resposta)

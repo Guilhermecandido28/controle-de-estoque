@@ -5,14 +5,16 @@ from formations import *
 from tkinter import filedialog
 from PIL import Image, ImageTk
 from tkinter import ttk
-from estoque.banco_dados_estoque import *
+from bancodedados.banco_dados import *
 import io
-from fornecedor.banco_dados_fornecedor import *
+
 
 
 class EditarEstoque():
     def __init__(self, frame, img, id) -> None:
-        self.f_editar_estoque = frame        
+        self.f_editar_estoque = frame 
+        self.banco_estoque = BancoDeDados('estoques.db')
+        self.banco_fornecedor = BancoDeDados('fornecedores.db')       
         self.id = id
         self.img = img
         self.entrys()
@@ -34,7 +36,7 @@ class EditarEstoque():
         self.ed_preco_venda = tk.Entry(self.f_editar_estoque, bg=cor4, font=('arial 12'), bd=0)       
         self.e_fornecedor = ttk.Combobox(self.f_editar_estoque, background=cor4, font=('arial 12'), state='readonly')
         query = "SELECT nome FROM fornecedor"
-        self.e_fornecedor['values'] = fornecedor_dql(query)
+        self.e_fornecedor['values'] = self.banco_fornecedor.dql(query)
         
         #----------------------------------------------------------------------------------#
         self.ed_barcode.place(relx=.05, rely=.2, relwidth=.2, relheight=0.04) 
@@ -130,7 +132,7 @@ class EditarEstoque():
         
         query = f"UPDATE estoque SET id = ?, descricao = ?, categoria = ?, marca = ?, estoque_minimo = ?, quantidade = ?, observacoes = ?, tamanho = ?, cor = ?, custo = ?, venda = ? WHERE id = {self.id}"
         params = (modify_barcode, modify_descricao, modify_categoria, modify_marca, modify_estoque_min, modify_quantidade, modify_obs, modify_tamanho, modify_cor, modify_preco_custo, modify_preco_venda)
-        dml(query, params)
+        self.banco_estoque.dml(query, params)
         print('produto foi salvo')
         
 

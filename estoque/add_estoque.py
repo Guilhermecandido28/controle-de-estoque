@@ -4,10 +4,9 @@ import tkinter as tk
 from tkinter import filedialog
 from formations import *
 from tkinter import ttk
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageDraw, ImageFont
 from limpar import limpar
-from estoque.banco_dados_estoque import *
-from fornecedor.banco_dados_fornecedor import *
+from bancodedados.banco_dados import *
 from tkinter import messagebox
 from estoque.barcode import *
 
@@ -16,6 +15,8 @@ from estoque.barcode import *
 class AddEstoque():
     def __init__(self, frame):
         self.principal = frame
+        self.banco_estoque = BancoDeDados('estoques.db')
+        self.banco_fornecedor = BancoDeDados('fornecedores.db')
         self.add_estoque()
         self.img = Image.open('imagens/pessoa.png')
         self.filename = None
@@ -94,7 +95,7 @@ class AddEstoque():
         self.title_fonecedor.place(relx=0.71, rely=.25)
         self.e_fornecedor = ttk.Combobox(self.principal, background=cor4, font=('arial 12'), state='readonly')
         query = "SELECT nome FROM fornecedor"
-        self.fornecedores = fornecedor_dql(query)
+        self.fornecedores = self.banco_fornecedor.dql(query)
         self.fornecedores = [fornecedor[0] for fornecedor in self.fornecedores]
         self.e_fornecedor['values'] = self.fornecedores
         self.e_fornecedor.place(relx=0.71, rely=.3, relwidth=0.20, relheight=0.04)
@@ -149,8 +150,9 @@ class AddEstoque():
             if entry.get() == "":
                 messagebox.showerror('Erro', f'Preencha todos os campos. O campo código de barras se deixado vazio, será gerado um código automaticamente.')
                 return
-        if self.e_barcode.get() == "":            
-            gerar_barcode(self.codigo)
+        if self.e_barcode.get() == "":                       
+            gerar_barcode(self.codigo, texto=f'R$ {(self.preco_venda.get())}')
+           
         else:
             if len(self.e_barcode.get()) < 12:
                 messagebox.showerror('Erro', 'O código de barras deve ter 12 dígitos, ou deixo-o em branco para ser gerado um código automaticamente.')
@@ -179,7 +181,7 @@ class AddEstoque():
 
         query = "INSERT INTO estoque (id, descricao, categoria, marca, estoque_minimo, quantidade, observacoes, tamanho, fornecedor, cor, custo, venda, imagem) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         params = (self.value_id, value_descricao, value_categoria, value_marca, value_estoque_min, value_qtd_estoque, value_obs, value_tamanho, value_fornecedor, value_cor, value_custo, value_venda, value_imagem)
-        dml(query, params)
+        self.banco_estoque.dml(query, params)
         print('cliente foi salvo')           
                                         
         messagebox.showinfo("Sucesso", "Operação realizada com sucesso!")   

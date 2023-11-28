@@ -3,11 +3,10 @@ from styles.cores import *
 import tkinter as tk
 from formations import *
 from limpar import limpar
-from estoque.banco_dados_estoque import *
 from PIL import Image, ImageTk
 from compra.listadecompras import ListaCompras
 from compra.add_compra import AddCompra
-from compra.bancodedadoscompra import *
+from bancodedados.banco_dados import *
 
 
 class Compra():
@@ -17,6 +16,8 @@ class Compra():
         self.location_compra = tk.Canvas(frame, bd=0, highlightthickness=0)
         self.f_filtros_busca = tk.Frame(frame, bg='#8A8A8A')
         self.titulos = tk.Frame(frame, bg='#8A8A8A')
+        self.banco_compra = BancoDeDados('compra.db')
+        self.banco_estoque = BancoDeDados('estoques.db')
         self.nova_compra()
         self.lista_compras()
         self.filtros_busca()
@@ -25,7 +26,7 @@ class Compra():
 
     def lista_compras(self):
         query = '''SELECT id, fornecedor, data_compra, data_entrega, total, status FROM compras ORDER BY id'''
-        self.text_list = compra_dql(query)
+        self.text_list = self.banco_compra.dql(query)
                
         
         self.lista_compra = ListaCompras(self.principal, self.text_list, 100, self)
@@ -300,7 +301,7 @@ class Compra():
                         f"OR total LIKE '%{palavra_chave}%' " \
                         f"OR status LIKE '%{palavra_chave}%' " \
             
-            linhas = compra_dql(consulta)            
+            linhas = self.banco_compra.dql(consulta)            
             self.lista_compra.clear_frame()
             for index, item in enumerate(linhas):
                 self.lista_compra.creat_compra(linhas[index][0], item).pack(expand= True, fill='both', padx=10)

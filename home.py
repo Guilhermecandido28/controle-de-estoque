@@ -6,8 +6,8 @@ from PIL import Image
 from limpar import limpar
 from PIL import Image, ImageTk
 from datetime import datetime
-from estoque.banco_dados_estoque import *
-from vendas.bancodedadosvenda import vendas_dql
+from bancodedados.banco_dados import *
+
 import pandas as pd
 import sqlite3
 
@@ -16,6 +16,8 @@ import sqlite3
 class Home():
     def __init__(self, frame):
         self.home = tk.Canvas(frame, bd=0, highlightthickness=0)
+        self.banco_estoque = BancoDeDados('estoque.db')
+        self.banco_vendas = BancoDeDados('vendas.db')
         self.valores()
 
     def frame_home(self):
@@ -37,9 +39,9 @@ class Home():
         id_produto = "SELECT ID from estoque"
         estoque_baixo = "SELECT estoque_minimo from estoque"
         qtd_estoque = "SELECT quantidade from estoque"
-        query_id = dql(id_produto)
-        query_estoque_baixo = dql(estoque_baixo)
-        query_qtd_estoque = dql(qtd_estoque)
+        query_id = self.banco_estoque.dql(id_produto)
+        query_estoque_baixo = self.banco_estoque.dql(estoque_baixo)
+        query_qtd_estoque = self.banco_estoque.dql(qtd_estoque)
         dic_estoque = {}
         contagem_estoque_baixo = 0
         if (
@@ -83,7 +85,7 @@ class Home():
         self.pedidos_receber.place(relx=0.04, rely=.19, relwidth=0.10)
 
         query_produtos = "SELECT id from estoque"
-        produtos = dql(query_produtos)
+        produtos = self.banco_estoque.dql(query_produtos)
         qtd_produtos = len(produtos)
 
         self.p_cadastrados = Button(
@@ -101,7 +103,7 @@ class Home():
         self.vendas_hoje = StringVar()
         data_hoje = datetime.today().strftime('%d/%m/%Y')        
         query = f"SELECT total FROM venda WHERE data LIKE '%{data_hoje}%'"
-        total_vendas_dia = vendas_dql(query)
+        total_vendas_dia = self.banco_vendas.dql(query)
         total_vendas_dia = [float(x[0].replace('R$', '').replace(',','.')) for x in total_vendas_dia]
         self.vendas_hoje.set(f'{sum(total_vendas_dia):.2f}'.replace('.',','))
         
@@ -166,7 +168,7 @@ class Home():
         self.titulo_vendas_mes.place(relx=.63, rely=.244)
 
         query_cliente = f"SELECT cliente FROM venda WHERE data LIKE '%{data_hoje}%'"
-        clientes = vendas_dql(query_cliente)
+        clientes = self.banco_vendas.dql(query_cliente)
         clientes = [x[0] for x in clientes]
         clientes = set(clientes)
 
@@ -202,7 +204,7 @@ class Home():
         forma_credito = StringVar()
         consulta_credito = 'Crédito'
         query_credito =f"SELECT total FROM venda WHERE forma_pagamento LIKE '%{consulta_credito}%'"
-        credito = vendas_dql(query_credito)
+        credito = self.banco_vendas.dql(query_credito)
         credito = [float(x[0].replace('R$', '0').replace(',','.')) for x in credito]
         forma_credito.set(f'{sum(credito):.2f}'.replace('.',','))
 
@@ -219,7 +221,7 @@ class Home():
         forma_debito = StringVar()
         consulta_debito = 'Débito'
         query_debito =f"SELECT total FROM venda WHERE forma_pagamento LIKE '%{consulta_debito}%'"
-        debito = vendas_dql(query_debito)
+        debito = self.banco_vendas.dql(query_debito)
         debito = [float(x[0].replace('R$', '0').replace(',','.')) for x in debito]
         forma_debito.set(f'{sum(debito):.2f}'.replace('.',','))
 
@@ -236,7 +238,7 @@ class Home():
         forma_dinheiro = StringVar()
         consulta_dinheiro = 'Dinheiro'
         query_dinheiro =f"SELECT total FROM venda WHERE forma_pagamento LIKE '%{consulta_dinheiro}%'"
-        dinheiro = vendas_dql(query_dinheiro)
+        dinheiro = self.banco_vendas.dql(query_dinheiro)
         dinheiro = [float(x[0].replace('R$', '0').replace(',','.')) for x in dinheiro]
         forma_dinheiro.set(f'{sum(dinheiro):.2f}'.replace('.',','))
 
@@ -253,7 +255,7 @@ class Home():
         forma_pix = StringVar()
         consulta_pix = 'Pix'
         query_pix =f"SELECT total FROM venda WHERE forma_pagamento LIKE '%{consulta_pix}%'"
-        pix = vendas_dql(query_pix)
+        pix = self.banco_vendas.dql(query_pix)
         pix = [float(x[0].replace('R$', '0').replace(',','.')) for x in pix]
         forma_pix.set(f'{sum(pix):.2f}'.replace('.',','))
 

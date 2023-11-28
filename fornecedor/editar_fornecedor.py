@@ -3,7 +3,7 @@ from styles.cores import *
 import tkinter as tk
 from formations import *
 from tkinter import ttk
-from fornecedor.banco_dados_fornecedor import *
+from bancodedados.banco_dados import *
 from tkinter import messagebox
 
 
@@ -11,6 +11,7 @@ class EditarFornecedor():
     def __init__(self, frame, id) -> None:
         self.f_editar_fornecedor = frame        
         self.id = id
+        self.banco_fornecedor = BancoDeDados('fornecedores.db')
         self.make_listbox()
         self.entrys()
         self.titulos()
@@ -182,7 +183,7 @@ class EditarFornecedor():
         value_e_lista_fornecedor = '; '.join(lista_formatada_produtos)
         query = f"UPDATE fornecedor SET id = ?, nome = ?, categoria = ?, cnpj = ?, email = ?, telefone = ?, OBS = ?, CEP = ?, rua = ?, numero = ?, bairro = ?, cidade = ?, estado = ?, lista_produtos = ? WHERE id = {self.id}"
         params = (modify_id, modify_nome, modify_categoria, modify_cnpj, modify_email, modify_telefone, modify_obs, modify_cep, modify_rua, modify_numero, modify_bairro, modify_cidade, modify_estado, value_e_lista_fornecedor)
-        fornecedor_dml(query, params)
+        self.banco_fornecedor.dml(query, params)
         print('fornecedor foi salvo')
 
     def ler_categoria_do_arquivo(self):
