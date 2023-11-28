@@ -357,8 +357,7 @@ class Vendas():
             '+5511985518059', mensagem, tab_close=True, wait_time=10)
         messagebox.showinfo('Sucesso!', "Venda realizada com sucesso!")
 
-    def imprimir_recibo(self):
-        total = sum(float(item[7]) * int(item[6]) for item in self.lista_vendas)
+    def imprimir_recibo(self):       
 
         texto_recibo = 'LOJA JK MODAS E VARIEDADES\n'
         texto_recibo += f"============= Recibo de Compra =============\n\n"
