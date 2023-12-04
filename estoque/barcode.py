@@ -22,11 +22,11 @@ def gerar_barcode(entry, texto):
     codigo_barra = EAN13(numero, writer=ImageWriter())
     codigo_barra.save(f'estoque/codigos_barras/{numero}')
     imagem = Image.open(f'estoque/codigos_barras/{numero}.png')
-    draw = ImageDraw.Draw(imagem)
-    font = ImageFont.truetype('arial.ttf', size=40)
-    draw.text((200, 240), f"{texto}", font=font, fill='black')
-    imagem.save(f'estoque/codigos_barras/{numero}.png')  
-    imagem_path = os.path.abspath(f'estoque/codigos_barras/{numero}.png')
+    # draw = ImageDraw.Draw(imagem)
+    # font = ImageFont.truetype('arial.ttf', size=40)
+    # draw.text((200, 240), f"{texto}", font=font, fill='black')
+    # imagem.save(f'estoque/codigos_barras/{numero}.png')  
+    # imagem_path = os.path.abspath(f'estoque/codigos_barras/{numero}.png')
     imprimir_barcode(numero=numero)
 
 def imprimir_barcode(numero):    

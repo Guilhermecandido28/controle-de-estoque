@@ -2,11 +2,9 @@ from tkinter import *
 from styles.cores import *
 import tkinter as tk
 from formations import *
-from PIL import Image
 from limpar import limpar
 from clientes.cliente import Cliente
 from home import Home
-from PIL import Image, ImageTk
 from estoque.estoque import Estoque
 from fornecedor.fornecedor import Fornecedor
 from compra.compra import Compra

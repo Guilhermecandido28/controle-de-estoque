@@ -5,14 +5,12 @@ from formations import *
 from limpar import limpar
 from tkinter import ttk
 from tkinter import messagebox
-import io
 from fornecedor.add_fornecedor import AddFornecedor
 from fornecedor.editar_fornecedor import EditarFornecedor
 from bancodedados.banco_dados import *
 from bancodedados.banco_dados import *
 from PIL import Image, ImageTk
-import subprocess
-import os
+
 
 class Fornecedor():
     def __init__(self, frame):

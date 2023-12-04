@@ -5,7 +5,7 @@ from docx import Document
 from docx.shared import Inches
 from bancodedados.banco_dados import *
 from datetime import datetime
-import subprocess
+
 
 class ImprimirFicha():
     def __init__(self, documento, id):

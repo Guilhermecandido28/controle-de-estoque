@@ -6,7 +6,7 @@ from tkinter import filedialog
 from PIL import Image, ImageTk
 from tkinter import ttk
 from bancodedados.banco_dados import *
-import io
+
 
 
 

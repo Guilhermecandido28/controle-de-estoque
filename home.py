@@ -7,8 +7,6 @@ from limpar import limpar
 from PIL import Image, ImageTk
 from datetime import datetime
 from bancodedados.banco_dados import *
-
-import pandas as pd
 import sqlite3
 
 
@@ -16,7 +14,7 @@ import sqlite3
 class Home():
     def __init__(self, frame):
         self.home = tk.Canvas(frame, bd=0, highlightthickness=0)
-        self.banco_estoque = BancoDeDados('estoque.db')
+        self.banco_estoque = BancoDeDados('estoques.db')
         self.banco_vendas = BancoDeDados('vendas.db')
         self.valores()
 
@@ -36,9 +34,9 @@ class Home():
         self.seta_cima = PhotoImage(file='imagens/seta_cima.png')
         self.seta_baixo = PhotoImage(file='imagens/seta_baixo.png')
         # estoque baixo
-        id_produto = "SELECT ID from estoque"
-        estoque_baixo = "SELECT estoque_minimo from estoque"
-        qtd_estoque = "SELECT quantidade from estoque"
+        id_produto = "SELECT ID from estoques"
+        estoque_baixo = "SELECT estoque_minimo from estoques"
+        qtd_estoque = "SELECT quantidade from estoques"
         query_id = self.banco_estoque.dql(id_produto)
         query_estoque_baixo = self.banco_estoque.dql(estoque_baixo)
         query_qtd_estoque = self.banco_estoque.dql(qtd_estoque)

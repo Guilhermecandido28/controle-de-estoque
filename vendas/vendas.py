@@ -12,6 +12,8 @@ from bancodedados.banco_dados import *
 import pywhatkit as kt
 
 
+
+
 class Vendas():
     def __init__(self, frame) -> None:
         self.principal = tk.Frame(frame, background='light gray')
@@ -348,16 +350,16 @@ class Vendas():
         query = "INSERT INTO venda (data, produtos, cliente, desconto, total, forma_pagamento) VALUES (?, ?, ?, ?, ?, ?)"  
         self.banco_vendas.dml(query, (self.data, self.resultado, self.cliente, self.info_desconto, self.total_bd, self.valor_forma_pagamento))
         
-        # self.mensagem_whats()
+        self.mensagem_whats()
         self.imprimir_recibo()
 
     def mensagem_whats(self):
         mensagem = f'Em {self.data} foi realizada a venda de {self.total_bd} do(s) produto(s) {self.resultado} para o(a)  cliente {self.cliente}. Parabéns pela venda!'
         kt.sendwhatmsg_instantly(
-            '+5511985518059', mensagem, tab_close=True, wait_time=10)
+            '+5511996241660', mensagem, tab_close=True, wait_time=15)
         messagebox.showinfo('Sucesso!', "Venda realizada com sucesso!")
 
-    def imprimir_recibo(self):       
+    def imprimir_recibo(self):  
 
         texto_recibo = 'LOJA JK MODAS E VARIEDADES\n'
         texto_recibo += f"============= Recibo de Compra =============\n\n"
@@ -387,8 +389,9 @@ class Vendas():
 
         conector.texto(texto_recibo)
 
-        conector.Feed(3)
+        conector.Feed(10)
         conector.Corte(20)
+
 
 
         nome_impressora = "cupom"
@@ -398,3 +401,4 @@ class Vendas():
 
 
         print(resposta)
+
