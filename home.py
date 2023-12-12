@@ -8,6 +8,7 @@ from PIL import Image, ImageTk
 from datetime import datetime
 from bancodedados.banco_dados import *
 import sqlite3
+import pandas as pd
 
 
 
@@ -34,9 +35,9 @@ class Home():
         self.seta_cima = PhotoImage(file='imagens/seta_cima.png')
         self.seta_baixo = PhotoImage(file='imagens/seta_baixo.png')
         # estoque baixo
-        id_produto = "SELECT ID from estoques"
-        estoque_baixo = "SELECT estoque_minimo from estoques"
-        qtd_estoque = "SELECT quantidade from estoques"
+        id_produto = "SELECT ID from estoque"
+        estoque_baixo = "SELECT estoque_minimo from estoque"
+        qtd_estoque = "SELECT quantidade from estoque"
         query_id = self.banco_estoque.dql(id_produto)
         query_estoque_baixo = self.banco_estoque.dql(estoque_baixo)
         query_qtd_estoque = self.banco_estoque.dql(qtd_estoque)
@@ -118,7 +119,7 @@ class Home():
         self.vendas_do_mes = StringVar()
                 
         # Conecte-se ao banco de dados SQLite
-        conn = sqlite3.connect('vendas/vendas.db')
+        conn = sqlite3.connect('bancodedados/vendas.db')
 
         # Execute a query e carregue os dados em um DataFrame do pandas
         df = pd.read_sql_query("SELECT * FROM venda", conn)

@@ -11,7 +11,11 @@ from compra.compra import Compra
 from vendas.vendas import Vendas
 from financeiro.financeiro import Financeiro
 from trocas.troca import Troca
-
+import os
+import requests
+from tkinter import messagebox
+import wget
+from subprocess import Popen
 
 
 janela = Tk()
@@ -32,10 +36,49 @@ class Applicantion(Cliente, Home, Estoque, Compra, Vendas, Financeiro, Troca):
         self.compra_widgets_criados = False 
         self.venda_widgets_criados = False  
         self.financeiro_widgets_criados = False  
-        self.troca_widgets_criados = False            
+        self.troca_widgets_criados = False
+        self.check_updates()            
         janela.mainloop()
         
- 
+    def check_updates(self):
+        github_api_url = 'https://api.github.com/repos/Guilhermecandido28/controle-de-estoque/releases/latest'
+
+        try:
+            response = requests.get(github_api_url)
+            response.raise_for_status()
+            latest_version = response.json()['name']
+
+            # Substitua a versão abaixo pela versão atual do seu aplicativo
+            current_version = '1.0'
+
+            # Verifica se há uma versão mais recente
+            if latest_version > current_version:
+                resposta = messagebox.askquestion('Atualização Disponível',
+                                                  f'Nova versão {latest_version} disponível! Deseja atualizar?')
+
+                if resposta == 'yes':
+                    # Substitua 'SeuAplicativoSetup.exe' pelo nome do seu instalador Inno Setup
+                    installer_url = 'https://github.com/Guilhermecandido28/controle-de-estoque/releases/latest/download/mysetup.exe'
+
+                    # Baixa o instalador da versão mais recente
+                    installer_path = wget.download(installer_url)
+
+                    # Executa o instalador
+                    Popen([installer_path])
+
+                    messagebox.showinfo('Atualização Concluída',
+                                        f'A versão {latest_version} foi instalada com sucesso. O aplicativo será reiniciado.')
+
+                    # Adicione código para reiniciar o aplicativo após a atualização
+
+                    # Após a instalação, você pode querer excluir o instalador baixado
+                    os.remove(installer_path)
+                else:
+                    messagebox.showinfo('Atualização Cancelada', 'Você optou por não atualizar neste momento.')
+            else:
+                messagebox.showinfo('Sem Atualizações', 'Você está usando a versão mais recente.')
+        except requests.RequestException as e:
+            messagebox.showwarning('Erro de Conexão', f'Erro ao verificar atualizações: {str(e)}')
     def tela(self):
         self.janela.title('Controle fincanceiro')
         self.janela.geometry('1500x1000')
@@ -175,42 +218,52 @@ class Applicantion(Cliente, Home, Estoque, Compra, Vendas, Financeiro, Troca):
         if self.troca_widgets_criados:
             troca.principal.place_forget()
             troca.location_troca.place_forget()
+            
             self.troca_widgets_criados = False
 
                    
  
     def buttons(self):         
         #Botão cliente
-        self.img_cliente = PhotoImage(file='imagens/cliente.png')
+        cliente= os.path.abspath('imagens/cliente.png')
+        print(cliente)
+        self.img_cliente = PhotoImage(file=cliente)
         self.btn_clientes = Button(self.menu, text='Clientes', image=self.img_cliente, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2', command=self.cliente)
         self.btn_clientes.place(relx=0, rely=0, relwidth=0.14, relheight=1)
         #botão vendas
-        self.img_vendas = PhotoImage(file='imagens/vendas.png')
+        vendas = os.path.abspath('imagens/vendas.png')
+        self.img_vendas = PhotoImage(file=vendas)
         self.btn_vendas = Button(self.menu, text='Vendas', image=self.img_vendas, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2', command=self.venda)
         self.btn_vendas.place(relx=0.14, rely=0, relwidth=0.14, relheight=1)
         # Fornecedor
-        self.img_fornecedor = PhotoImage(file='imagens/fornecedor.png')
+        fornecedor = os.path.abspath('imagens/fornecedor.png')
+        self.img_fornecedor = PhotoImage(file=fornecedor)
 
         self.btn_fornecedor = Button(self.menu, text='Fornecedor', image=self.img_fornecedor, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2', command=self.fornecedor)
         self.btn_fornecedor.place(relx=0.28, rely=0, relwidth=0.14, relheight=1)
         #estoque
-        self.img_estoque= PhotoImage(file='imagens/estoque.png')
+        estoque = os.path.abspath('imagens/estoque.png')
+        self.img_estoque= PhotoImage(file=estoque)
         self.btn_estoque = Button(self.menu, text='Estoque', image=self.img_estoque, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2', command=self.estoque)
         self.btn_estoque.place(relx=0.42, rely=0, relwidth=0.14, relheight=1)
         #compras
-        self.img_compras= PhotoImage(file='imagens/compras.png')
+        compras = os.path.abspath('imagens/compras.png')
+        self.img_compras= PhotoImage(file=compras)
         self.btn_compras = Button(self.menu, text='Compras', image=self.img_compras, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2', command=self.compra)
         self.btn_compras.place(relx=0.56, rely=0, relwidth=0.14, relheight=1)
         #financeiro
-        self.img_financeiro= PhotoImage(file='imagens/financeiro.png')
+        financeiro = os.path.abspath('imagens/financeiro.png')
+        self.img_financeiro= PhotoImage(file=financeiro)
         self.btn_financeiro = Button(self.menu, text='Financeiro', image=self.img_financeiro, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2', command=self.financa)
         self.btn_financeiro.place(relx=0.7, rely=0, relwidth=0.14, relheight=1)
         #troca
-        self.img_settings= PhotoImage(file='imagens/troca.png')
+        troca = os.path.abspath('imagens/troca.png')
+        self.img_settings= PhotoImage(file=troca)
         self.btn_settings = Button(self.menu, text='Trocas', image=self.img_settings, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2', command=self.trocas)
         self.btn_settings.place(relx=0.84, rely=0, relwidth=0.14, relheight=1)
         #home
-        self.img_home = PhotoImage(file='imagens/home.png')
+        home = os.path.abspath('imagens/home.png')
+        self.img_home = PhotoImage(file=home)
         self.btn_home = Button(self.header, image=self.img_home, bg=cor3, bd=0, font=('arial 12 bold'), cursor='hand2', command=self.home)
         self.btn_home.place(relx=0, rely=0, relheight=1, relwidth=0.05)   
   

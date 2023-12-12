@@ -78,7 +78,8 @@ class Cliente(AddCliente, EditarCliente):
         self.btn_exclcliente = Button(self.principal, text='EXCLUIR\n Cliente', bg='gray', compound='center',bd=0, font=('arial 14 bold'), foreground='black', cursor='hand2',command=self.excluir_cliente)
         self.btn_exclcliente.place(relx=0.7, rely=0, relheight=0.1, relwidth=0.1)
         #botão voltar
-        self.img_voltar = PhotoImage(file='imagens/voltar.png')
+        voltar = os.path.abspath('imagens/voltar.png')
+        self.img_voltar = PhotoImage(file=voltar)
         self.btn_voltar = Button(self.f_editar_cliente, image=self.img_voltar, bg='white', cursor='hand2', command=self.voltar, relief='flat')
         self.btn_voltar.place(relx=0.962, rely=0.0)
         
@@ -100,12 +101,14 @@ class Cliente(AddCliente, EditarCliente):
         self.search.bind("<FocusIn>", lambda event: self.search.delete(0, "end"))
         self.search.place(relx=0, rely=0, relheight=0.1, relwidth=0.7)
         #botão_pesquisar
-        self.img_search = PhotoImage(file='imagens/search.png')
+        search = os.path.abspath('imagens/search.png')
+        self.img_search = PhotoImage(file=search)
         self.btn_search = Button(self.principal, image=self.img_search, bg="#8A8A8A", bd=0, cursor='hand2', command=self.cliente_buscado)
         self.btn_search.place(relx=0.6, rely=0, relheight=0.1, relwidth=0.05)
         self.search.bind('<Return>', self.on_enter)
         #Botão_imprimir
-        self.img_print = PhotoImage(file='imagens/impressora.png')
+        print = os.path.abspath('imagens/impressora.png')
+        self.img_print = PhotoImage(file=print)
         self.btn_print = Button(self.principal, image=self.img_print, bg="#8A8A8A", bd=0, cursor='hand2', command=self.imprimir_cliente)
         self.btn_print.place(relx=0.65, rely=0, relheight=0.1, relwidth=0.05)
 
