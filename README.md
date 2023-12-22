@@ -12,7 +12,7 @@ Este projeto foi criado por Guilherme Nunes com o objetivo de chamar a atenção
 2. Navegue até o diretório onde deseja armazenar o projeto.
 3. Execute o seguinte comando:
    ```bash
-   git clone https://github.com/seu-usuario/nome-do-repositorio.git
+   git clone https://github.com/Guilhermecandido28/controle-de-estoque.git
 
 ## Baixando para uso em uma loja
 
