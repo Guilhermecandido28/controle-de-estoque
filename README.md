@@ -1,16 +1,19 @@
-Projeto de Controle para Lojas de Roupas
-Sobre o Projeto
+# Projeto de Controle para Lojas de Roupas
+
+## Sobre o Projeto
+
 Este projeto foi criado por Guilherme Nunes com o objetivo de chamar a atenção de recrutadores e também fornecer uma solução de baixo custo para o controle de lojas de roupas. Ele foi desenvolvido a pedido de uma loja e inclui funcionalidades para gerenciamento de estoque, clientes, vendas, compras e aspectos financeiros da loja.
 
-Como Começar
-Usando git clone (para desenvolver ou melhorar o software)
-Abra seu terminal ou prompt de comando.
-Navegue até o diretório onde deseja armazenar o projeto.
-Execute o seguinte comando:
-bash
-Copy code
-git clone https://github.com/seu-usuario/nome-do-repositorio.git
-(Substitua "seu-usuario" e "nome-do-repositorio" pelos seus dados reais).
+## Como Começar
+
+### Usando git clone (para desenvolver ou melhorar o software)
+
+1. Abra seu terminal ou prompt de comando.
+2. Navegue até o diretório onde deseja armazenar o projeto.
+3. Execute o seguinte comando:
+   ```bash
+   git clone https://github.com/seu-usuario/nome-do-repositorio.git
+
 Baixando para uso em uma loja
 Visite a seção de releases do projeto.
 Baixe a versão mais recente do software.
