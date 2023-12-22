@@ -1,4 +1,4 @@
-# Projeto de Controle para Lojas de Roupas
+# Projeto de Controle de Estoque
 
 ## Sobre o Projeto
 
