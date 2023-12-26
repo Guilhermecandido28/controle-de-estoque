@@ -356,7 +356,7 @@ class Vendas():
     def mensagem_whats(self):
         mensagem = f'Em {self.data} foi realizada a venda de {self.total_bd} do(s) produto(s) {self.resultado} para o(a)  cliente {self.cliente}. Parabéns pela venda!'
         kt.sendwhatmsg_instantly(
-            '+5511996241660', mensagem, tab_close=True, wait_time=15)
+            '+5511996241660', mensagem, wait_time=15)
         messagebox.showinfo('Sucesso!', "Venda realizada com sucesso!")
 
     def imprimir_recibo(self):  

@@ -16,6 +16,8 @@ import requests
 from tkinter import messagebox
 import wget
 from subprocess import Popen
+from packaging import version
+
 
 
 janela = Tk()
@@ -38,8 +40,9 @@ class Applicantion(Cliente, Home, Estoque, Compra, Vendas, Financeiro, Troca):
         self.financeiro_widgets_criados = False  
         self.troca_widgets_criados = False
         self.check_updates()            
-        janela.mainloop()
-        
+        janela.mainloop()        
+
+
     def check_updates(self):
         github_api_url = 'https://api.github.com/repos/Guilhermecandido28/controle-de-estoque/releases/latest'
 
@@ -48,37 +51,34 @@ class Applicantion(Cliente, Home, Estoque, Compra, Vendas, Financeiro, Troca):
             response.raise_for_status()
             latest_version = response.json()['name']
 
-            # Substitua a versão abaixo pela versão atual do seu aplicativo
-            current_version = '1.0'
+            
+            current_version = '1.3'
 
-            # Verifica se há uma versão mais recente
-            if latest_version > current_version:
+            
+            if version.parse(latest_version) > version.parse(current_version):
                 resposta = messagebox.askquestion('Atualização Disponível',
-                                                  f'Nova versão {latest_version} disponível! Deseja atualizar?')
+                                                f'Nova versão {latest_version} disponível! Deseja atualizar?')
 
                 if resposta == 'yes':
-                    # Substitua 'SeuAplicativoSetup.exe' pelo nome do seu instalador Inno Setup
+                    
                     installer_url = 'https://github.com/Guilhermecandido28/controle-de-estoque/releases/latest/download/mysetup.exe'
 
-                    # Baixa o instalador da versão mais recente
+                    
                     installer_path = wget.download(installer_url)
 
-                    # Executa o instalador
+                    
                     Popen([installer_path])
 
                     messagebox.showinfo('Atualização Concluída',
                                         f'A versão {latest_version} foi instalada com sucesso. O aplicativo será reiniciado.')
-
-                    # Adicione código para reiniciar o aplicativo após a atualização
-
-                    # Após a instalação, você pode querer excluir o instalador baixado
                     os.remove(installer_path)
                 else:
                     messagebox.showinfo('Atualização Cancelada', 'Você optou por não atualizar neste momento.')
             else:
-                messagebox.showinfo('Sem Atualizações', 'Você está usando a versão mais recente.')
+                pass
         except requests.RequestException as e:
             messagebox.showwarning('Erro de Conexão', f'Erro ao verificar atualizações: {str(e)}')
+
     def tela(self):
         self.janela.title('Controle fincanceiro')
         self.janela.geometry('1500x1000')
@@ -171,7 +171,7 @@ class Applicantion(Cliente, Home, Estoque, Compra, Vendas, Financeiro, Troca):
             troca = Troca(self.janela)
             troca.troca()
             self.esquecer_functions()
-            self.financeiro_widgets_criados = True
+            self.troca_widgets_criados = True
         else:
             pass
 

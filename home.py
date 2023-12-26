@@ -78,10 +78,10 @@ class Home():
         self.pedidos_receber = Label(
             self.home,
             text='02',
-            font=('arial 36 bold'),
+            font=('arial 24 bold'),
             foreground='#FFFFFF',
             bg='#A6A6A6')
-        self.pedidos_receber.place(relx=0.04, rely=.19, relwidth=0.10)
+        self.pedidos_receber.place(relx=0.04, rely=.21, relwidth=0.10)
 
         query_produtos = "SELECT id from estoque"
         produtos = self.banco_estoque.dql(query_produtos)
@@ -90,7 +90,7 @@ class Home():
         self.p_cadastrados = Button(
             self.home,
             text=qtd_produtos,
-            font=('arial 42 bold'),
+            font=('arial 32 bold'),
             foreground='#FFFFFF',
             bg='#A6A6A6',
             highlightthickness=0,
@@ -111,7 +111,7 @@ class Home():
             image=self.seta_cima,
             compound='right',            
             textvariable=self.vendas_hoje,
-            font=('arial 36 bold'),
+            font=('arial 24 bold'),
             foreground='#FFFFFF',
             bg='#A6A6A6')
         self.vendas_dia.place(relx=.605, rely=.04, relwidth=0.18)
@@ -140,7 +140,7 @@ class Home():
             image=self.seta_cima,
             compound='right',
             textvariable=self.vendas_do_mes,
-            font=('arial 36 bold'),
+            font=('arial 24 bold'),
             foreground='#FFFFFF',
             bg='#A6A6A6')
         self.vendas_mes.place(relx=.605, rely=.17, relwidth=0.18)
@@ -164,7 +164,7 @@ class Home():
             font=('inter 9'),
             fg='white',
             bg='#A6A6A6')
-        self.titulo_vendas_mes.place(relx=.63, rely=.244)
+        self.titulo_vendas_mes.place(relx=.63, rely=.22)
 
         query_cliente = f"SELECT cliente FROM venda WHERE data LIKE '%{data_hoje}%'"
         clientes = self.banco_vendas.dql(query_cliente)
@@ -174,7 +174,7 @@ class Home():
         self.qtd_clientes = Label(
         self.home,
         text=len(clientes),
-        font=('arial 42 bold'),
+        font=('arial 32 bold'),
         foreground='#FFFFFF',
         bg='#A6A6A6')
         self.qtd_clientes.place(relx=.64, rely=.30)
@@ -184,7 +184,7 @@ class Home():
         image=self.seta_cima,
         compound='right',
         text='1350,00',
-        font=('arial 36 bold'),
+        font=('arial 32 bold'),
         foreground='#FFFFFF',
         bg='#A6A6A6')
         self.a_receber.place(relx=.10, rely=.62)
@@ -194,10 +194,10 @@ class Home():
         image=self.seta_baixo,
         compound='right',
         text='678,56',
-        font=('arial 36 bold'),
+        font=('arial 32 bold'),
         foreground='#FFFFFF',
         bg='#A6A6A6')
-        self.a_pagar.place(relx=.10, rely=.84)
+        self.a_pagar.place(relx=.10, rely=.83)
 
     
         forma_credito = StringVar()
@@ -212,7 +212,7 @@ class Home():
         image=self.seta_cima,
         compound='right',
         textvariable= forma_credito,
-        font=('arial 24 bold'),
+        font=('arial 16 bold'),
         foreground='#FFFFFF',
         bg='#A6A6A6')
         self.credito.place(relx=.68, rely=.565)
@@ -229,7 +229,7 @@ class Home():
         image=self.seta_cima,
         compound='right',
         textvariable=forma_debito,
-        font=('arial 24 bold'),
+        font=('arial 16 bold'),
         foreground='#FFFFFF',
         bg='#A6A6A6')
         self.debito.place(relx=.68, rely=.65)
@@ -246,7 +246,7 @@ class Home():
         image=self.seta_cima,
         compound='right',
         textvariable= forma_dinheiro,
-        font=('arial 24 bold'),
+        font=('arial 16 bold'),
         foreground='#FFFFFF',
         bg='#A6A6A6')
         self.dinheiro.place(relx=.68, rely=.735)
@@ -263,7 +263,7 @@ class Home():
         image=self.seta_cima,
         compound='right',
         textvariable= forma_pix,
-        font=('arial 24 bold'),
+        font=('arial 16 bold'),
         foreground='#FFFFFF',
         bg='#A6A6A6')
         self.pix.place(relx=.63, rely=.817)
