@@ -31,26 +31,65 @@ class AddCliente():
     def add_client(self):
         
         #título 
-        self.titulo = Label(self.principal, text='Ficha de Cadastro de Clientes', bg='white', font=('arial 36 bold'))
-        self.linha = Frame(self.principal, bg=cor5)
-        self.linha.place(relx=0.146, rely=0.17, relwidth=0.525, relheight=0.004)
+        self.titulo = Label(
+            self.principal,
+            text='Ficha de Cadastro de Clientes',
+            bg='white',
+            font=('arial 36 bold'))
         self.titulo.place(relx=0.146, rely=0.07, relheight=0.1)
+
+        Frame(
+            self.principal,
+            bg=cor5
+            ).place(relx=0.146, rely=0.17, relwidth=0.525, relheight=0.004)
+        
         #imagem
-        self.my_canvas = Canvas(self.principal, bd=0, highlightthickness=0, relief='ridge')
+        self.my_canvas = Canvas(
+            self.principal,
+            bd=0,
+            highlightthickness=0,
+            relief='ridge')
         self.my_canvas.place(relx=0, rely=0.1, relheight=.34, relwidth=.14)
-              
-        self.my_canvas.bind('<Configure>', self.resizer)        
-        botao_upload = tk.Button(self.principal, command= self.upload , text="Upload", font=('arial 12 bold'), background='green', foreground='white', cursor='hand2')
+        self.my_canvas.bind('<Configure>', self.resizer) 
+               
+        botao_upload = tk.Button(
+            self.principal,
+            command= self.upload,
+            text="Upload",
+            font=('arial 12 bold'),
+            background='green',
+            foreground='white',
+            cursor='hand2')        
         botao_upload.place(relx=0, rely=0.44, relwidth=.14, relheight=0.04)
-        botao_upload_instagram = tk.Button(self.principal, command= self.upload_instagram , text="Mostre foto perfil instagram ", font=('arial 12 bold'), background='green', foreground='white', cursor='hand2')
+
+        botao_upload_instagram = tk.Button(
+            self.principal,
+            command= self.upload_instagram,
+            text="Mostre foto perfil instagram ",
+            font=('arial 12 bold'),
+            background='green',
+            foreground='white',
+            cursor='hand2')
         botao_upload_instagram.place(relx=0.49, rely=0.38, relwidth=.18, relheight=0.04)
+
         # Entrys
             #nome
-        self.title_nome = Label(self.principal, text='NOME:', font=('arial 12'), foreground= cor4, bg='white')
+        self.title_nome = Label(
+            self.principal,
+            text='NOME:',
+            font=('arial 12'),
+            foreground= cor4,
+            bg='white')
         self.title_nome.place(relx=0.148, rely=0.195)
-        self.e_nome = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0)
+
+        self.e_nome = Entry(
+            self.principal,
+            bg=cor4,
+            font=('arial 12'),
+            bd=0)
         self.e_nome.place(relx=0.150, rely=0.24, relwidth=0.25, relheight=0.04)
         placeholder_nome(self.e_nome)
+        
             #sobrenome
         self.title_sobrenome = Label(self.principal, text='SOBRENOME:', font=('arial 12'), foreground= cor4, bg='white')
         self.title_sobrenome.place(relx=0.416, rely=0.195)
