@@ -8,4 +8,4 @@ __pycache__/
 *.pyzw
 .vscode/
 build/
-venv/
+venv
