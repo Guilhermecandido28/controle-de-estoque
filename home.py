@@ -15,8 +15,8 @@ import pandas as pd
 class Home():
     def __init__(self, frame):
         self.home = tk.Canvas(frame, bd=0, highlightthickness=0)
-        self.banco_estoque = BancoDeDados('estoques.db')
-        self.banco_vendas = BancoDeDados('vendas.db')
+        self.banco_estoque = BancoDeDados('controle_estoque.db')
+        self.banco_vendas = BancoDeDados('controle_estoque.db')
         self.valores()
 
     def frame_home(self):

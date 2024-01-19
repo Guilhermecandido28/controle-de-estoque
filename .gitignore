@@ -1,0 +1,11 @@
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+*.pyi
+*.pyw
+*.pyz
+*.pyzw
+.vscode/
+build/
+venv/

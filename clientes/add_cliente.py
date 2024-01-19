@@ -23,7 +23,7 @@ class AddCliente():
         self.img = Image.open('imagens/pessoa.png')               
         self.principal = frame
         self.filename = None
-        self.banco = BancoDeDados('clientes.db')
+        self.banco = BancoDeDados('controle_estoque.db')
         self.add_client()               
         self.tvw_hist()
         self.inserir_na_treeview()             
