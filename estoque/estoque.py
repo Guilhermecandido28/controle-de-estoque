@@ -18,7 +18,7 @@ class Estoque(EditarEstoque):
         self.f_editar_estoque = tk.Frame(frame, bg='white')
         self.f_add_estoque = tk.Frame(frame, bg= 'white')
         self.location_est = tk.Canvas(frame, bd=0, highlightthickness=0)
-        self.banco_estoque = BancoDeDados('estoques.db')
+        self.banco_estoque = BancoDeDados('controle_estoque.db')
         
         self.buscar_estoque_est()
         self.tree_estoque()

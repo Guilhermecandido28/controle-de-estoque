@@ -15,8 +15,8 @@ from estoque.barcode import *
 class AddEstoque():
     def __init__(self, frame):
         self.principal = frame
-        self.banco_estoque = BancoDeDados('estoques.db')
-        self.banco_fornecedor = BancoDeDados('fornecedores.db')
+        self.banco_estoque = BancoDeDados('controle_estoque.db')
+        self.banco_fornecedor = BancoDeDados('controle_estoque.db')
         self.add_estoque()
         self.img = Image.open('imagens/pessoa.png')
         self.filename = None

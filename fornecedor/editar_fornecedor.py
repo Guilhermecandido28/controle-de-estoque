@@ -11,7 +11,7 @@ class EditarFornecedor():
     def __init__(self, frame, id) -> None:
         self.f_editar_fornecedor = frame        
         self.id = id
-        self.banco_fornecedor = BancoDeDados('fornecedores.db')
+        self.banco_fornecedor = BancoDeDados('controle_estoque.db')
         self.make_listbox()
         self.entrys()
         self.titulos()
