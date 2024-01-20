@@ -13,8 +13,8 @@ from bancodedados.banco_dados import *
 class EditarEstoque():
     def __init__(self, frame, img, id) -> None:
         self.f_editar_estoque = frame 
-        self.banco_estoque = BancoDeDados('controle_estoque.db')
-        self.banco_fornecedor = BancoDeDados('controle_estoque.db')       
+        self.banco_estoque = BancoDeDados()
+        self.banco_fornecedor = BancoDeDados()       
         self.id = id
         self.img = img
         self.entrys()

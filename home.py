@@ -15,8 +15,8 @@ import pandas as pd
 class Home():
     def __init__(self, frame):
         self.home = tk.Canvas(frame, bd=0, highlightthickness=0)
-        self.banco_estoque = BancoDeDados('controle_estoque.db')
-        self.banco_vendas = BancoDeDados('controle_estoque.db')
+        self.banco_estoque = BancoDeDados()
+        self.banco_vendas = BancoDeDados()
         self.valores()
 
     def frame_home(self):
@@ -117,7 +117,8 @@ class Home():
         self.vendas_dia.place(relx=.605, rely=.04, relwidth=0.18)
 
         self.vendas_do_mes = StringVar()
-                
+
+        #FIXME: Tirar referencia hardcode do banco de dados para referenciar a classe       
         # Conecte-se ao banco de dados SQLite
         conn = sqlite3.connect('bancodedados/vendas.db')
 

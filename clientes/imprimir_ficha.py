@@ -9,7 +9,7 @@ from datetime import datetime
 
 class ImprimirFicha():
     def __init__(self, documento, id):
-        self.banco = BancoDeDados('controle_estoque.db')
+        self.banco = BancoDeDados()
         self.documento = Document(documento)
         self.id = id
         self.nome = self.banco.dql(f"SELECT nome FROM clientes WHERE id = {self.id}")

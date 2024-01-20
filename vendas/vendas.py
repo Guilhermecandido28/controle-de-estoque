@@ -20,9 +20,9 @@ class Vendas():
         self.location_venda = tk.Canvas(frame, bd=0, highlightthickness=0)
         self.frame_codigo = Frame(frame, background='light gray')
         self.titulos = Frame(frame)
-        self.banco_cliente = BancoDeDados('controle_estoque.db')
-        self.banco_estoque = BancoDeDados('controle_estoque.db')
-        self.banco_vendas = BancoDeDados('controle_estoque.db')
+        self.banco_cliente = BancoDeDados()
+        self.banco_estoque = BancoDeDados()
+        self.banco_vendas = BancoDeDados()
         self.count = 0
         self.total = 0
         self.stringvar = StringVar()

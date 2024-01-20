@@ -16,9 +16,9 @@ from bancodedados.banco_dados import *
 class AddCompra():
     def __init__(self, frame):
         self.principal = frame
-        self.banco_fornecedor = BancoDeDados('controle_estoque.db')
-        self.banco_compra = BancoDeDados('controle_estoque.db')
-        self.banco_estoque = BancoDeDados('controle_estoque.db')
+        self.banco_fornecedor = BancoDeDados()
+        self.banco_compra = BancoDeDados()
+        self.banco_estoque = BancoDeDados()
         self.layout_add_compra() 
         self.index = 1
         self.rely = 0.02 

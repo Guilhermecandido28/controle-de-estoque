@@ -8,8 +8,8 @@ class EditarCompra():
         self.janela = Tk()
         self.janela.title("Editar Compra")
         self.janela.geometry('500x800')
-        self.banco_compra = BancoDeDados('controle_estoque.db')
-        self.banco_estoque = BancoDeDados('controle_estoque.db')
+        self.banco_compra = BancoDeDados()
+        self.banco_estoque = BancoDeDados()
         self.id = id
         self.label_frames()
         self.labels()
