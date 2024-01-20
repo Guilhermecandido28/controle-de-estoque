@@ -23,7 +23,7 @@ class Cliente(AddCliente, EditarCliente):
         self.f_editar_cliente = tk.Frame(frame, bg='white')
         self.f_add_cliente = tk.Frame(frame, bg= 'white')
         self.location = tk.Canvas(frame, bd=0, highlightthickness=0) 
-        self.banco = BancoDeDados('controle_estoque.db')       
+        self.banco = BancoDeDados()       
         self.inserir_dados()
         self.clientes_na_treeview()              
 

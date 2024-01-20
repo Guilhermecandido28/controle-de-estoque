@@ -7,7 +7,6 @@ from limpar import limpar
 from PIL import Image, ImageTk
 from datetime import datetime
 from bancodedados.banco_dados import *
-import sqlite3
 import pandas as pd
 
 
@@ -15,8 +14,8 @@ import pandas as pd
 class Home():
     def __init__(self, frame):
         self.home = tk.Canvas(frame, bd=0, highlightthickness=0)
-        self.banco_estoque = BancoDeDados('controle_estoque.db')
-        self.banco_vendas = BancoDeDados('controle_estoque.db')
+        self.banco_estoque = BancoDeDados()
+        self.banco_vendas = BancoDeDados()
         self.valores()
 
     def frame_home(self):
@@ -117,12 +116,12 @@ class Home():
         self.vendas_dia.place(relx=.605, rely=.04, relwidth=0.18)
 
         self.vendas_do_mes = StringVar()
-                
+      
         # Conecte-se ao banco de dados SQLite
-        conn = sqlite3.connect('bancodedados/vendas.db')
+        conn = self.banco_estoque.conexao_banco()
 
         # Execute a query e carregue os dados em um DataFrame do pandas
-        df = pd.read_sql_query("SELECT * FROM venda", conn)
+        df = pd.read_sql_query("SELECT * FROM venda",conn)
         df = df[['data', 'total']]
         df['data'] = pd.to_datetime(df['data'], format= '%d/%m/%Y %H:%M:%S')
         df_atual = df[df['data'].dt.month == pd.Timestamp.now().month]

@@ -15,8 +15,8 @@ from estoque.barcode import *
 class AddFornecedor():
     def __init__(self, frame):
         self.principal = frame
-        self.banco_estoque = BancoDeDados('controle_estoque.db')
-        self.banco_fornecedor = BancoDeDados('controle_estoque.db')
+        self.banco_estoque = BancoDeDados()
+        self.banco_fornecedor = BancoDeDados()
         self.add_fornecedor()
         self.make_listbox()
         self.preencher_listbox()

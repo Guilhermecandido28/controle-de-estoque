@@ -12,7 +12,7 @@ class Troca():
         self.location_troca = tk.Canvas(frame, bd=0, highlightthickness=0)
         self.var_entrada = StringVar()
         self.var_saida = StringVar()
-        self.banco = BancoDeDados('controle_estoque.db')
+        self.banco = BancoDeDados()
         self.onde_estou()
 
     def onde_estou(self):

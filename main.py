@@ -226,7 +226,6 @@ class Applicantion(Cliente, Home, Estoque, Compra, Vendas, Financeiro, Troca):
     def buttons(self):         
         #Botão cliente
         cliente= os.path.abspath('imagens/cliente.png')
-        print(cliente)
         self.img_cliente = PhotoImage(file=cliente)
         self.btn_clientes = Button(self.menu, text='Clientes', image=self.img_cliente, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2', command=self.cliente)
         self.btn_clientes.place(relx=0, rely=0, relwidth=0.14, relheight=1)

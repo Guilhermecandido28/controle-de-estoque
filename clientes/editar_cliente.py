@@ -14,7 +14,7 @@ class EditarCliente():
         self.f_editar_cliente = frame
         self.img = img
         self.id = id
-        self.banco = BancoDeDados('controle_estoque.db')
+        self.banco = BancoDeDados()
         self.entrys()
         self.titulos()
         self.foto()
