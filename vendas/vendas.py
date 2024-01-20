@@ -9,7 +9,7 @@ from tkinter import messagebox
 import datetime
 from impressora.impressora import ConectorV3
 from bancodedados.banco_dados import *
-import pywhatkit as kt
+from twilio.rest import Client
 
 
 
@@ -404,8 +404,6 @@ class Vendas():
 
         conector.Feed(10)
         conector.Corte(20)
-
-
 
         nome_impressora = "cupom"
 
