@@ -219,7 +219,7 @@ class AddEstoque():
     def ler_cores_do_arquivo(self):
         self.cores = []
         try:
-            with open('estoque/cores.txt', 'r') as file:
+            with open('estoque/cores.txt', 'r', encoding='utf-8') as file:
                 for line in file:
                     cor = line.strip().upper()
                     if cor:  # Verifica se a linha não está vazia
