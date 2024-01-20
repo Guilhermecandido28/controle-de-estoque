@@ -151,7 +151,7 @@ class AddEstoque():
                 messagebox.showerror('Erro', f'Preencha todos os campos. O campo código de barras se deixado vazio, será gerado um código automaticamente.')
                 return
         if self.e_barcode.get() == "":                       
-            gerar_barcode(self.codigo, texto=f'R$ {(self.preco_venda.get())}')
+            gerar_barcode(self.codigo, texto=f'R$ {(self.preco_venda.get())} - TAM: {self.e_tamanho.get()}')
            
         else:
             if len(self.e_barcode.get()) < 12:
@@ -184,7 +184,7 @@ class AddEstoque():
         self.banco_estoque.dml(query, params)
         print('cliente foi salvo')           
                                         
-        messagebox.showinfo("Sucesso", "Operação realizada com sucesso!")   
+           
 
     def calcular_lucro_e_porcentagem(self):
         preco_custo = self.preco_custo.get().replace(',','.')

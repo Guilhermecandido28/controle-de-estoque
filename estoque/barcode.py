@@ -4,7 +4,7 @@ from barcode.writer import ImageWriter
 from PIL import Image, ImageDraw, ImageFont
 import subprocess
 import os
-#import pyautogui
+import pyautogui
 import win32print
 import win32api
 
@@ -42,6 +42,7 @@ def gerar_barcode(entry, texto):
     imagem_redimensionada.save(f'estoque/codigos_barras/{numero}.png')
     imagem_path = os.path.abspath(f'estoque/codigos_barras/{numero}.png')
     imprimir_barcode(numero=numero)
+    pyautogui.press('enter')
 
 def imprimir_barcode(numero):
     lista_impressoras = win32print.EnumPrinters(2)
