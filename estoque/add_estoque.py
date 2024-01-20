@@ -52,6 +52,7 @@ class AddEstoque():
         self.title_categoria.place(relx=0.158, rely=0.25)
         self.e_categoria = ttk.Combobox(self.principal, background=cor4, font=('arial 12'), state='readonly')
         self.e_categoria['values'] = list(self.e_categoria['values']) + self.ler_categoria_do_arquivo()
+        self.e_categoria.set(self.e_categoria['values'][0])
         self.e_categoria.place(relx=0.160, rely=0.30, relwidth=0.19, relheight=0.04)
         self.img_adicionar = PhotoImage(file='imagens/adicionar.png')
         self.btn_add_categoria = Button(self.principal, image=self.img_adicionar, background='dark green', relief='flat', highlightthickness=0, bd=0, command=self.categoria, cursor='hand2')
@@ -63,6 +64,7 @@ class AddEstoque():
         self.title_marca.place(relx=0.40, rely=0.25)
         self.e_marca = ttk.Combobox(self.principal, background=cor4, font=('arial 12'), state='readonly')
         self.e_marca['values'] = list(self.e_marca['values']) + self.ler_marcas_do_arquivo()
+        self.e_marca.set(self.e_marca['values'][0])
         self.e_marca.place(relx=0.400, rely=0.30, relwidth=0.19, relheight=0.04)
         self.btn_add_marca = Button(self.principal, image=self.img_adicionar, background='dark green', relief='flat', highlightthickness=0, bd=0, command=self.marca)
         self.btn_add_marca.place(relx=0.591, rely=0.30, relheight=0.04, relwidth=0.02)
@@ -90,6 +92,7 @@ class AddEstoque():
         self.title_tamanho.place(relx=0.400, rely=0.45)
         self.e_tamanho = ttk.Combobox(self.principal, background=cor4, font=('arial 12'), state='readonly')
         self.e_tamanho['values'] = list(self.e_tamanho['values']) + self.ler_tamanhos_do_arquivo()
+        self.e_tamanho.set(self.e_tamanho['values'][0])
             #fornecedor
         self.title_fonecedor = Label(self.principal, text='FORNECEDOR:', font=('arial 12'), foreground= cor4, bg='white')
         self.title_fonecedor.place(relx=0.71, rely=.25)
@@ -98,6 +101,7 @@ class AddEstoque():
         self.fornecedores = self.banco_fornecedor.dql(query)
         self.fornecedores = [fornecedor[0] for fornecedor in self.fornecedores]
         self.e_fornecedor['values'] = self.fornecedores
+        
         self.e_fornecedor.place(relx=0.71, rely=.3, relwidth=0.20, relheight=0.04)
         self.e_tamanho.place(relx=0.400, rely=0.50, relwidth=0.08, relheight=0.04)
         self.btn_add_tamanho = Button(self.principal, image=self.img_adicionar, background='dark green', relief='flat', highlightthickness=0, bd=0, command=self.tamanho, cursor='hand2')
@@ -108,6 +112,7 @@ class AddEstoque():
         self.e_cor = ttk.Combobox(self.principal, background=cor4, font=('arial 12'), state='readonly')
         self.e_cor.place(relx=0.530, rely=0.50, relwidth=0.06, relheight=0.04)
         self.e_cor['values'] = list(self.e_cor['values']) + self.ler_cores_do_arquivo()
+        self.e_cor.set(self.e_cor['values'][0])
         self.btn_add_cor = Button(self.principal, image=self.img_adicionar, background='dark green', relief='flat', highlightthickness=0, bd=0, command=self.cor, cursor='hand2')
         self.btn_add_cor.place(relx=0.592, rely=0.50, relheight=0.04, relwidth=0.02)
         #preços e custos
@@ -145,7 +150,7 @@ class AddEstoque():
     
 
     def salvar_produto(self):
-        lista = [self.e_descricao, self.e_categoria, self.e_marca, self.e_estoque_min, self.e_estoque_max, self.e_tamanho, self.e_cor, self.preco_custo, self.preco_venda, self.e_fornecedor]
+        lista = [self.e_descricao, self.e_categoria, self.e_marca, self.e_estoque_min, self.e_estoque_max, self.e_tamanho, self.e_cor, self.preco_custo, self.preco_venda]
         for entry in lista:
             if entry.get() == "":
                 messagebox.showerror('Erro', f'Preencha todos os campos. O campo código de barras se deixado vazio, será gerado um código automaticamente.')
@@ -173,7 +178,7 @@ class AddEstoque():
         value_qtd_estoque = self.e_estoque_max.get()
         value_obs = self.e_obs.get()
         value_tamanho = self.e_tamanho.get()
-        value_fornecedor = self.e_fornecedor.get()
+        value_fornecedor = None
         value_cor = self.e_cor.get()
         value_custo = self.preco_custo.get()
         value_venda = self.preco_venda.get()
