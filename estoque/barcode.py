@@ -10,14 +10,27 @@ import win32api
 from time import sleep
 
 
+from random import randint
+
 def gerar_numero_aleatorio():
     # Gera um número aleatório de 12 dígitos
     numero_aleatorio = randint(10**11, (10**12) - 1)
+    numero_aleatorio_str = str(numero_aleatorio)  # Convertendo para string
+    soma_pares = sum(int(numero_aleatorio_str[i]) for i in range(0, 12, 2))
+    soma_impares = sum(int(numero_aleatorio_str[i]) for i in range(1, 12, 2))
+    soma_impares *= 3
+    total_soma = soma_pares + soma_impares
+    proximo_multiplo_10 = (total_soma // 10 + 1) * 10
+    digito_verificador = proximo_multiplo_10 - total_soma
+
+    if digito_verificador == 10:
+        digito_verificador = 0
     
-    # Formata o número para uma string de 12 dígitos
-    numero_aleatorio_formatado = "{:012d}".format(numero_aleatorio)
+    # Formata o número para uma string de 13 dígitos
+    numero_aleatorio_formatado = f"{numero_aleatorio:012d}{digito_verificador}"
     
     return numero_aleatorio_formatado
+
 
 def gerar_barcode(entry, texto):
     numero = gerar_numero_aleatorio()

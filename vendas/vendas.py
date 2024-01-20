@@ -256,10 +256,10 @@ class Vendas():
 
         codigo_barras = self.codigo.get()
 
-        if len(codigo_barras) == 13:
+        if len(codigo_barras) >= 12:
             if self.count == 0:
-                query = 'SELECT ID, descricao, categoria, marca, tamanho, cor, venda FROM estoque WHERE ID = ?'
-                produto = self.banco_estoque.dql_args(query, (codigo_barras,))
+                query = 'SELECT ID, descricao, categoria, marca, tamanho, cor, venda FROM estoque WHERE ID LIKE ? LIMIT 1'
+                produto = self.banco_estoque.dql_args(query, (codigo_barras+'%',))
                 self.lista_temporaria = []
                 for item in produto[0]:
                     self.lista_temporaria.append(item)
