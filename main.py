@@ -52,7 +52,7 @@ class Applicantion(Cliente, Home, Estoque, Compra, Vendas, Financeiro, Troca):
             latest_version = response.json()['name']
 
             
-            current_version = '1.6'
+            current_version = '1.7'
 
             
             if version.parse(latest_version) > version.parse(current_version):
