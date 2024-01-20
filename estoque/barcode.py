@@ -7,6 +7,7 @@ import os
 import pyautogui
 import win32print
 import win32api
+from time import sleep
 
 
 def gerar_numero_aleatorio():
@@ -42,6 +43,7 @@ def gerar_barcode(entry, texto):
     imagem_redimensionada.save(f'estoque/codigos_barras/{numero}.png')
     imagem_path = os.path.abspath(f'estoque/codigos_barras/{numero}.png')
     imprimir_barcode(numero=numero)
+    sleep(1)
     pyautogui.press('enter')
 
 def imprimir_barcode(numero):
