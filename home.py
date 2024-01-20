@@ -7,7 +7,6 @@ from limpar import limpar
 from PIL import Image, ImageTk
 from datetime import datetime
 from bancodedados.banco_dados import *
-import sqlite3
 import pandas as pd
 
 
