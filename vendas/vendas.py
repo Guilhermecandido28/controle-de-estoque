@@ -14,6 +14,7 @@ import pywhatkit as kt
 
 
 
+
 class Vendas():
     def __init__(self, frame) -> None:
         self.principal = tk.Frame(frame, background='light gray')
@@ -289,14 +290,17 @@ class Vendas():
         self.codigo.after_cancel(self.manter_foco_entry)
         cliente = simpledialog.askstring(
             "Vincular Cliente", 'Digite o Nome e Sobrenome do Cliente:').title()
+        
         query_cliente = f"SELECT valor_gasto FROM clientes WHERE nome LIKE '%{cliente}%' " 
         self.nome_do_cliente = cliente
-        cliente_buscado = self.banco_cliente.dql(query_cliente)
-        if cliente_buscado[0][0] == None:
-            cliente_buscado = 0
-        query_modificacao = "UPDATE clientes SET valor_gasto = ? WHERE nome = ?"
-        valor_gasto = (cliente_buscado[0][0]+self.total)
-        self.banco_cliente.dml(query_modificacao, ((valor_gasto, cliente)))
+        try:
+            cliente_buscado = self.banco_cliente.dql(query_cliente)
+            query_modificacao = "UPDATE clientes SET valor_gasto = ? WHERE nome = ?"
+            valor_gasto = (cliente_buscado[0][0]+self.total)
+            self.banco_cliente.dml(query_modificacao, ((valor_gasto, cliente)))
+        except:
+            None
+        
         return cliente
 
     def mostrar_dialogo_forma_pagamento(self):
@@ -349,12 +353,12 @@ class Vendas():
 
         query = "INSERT INTO venda (data, produtos, cliente, desconto, total, forma_pagamento) VALUES (?, ?, ?, ?, ?, ?)"  
         self.banco_vendas.dml(query, (self.data, self.resultado, self.cliente, self.info_desconto, self.total_bd, self.valor_forma_pagamento))
-        
-        self.mensagem_whats()
-        self.imprimir_recibo()
 
-    def mensagem_whats(self):
+        self.imprimir_recibo()
+        self.mensagem_whats()
         
+
+    def mensagem_whats(self):        
 
         account_sid = 'ACb30592726b37aa89d288f721590869f6'
         auth_token = '36f939e093922321cb633ae28e754102'
@@ -378,7 +382,7 @@ class Vendas():
         texto_recibo += "---------------------------------\n"
 
         for item in self.lista_vendas:
-            texto_recibo += f"{item[1].ljust(30)}{item[7]:.2f}\tx{item[6]}\n"
+            texto_recibo += f"{item[1].ljust(30)}{item[7]}\tx{item[6]}\n"
 
         texto_recibo += "---------------------------------\n"
         if self.desconto.get() != '0':

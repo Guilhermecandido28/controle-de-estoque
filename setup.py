@@ -15,7 +15,7 @@ base = "Win32GUI" if sys.platform == "win32" else None
 
 setup(
     name="Controle de Estoque",
-    version="0.1",
+    version="1.7",
     description="My GUI application!",
     options={"build_exe": build_exe_options},
     executables=[Executable("main.py", base=base)],
