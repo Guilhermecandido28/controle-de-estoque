@@ -49,6 +49,7 @@ class BancoDeDados():
         - directory_path (str): Caminho para o diretório a ser criado e oculto.
         """
         os.mkdir(directory_path)
+        # Torna o diretório oculto
         os.system(f"attrib +h {directory_path}")
 
     def _executarScriptSQL(self):
