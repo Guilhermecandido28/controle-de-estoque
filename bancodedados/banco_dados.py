@@ -36,17 +36,51 @@ import os
 
 class BancoDeDados():
     def __init__(self):
-        self.pastaApp = "c:\\.controleestoque\\"  
-        self.nomeBanco = self.pastaApp+'banco.db'
+        self.folderBanco = "c:\\.controleestoque"
+        self.nomeBanco = "banco.db"
+        self.pathBanco = os.path.join(self.folderBanco, self.nomeBanco)
+       
 
+    def _criarDiretorio(self, directory_path):
+        """
+        Cria um diretório se ele não existir e o torna oculto.
+
+        Args:
+        - directory_path (str): Caminho para o diretório a ser criado e oculto.
+        """
+        os.mkdir(directory_path)
+        os.system(f"attrib +h {directory_path}")
+
+    def _executarScriptSQL(self):
+        """
+        Executa um script SQL para criar o banco de dados.
+
+        Args:
+        - directory_path (str): Caminho para o diretório onde o banco de dados será criado.
+        """
+        diretorio = os.path.join('bancodedados', "create.sql")
+        diretorio_absoluto =  os.path.abspath(diretorio)
+
+        with open(diretorio_absoluto, 'r') as sql_file:
+            sql_script = sql_file.read()
+
+        db = sqlite3.connect(self.pathBanco)
+        cursor = db.cursor()
+        cursor.executescript(sql_script)
+        db.commit()
+        db.close()
 
     def conexao_banco(self):
-        con= None
-        try:
-            con=sqlite3.connect(self.nomeBanco)
-        except Error as ex:
-            print(ex)
+        con = None
+        if not os.path.exists(self.folderBanco):
+            self._criarDiretorio(self.folderBanco)
+            self._executarScriptSQL()
+            con=sqlite3.connect(self.pathBanco)
+        else:
+            con=sqlite3.connect(self.pathBanco)
         return con
+
+
 
     def dql(self, query): #select
         vcon=self.conexao_banco()
