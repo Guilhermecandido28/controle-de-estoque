@@ -354,10 +354,19 @@ class Vendas():
         self.imprimir_recibo()
 
     def mensagem_whats(self):
-        mensagem = f'Em {self.data} foi realizada a venda de {self.total_bd} do(s) produto(s) {self.resultado} para o(a)  cliente {self.cliente}. Parabéns pela venda!'
-        kt.sendwhatmsg_instantly(
-            '+5511996241660', mensagem, wait_time=15)
-        messagebox.showinfo('Sucesso!', "Venda realizada com sucesso!")
+        
+
+        account_sid = 'ACb30592726b37aa89d288f721590869f6'
+        auth_token = '36f939e093922321cb633ae28e754102'
+        client = Client(account_sid, auth_token)
+
+        message = client.messages.create(
+        from_='whatsapp:+14155238886',
+        body=f'Foi vendido {self.stringvar.get()} para o cliente {self.nome_do_cliente} os produtos {self.lista_vendas} e forma de pagameto foi {self.valor_forma_pagamento}',
+        to='whatsapp:+5511996241660'
+        )
+
+        print(message.sid)
 
     def imprimir_recibo(self):  
 

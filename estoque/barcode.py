@@ -20,15 +20,27 @@ def gerar_numero_aleatorio():
 
 def gerar_barcode(entry, texto):
     numero = gerar_numero_aleatorio()
+    print(numero)
     entry.set(numero)
+
     codigo_barra = EAN13(numero, writer=ImageWriter())
     codigo_barra.save(f'estoque/codigos_barras/{numero}')
+
+    # Abre a imagem e redimensiona conforme necessário
     imagem = Image.open(f'estoque/codigos_barras/{numero}.png')
-    # draw = ImageDraw.Draw(imagem)
-    # font = ImageFont.truetype('arial.ttf', size=40)
-    # draw.text((200, 240), f"{texto}", font=font, fill='black')
-    # imagem.save(f'estoque/codigos_barras/{numero}.png')  
-    # imagem_path = os.path.abspath(f'estoque/codigos_barras/{numero}.png')
+    nova_dimensao = (800, 800)  # Ajuste conforme necessário
+    imagem_redimensionada = imagem.resize(nova_dimensao)
+
+    draw = ImageDraw.Draw(imagem_redimensionada)
+
+    # Ajuste a posição e o tamanho do texto conforme necessário
+    text_position = (50, 700)
+    font_size = 80
+    font = ImageFont.truetype('arial.ttf', size=font_size)
+    draw.text(text_position, f"{texto}", font=font, fill='black')
+
+    imagem_redimensionada.save(f'estoque/codigos_barras/{numero}.png')
+    imagem_path = os.path.abspath(f'estoque/codigos_barras/{numero}.png')
     imprimir_barcode(numero=numero)
 
 def imprimir_barcode(numero):
