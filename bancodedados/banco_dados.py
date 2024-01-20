@@ -35,9 +35,11 @@ import os
 
 
 class BancoDeDados():
-    def __init__(self, nome):
-        pastaApp = os.path.dirname(__file__)
-        self.nomeBanco = pastaApp+ f'\\{nome}'
+    def __init__(self):
+        self.pastaApp = "c:\\.controleestoque\\"  
+        self.nomeBanco = self.pastaApp+'banco.db'
+
+
     def conexao_banco(self):
         con= None
         try:
