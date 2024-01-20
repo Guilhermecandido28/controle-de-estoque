@@ -273,16 +273,17 @@ class Vendas():
                 self.total_da_venda()
 
     def total_da_venda(self):
+        
         if self.total == 0:
             for item in self.lista_vendas:
-                self.total += int(item[-2])*float(item[-1].replace(',','.'))
+                self.total += int(item[-2])*float(str(item[-1].replace(',','.')))
                 self.stringvar.set(f'R${self.total:.2f}'.replace('.', ','))
 
             return self.stringvar
         else:
             self.total -= self.total
             for item in self.lista_vendas:
-                self.total += int(item[-2])*float(item[-1])
+                self.total += int(item[-2])*float(str(item[-1].replace(',','.')))
                 self.stringvar.set(f'R${self.total:.2f}'.replace('.', ','))
             return self.stringvar
 
