@@ -40,7 +40,8 @@ class Applicantion(Cliente, Home, Estoque, Compra, Vendas, Financeiro, Troca):
         self.financeiro_widgets_criados = False  
         self.troca_widgets_criados = False
         self.check_updates()            
-        janela.mainloop()        
+        janela.mainloop()
+                
 
 
     def check_updates(self):
@@ -52,7 +53,7 @@ class Applicantion(Cliente, Home, Estoque, Compra, Vendas, Financeiro, Troca):
             latest_version = response.json()['name']
 
             
-            current_version = '1.7'
+            current_version = '1.8'
 
             
             if version.parse(latest_version) > version.parse(current_version):
@@ -78,6 +79,8 @@ class Applicantion(Cliente, Home, Estoque, Compra, Vendas, Financeiro, Troca):
                 pass
         except requests.RequestException as e:
             messagebox.showwarning('Erro de Conexão', f'Erro ao verificar atualizações: {str(e)}')
+
+
 
     def tela(self):
         self.janela.title('Controle fincanceiro')

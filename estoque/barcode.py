@@ -8,8 +8,6 @@ import pyautogui
 import win32print
 import win32api
 from time import sleep
-
-
 from random import randint
 
 def gerar_numero_aleatorio():
@@ -36,20 +34,22 @@ def gerar_barcode(entry, texto):
     numero = gerar_numero_aleatorio()
     print(numero)
     entry.set(numero)
+    
 
-    codigo_barra = EAN13(numero, writer=ImageWriter())
+    codigo_barra = EAN13(numero, writer=ImageWriter())    
+
     codigo_barra.save(f'estoque/codigos_barras/{numero}')
 
     # Abre a imagem e redimensiona conforme necessário
     imagem = Image.open(f'estoque/codigos_barras/{numero}.png')
-    nova_dimensao = (800, 800)  # Ajuste conforme necessário
+    nova_dimensao = (550, 450)  # Ajuste conforme necessário
     imagem_redimensionada = imagem.resize(nova_dimensao)
 
     draw = ImageDraw.Draw(imagem_redimensionada)
 
     # Ajuste a posição e o tamanho do texto conforme necessário
-    text_position = (50, 700)
-    font_size = 80
+    text_position = (70, 390)
+    font_size = 45
     font = ImageFont.truetype('arial.ttf', size=font_size)
     draw.text(text_position, f"{texto}", font=font, fill='black')
 
@@ -57,7 +57,7 @@ def gerar_barcode(entry, texto):
     imagem_path = os.path.abspath(f'estoque/codigos_barras/{numero}.png')
     imprimir_barcode(numero=numero)
     sleep(1)
-    pyautogui.press('enter')
+    # pyautogui.press('enter')
 
 def imprimir_barcode(numero):
     lista_impressoras = win32print.EnumPrinters(2)

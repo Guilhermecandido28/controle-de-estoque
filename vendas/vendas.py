@@ -12,9 +12,6 @@ from bancodedados.banco_dados import *
 from twilio.rest import Client
 
 
-
-
-
 class Vendas():
     def __init__(self, frame) -> None:
         self.principal = tk.Frame(frame, background='light gray')
@@ -32,6 +29,7 @@ class Vendas():
         self.venda()
         self.init_entry()
         self.manter_foco_entry()
+        
 
     def onde_estou(self):
         # aqui coloca o frame de localização usando o metodo place
@@ -47,6 +45,9 @@ class Vendas():
         self.img_location_compra_tk = ImageTk.PhotoImage(
             self.img_location_compra)
         self.location_venda.bind('<Configure>', self.resize_image)
+        
+        
+        
 
     def resize_image(self, event):
         self.nova_imagem_venda = self.img_location_compra.resize(
@@ -87,14 +88,16 @@ class Vendas():
             bg='light gray'
         ).place(relx=.31, rely=.25)
 
+
         self.desconto = Spinbox(
             self.frame_codigo,
             background='light gray',
-            font=('arial 14 bold'),
+            font=('arial 14 bold'),            
             from_=0,
             to=999
         )
         self.desconto.place(relx=.41, rely=.25, relwidth=.05, relheight=.5)
+        
 
         self.quantidade = Spinbox(
             self.frame_codigo,
@@ -254,21 +257,25 @@ class Vendas():
         self.codigo.after(100, self.manter_foco_entry)
 
     def info_produto(self, event):
-
-        codigo_barras = self.codigo.get()
-
-        if len(codigo_barras) >= 12:
+        
+        codigo_barras = self.codigo.get()        
+        if len(codigo_barras) >= 13:
             if self.count == 0:
-                query = 'SELECT ID, descricao, categoria, marca, tamanho, cor, venda FROM estoque WHERE ID LIKE ? LIMIT 1'
+                query = 'SELECT ID, descricao, categoria, marca, tamanho, cor, venda FROM estoque WHERE ID LIKE ?'
                 produto = self.banco_estoque.dql_args(query, (codigo_barras+'%',))
-                self.lista_temporaria = []
-                for item in produto[0]:
-                    self.lista_temporaria.append(item)
-                self.lista_temporaria.insert(6, self.quantidade.get())               
-
-                self.lista_vendas.append(self.lista_temporaria)
                 
-                self.mostrar_vendas()
+                self.lista_temporaria = []
+                try:
+                    for item in produto[0]:
+                        self.lista_temporaria.append(item)
+                    self.lista_temporaria.insert(6, self.quantidade.get())               
+
+                    self.lista_vendas.append(self.lista_temporaria)
+                    
+                except IndexError:
+                    pass
+                
+                self.mostrar_vendas()                
                 self.codigo.delete(0, END)
                 self.total_da_venda()
 
@@ -369,9 +376,7 @@ class Vendas():
         from_='whatsapp:+14155238886',
         body=f'Foi vendido {self.stringvar.get()} para o cliente {self.nome_do_cliente} os produtos {self.lista_vendas} e forma de pagameto foi {self.valor_forma_pagamento}',
         to='whatsapp:+5511996241660'
-        )
-
-        print(message.sid)
+        )  
 
     def imprimir_recibo(self):  
 
@@ -400,9 +405,9 @@ class Vendas():
         conector = ConectorV3()
         
         conector.DeshabilitarCaracteresPersonalizados()
-
+        conector.Feed(10)
+        conector.Corte(20)
         conector.texto(texto_recibo)
-
         conector.Feed(10)
         conector.Corte(20)
 
