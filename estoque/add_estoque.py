@@ -187,7 +187,7 @@ class AddEstoque():
         query = "INSERT INTO estoque (id, descricao, categoria, marca, estoque_minimo, quantidade, observacoes, tamanho, fornecedor, cor, custo, venda, imagem) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         params = (self.value_id, value_descricao, value_categoria, value_marca, value_estoque_min, value_qtd_estoque, value_obs, value_tamanho, value_fornecedor, value_cor, value_custo, value_venda, value_imagem)
         self.banco_estoque.dml(query, params)
-        print('cliente foi salvo')           
+                   
                                         
            
 
