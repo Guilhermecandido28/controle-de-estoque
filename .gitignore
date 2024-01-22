@@ -10,3 +10,5 @@ __pycache__/
 build/
 venv/
 estoque/codigos_barras/
+vendas/2023-12.log
+vendas/2024-01.log
