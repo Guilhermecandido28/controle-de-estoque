@@ -11,7 +11,6 @@ from impressora.impressora import ConectorV3
 from bancodedados.banco_dados import *
 from twilio.rest import Client
 
-
 class Vendas():
     def __init__(self, frame) -> None:
         self.principal = tk.Frame(frame, background='light gray')
@@ -366,7 +365,7 @@ class Vendas():
         self.mensagem_whats()
         
 
-    def mensagem_whats(self):        
+    def mensagem_whats(self): 
 
         account_sid = 'ACb30592726b37aa89d288f721590869f6'
         auth_token = '36f939e093922321cb633ae28e754102'
@@ -376,7 +375,9 @@ class Vendas():
         from_='whatsapp:+14155238886',
         body=f'Foi vendido {self.stringvar.get()} para o cliente {self.nome_do_cliente} os produtos {self.lista_vendas} e forma de pagameto foi {self.valor_forma_pagamento}',
         to='whatsapp:+5511996241660'
-        )  
+        )
+
+        print(message.sid)
 
     def imprimir_recibo(self):  
 
