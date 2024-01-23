@@ -31,8 +31,7 @@ def gerar_numero_aleatorio():
 
 
 def gerar_barcode(entry, texto):
-    numero = gerar_numero_aleatorio()
-    print(numero)
+    numero = gerar_numero_aleatorio()    
     entry.set(numero)
     
 
