@@ -38,7 +38,7 @@ if "%APP_DB_DSN%" equ "" (
     goto :eof
 )
 REM Mudando para o diretorio do script
-cd "%APP_FOLDER%\bancodedados\"
+cd "%APP_FOLDER%bancodedados\"
 
 REM Executa o comando SQLite para realizar o backup
 sqlite3 %APP_DB_DSN% ".backup '%APP_BACKUP_FOLDER%banco_%year%%month%%day%_%hour%%min%bkp.db'"
@@ -52,5 +52,5 @@ REM /du: Duração da tarefa [HHHH:MM]
 REM /mo: Especifica a frequência com que a tarefa é executada 
 REM
 REM Exemplo de agendamento:
-REM schtasks /create /tn "backup_controle_estoque" /tr "C:\Users\saboiarf\Downloads\controle-de-estoque\backup.bat" /sc HOURLY /st 08:00 /mo 4"
+REM schtasks /create /tn "backup_controle_estoque" /tr "'%APP_FOLDER%bancodedados\backup.bat'" /sc HOURLY /st 08:00 /mo 4"
 
