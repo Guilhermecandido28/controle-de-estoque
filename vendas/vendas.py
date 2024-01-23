@@ -373,7 +373,7 @@ class Vendas():
         client = Client(account_sid, auth_token)
 
         message = client.messages.create(
-        from_='whatsapp:+14155238886',
+        from_=os.getenv('NUMERO_PRINCIPAL'),
         body=f'Foi vendido {self.stringvar.get()} para o cliente {self.nome_do_cliente} os produtos {self.lista_vendas} e forma de pagameto foi {self.valor_forma_pagamento}',
         to=f'whatsapp:{os.getenv("TO_WHATSAPP_NUMBER")}'
         )
