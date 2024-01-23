@@ -36,11 +36,11 @@ class AddEstoque():
         botao_upload.place(relx=0.01, rely=0.50, relwidth=.14, relheight=0.04)        
          # Entrys
             #codigo de barras
-        self.title_barcode = Label(self.principal, text='CÓDIGO DE BARRAS:', font=('arial 12'), foreground= cor4, bg='white')
-        self.title_barcode.place(relx=0.71, rely=0.15)
+        # self.title_barcode = Label(self.principal, text='CÓDIGO DE BARRAS:', font=('arial 12'), foreground= cor4, bg='white')
+        # self.title_barcode.place(relx=0.71, rely=0.15)
         self.codigo = tk.StringVar()
-        self.e_barcode = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0, textvariable=self.codigo)
-        self.e_barcode.place(relx=0.71, rely=0.20, relwidth=0.20, relheight=0.04)
+        self.e_barcode = Entry(self.principal, bg=cor4, font=('arial 12'), bd=0, textvariable=self.codigo)        
+        # self.e_barcode.place(relx=0.71, rely=0.20, relwidth=0.20, relheight=0.04)
             #DESCRIÇÃO
         self.title_descricao = Label(self.principal, text='DESCRIÇÃO:', font=('arial 12'), foreground= cor4, bg='white')
         self.title_descricao.place(relx=0.158, rely=0.15)
@@ -150,6 +150,7 @@ class AddEstoque():
     
 
     def salvar_produto(self):
+        
         lista = [self.e_descricao, self.e_categoria, self.e_marca, self.e_estoque_min, self.e_estoque_max, self.e_tamanho, self.e_cor, self.preco_custo, self.preco_venda]
         for entry in lista:
             if entry.get() == "":
@@ -186,7 +187,9 @@ class AddEstoque():
 
         query = "INSERT INTO estoque (id, descricao, categoria, marca, estoque_minimo, quantidade, observacoes, tamanho, fornecedor, cor, custo, venda, imagem) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         params = (self.value_id, value_descricao, value_categoria, value_marca, value_estoque_min, value_qtd_estoque, value_obs, value_tamanho, value_fornecedor, value_cor, value_custo, value_venda, value_imagem)
-        self.banco_estoque.dml(query, params)
+        self.banco_estoque.dml(query, params)        
+        self.e_barcode.delete(0, tk.END)
+        
                    
                                         
            
