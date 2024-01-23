@@ -103,7 +103,11 @@ class BancoDeDados():
         try:
             vcon=self.conexao_banco()
             c=vcon.cursor()
-            c.execute(query, params)
+            if params is not None:
+                c.execute(query, params)
+            else:
+                c.execute(query)
+            
             vcon.commit()
             vcon.close()
         except Error as ex:

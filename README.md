@@ -33,12 +33,8 @@ O software é intuitivo e foi projetado para ser utilizado em lojas de roupas. A
 2. Simples e Intuitivo: Focado na facilidade de uso.
 3. Desenvolvido em Python: Utilizando Tkinter, SQLite3, PyAutoGUI, Requests, entre outras bibliotecas.
 
-## Contribuições
+## Contribuições/Contato
 Contribuições são bem-vindas! Você pode contribuir entrando em contato com Guilherme por e-mail (gnfc28@icloud.com, gnfc28@gmail.com) ou através do WhatsApp (11985518059). Se preferir, também é possível criar um branch no repositório.
-
-## Contato
-Você pode contribuir entrando em contato com Guilherme por e-mail (gnfc28@icloud.com, gnfc28@gmail.com) ou através do WhatsApp (11985518059). Se preferir, também é possível criar um branch no repositório.
-Para dúvidas ou sugestões, entre em contato com Guilherme Nunes pelos e-mails mencionados ou pelo WhatsApp.
 
 ## Status do Projeto
 O projeto está em desenvolvimento ativo, pois acredito que sempre há espaço para melhorias e aprimoramentos.
@@ -49,3 +45,5 @@ O projeto está em desenvolvimento ativo, pois acredito que sempre há espaço p
 3. SQLite3
 4. PyAutoGUI
 5. Requests
+6. Pandas
+
