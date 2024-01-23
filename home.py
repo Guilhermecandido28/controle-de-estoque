@@ -102,6 +102,7 @@ class Home():
         data_hoje = datetime.today().strftime('%d/%m/%Y')        
         query = f"SELECT total FROM venda WHERE data LIKE '%{data_hoje}%'"
         total_vendas_dia = self.banco_vendas.dql(query)
+        total_vendas_dia = [tupla for tupla in total_vendas_dia if all(elemento for elemento in tupla)]
         total_vendas_dia = [float(x[0].replace('R$', '').replace(',','.')) for x in total_vendas_dia]
         self.vendas_hoje.set(f'{sum(total_vendas_dia):.2f}'.replace('.',','))
         
@@ -126,7 +127,15 @@ class Home():
         df['data'] = pd.to_datetime(df['data'], format= '%d/%m/%Y %H:%M:%S')
         df_atual = df[df['data'].dt.month == pd.Timestamp.now().month]
         # Remova o símbolo 'R$' e converta a coluna para float
-        df_atual['total'] = df_atual['total'].str.replace('R$', '').str.replace(',', '.').astype(float)
+        try:
+            df_atual['total'] = df_atual['total'].str.replace('R$', '').str.replace(',', '.').astype(float)            
+        except ValueError:            
+            query_delete = "DELETE FROM venda WHERE total = ''"
+            self.banco_vendas.dml(query=query_delete)         
+            
+            
+            df_atual['total'] = df_atual['total'].str.replace('R$', '').str.replace(',', '.').astype(float) 
+            
 
         # Some todos os valores na coluna 'total'
         soma_total = df_atual['total'].sum()
@@ -198,11 +207,12 @@ class Home():
         bg='#A6A6A6')
         self.a_pagar.place(relx=.10, rely=.83)
 
-    
+        
         forma_credito = StringVar()
         consulta_credito = 'Crédito'
         query_credito =f"SELECT total FROM venda WHERE forma_pagamento LIKE '%{consulta_credito}%'"
         credito = self.banco_vendas.dql(query_credito)
+        
         credito = [float(x[0].replace('R$', '0').replace(',','.')) for x in credito]
         forma_credito.set(f'{sum(credito):.2f}'.replace('.',','))
 
