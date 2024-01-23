@@ -53,4 +53,7 @@ REM /mo: Especifica a frequência com que a tarefa é executada
 REM
 REM Exemplo de agendamento:
 REM schtasks /create /tn "backup_controle_estoque" /tr "'%APP_FOLDER%bancodedados\backup.bat'" /sc HOURLY /st 08:00 /mo 4"
+REM 
+REM Comando para testar a tarefa agendada:
+REM schtasks /run /tn "backup_controle_estoque"
 
