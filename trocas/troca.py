@@ -5,6 +5,7 @@ from formations import *
 from PIL import Image, ImageTk
 from bancodedados.banco_dados import *
 from tkinter import messagebox
+from functions.functions import OndeEstou
 
 class Troca():
     def __init__(self, frame):
@@ -16,27 +17,9 @@ class Troca():
         self.onde_estou()
 
     def onde_estou(self):
-        # aqui coloca o frame de localização usando o metodo place
-        self.location_troca.place(
-            relx=0, rely=0.14, relwidth=1, relheight=0.09)
-
-        # coloca o nome da localização: FINANCEIRO
-        self.location_troca.create_text(
-            100, 30, text='TROCAS', anchor=NW, font=('arial 18 bold underline'))
-
-        # coloca a imagem de fundo e a torna responsiva
-        self.img_location_troca = Image.open('imagens/location.png')
-        self.img_location_troca_tk = ImageTk.PhotoImage(
-            self.img_location_troca)
-        self.location_troca.bind('<Configure>', self.resize_image)
-
-    def resize_image(self, event):
-        self.nova_imagem_troca = self.img_location_troca.resize(
-            (event.width, event.height))
-        self.nova_imagem_troca_tk = ImageTk.PhotoImage(self.nova_imagem_troca)
-        self.location_troca.create_image(
-            0, 0, anchor=NW, image=self.nova_imagem_troca_tk)
-        self.location_troca.image = self.nova_imagem_troca_tk
+        local = OndeEstou(self.location_troca, 'Trocas', '../imagens/location.png')
+        local.localizador()
+        
 
     def troca(self):
         self.principal.place(relx=0.01, rely=0.25, relwidth=0.98, relheight=0.72)

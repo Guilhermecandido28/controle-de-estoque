@@ -11,6 +11,7 @@ from impressora.impressora import ConectorV3
 from bancodedados.banco_dados import *
 from twilio.rest import Client
 from dotenv import load_dotenv
+from functions.functions import OndeEstou
 
 class Vendas():
     def __init__(self, frame) -> None:
@@ -32,31 +33,12 @@ class Vendas():
         
 
     def onde_estou(self):
-        # aqui coloca o frame de localização usando o metodo place
-        self.location_venda.place(
-            relx=0, rely=0.14, relwidth=1, relheight=0.09)
+        local = OndeEstou(self.location_venda, 'VENDAS', '../imagens/location.png')
+        local.localizador()
 
-        # coloca o nome da localização: COMPRA
-        self.location_venda.create_text(
-            100, 30, text='VENDAS', anchor=NW, font=('arial 18 bold underline'))
-
-        # coloca a imagem de fundo e a torna responsiva
-        self.img_location_compra = Image.open('imagens/location.png')
-        self.img_location_compra_tk = ImageTk.PhotoImage(
-            self.img_location_compra)
-        self.location_venda.bind('<Configure>', self.resize_image)
+    
         
         
-        
-
-    def resize_image(self, event):
-        self.nova_imagem_venda = self.img_location_compra.resize(
-            (event.width, event.height))
-        self.nova_imagem_venda_tk = ImageTk.PhotoImage(self.nova_imagem_venda)
-        self.location_venda.create_image(
-            0, 0, anchor=NW, image=self.nova_imagem_venda_tk)
-        self.location_venda.image = self.nova_imagem_venda_tk
-
     def init_entry(self):
         self.codigo = tk.Entry(
             self.frame_codigo,
