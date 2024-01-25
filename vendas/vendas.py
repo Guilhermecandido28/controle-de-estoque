@@ -18,12 +18,8 @@ class Vendas():
         self.principal = tk.Frame(frame, background='light gray')
         self.location_venda = tk.Canvas(frame, bd=0, highlightthickness=0)
         self.frame_codigo = Frame(frame, background='light gray')
-        self.titulos = Frame(frame)
-        self.banco_cliente = BancoDeDados()
-        self.banco_estoque = BancoDeDados()
-        self.banco_vendas = BancoDeDados()
-        self.count = 0
-        self.total = 0
+        self.titulos = Frame(frame)               
+        self.banco = BancoDeDados()
         self.stringvar = StringVar()
         self.lista_vendas = []
         self.onde_estou()
@@ -34,11 +30,8 @@ class Vendas():
 
     def onde_estou(self):
         local = OndeEstou(self.location_venda, 'VENDAS', '../imagens/location.png')
-        local.localizador()
-
-    
-        
-        
+        local.localizador()  
+ 
     def init_entry(self):
         self.codigo = tk.Entry(
             self.frame_codigo,
@@ -48,7 +41,7 @@ class Vendas():
         self.codigo.place(relx=.15, rely=.25, relwidth=.15, relheight=.5)
         self.codigo.bind(
             '<KeyRelease>', lambda event: self.info_produto(event))
-        self.count = 0
+        
 
     def venda(self):
         # aqui coloca o frame responsavel pela lista
@@ -239,42 +232,35 @@ class Vendas():
         self.codigo.after(100, self.manter_foco_entry)
 
     def info_produto(self, event):
-        
-        codigo_barras = self.codigo.get()        
-        if len(codigo_barras) >= 13:
-            if self.count == 0:
-                query = 'SELECT ID, descricao, categoria, marca, tamanho, cor, venda FROM estoque WHERE ID LIKE ?'
-                produto = self.banco_estoque.dql_args(query, (codigo_barras+'%',))
+
+        codigo_barras = self.codigo.get() # pega a numeração do código de barras       
+        if len(codigo_barras) >= 13:  # executa a validação da quantidade de algarismos do código de barras          
+                query = 'SELECT ID, descricao, categoria, marca, tamanho, cor, venda FROM estoque WHERE ID LIKE ?' # Seleciona o item no código de barras
+                produto = self.banco.dql_args(query, (codigo_barras+'%',)) # execução da query
                 
-                self.lista_temporaria = []
+                self.lista_temporaria = [] # essa lista serve para armazenar temporariamente o produto que corresponde ao código de barras
                 try:
                     for item in produto[0]:
-                        self.lista_temporaria.append(item)
-                    self.lista_temporaria.insert(6, self.quantidade.get())               
+                        self.lista_temporaria.append(item) # Adiciona o produto na lista temporária
+                    self.lista_temporaria.insert(6, self.quantidade.get())  # Adiciona a quantidade de itens que foram vendidos              
 
-                    self.lista_vendas.append(self.lista_temporaria)
+                    self.lista_vendas.append(self.lista_temporaria) # adiciona a lista temporária a lista final, para que possa ser mostrado todos os produtos que foram cadastrados na venda.
                     
                 except IndexError:
-                    pass
+                    pass # Caso não exista o produto.
                 
-                self.mostrar_vendas()                
-                self.codigo.delete(0, END)
-                self.total_da_venda()
+                self.mostrar_vendas() # mostra as vendas na tela               
+                self.codigo.delete(0, END) # apaga a entry do código de barras para uma nova leitura
+                self.total_da_venda() # exibe o total da venda
 
     def total_da_venda(self):
-        
-        if self.total == 0:
+            self.total = 0        
             for item in self.lista_vendas:
-                self.total += int(item[-2])*float(str(item[-1].replace(',','.')))
-                self.stringvar.set(f'R${self.total:.2f}'.replace('.', ','))
+                self.total += int(item[-2])*float(str(item[-1].replace(',','.'))) # simplesmente a multiplicação da quantidade de um unico produto, pelo seu preço
+            self.stringvar.set(f'R${self.total:.2f}'.replace('.', ',')) # configura a string para armazenar o valor total da venda, já formatado.
 
             return self.stringvar
-        else:
-            self.total -= self.total
-            for item in self.lista_vendas:
-                self.total += int(item[-2])*float(str(item[-1].replace(',','.')))
-                self.stringvar.set(f'R${self.total:.2f}'.replace('.', ','))
-            return self.stringvar
+
 
     def pegar_cliente(self):
         self.codigo.after_cancel(self.manter_foco_entry)
@@ -284,10 +270,10 @@ class Vendas():
         query_cliente = f"SELECT valor_gasto FROM clientes WHERE nome LIKE '%{cliente}%' " 
         self.nome_do_cliente = cliente
         try:
-            cliente_buscado = self.banco_cliente.dql(query_cliente)
+            cliente_buscado = self.banco.dql(query_cliente)
             query_modificacao = "UPDATE clientes SET valor_gasto = ? WHERE nome = ?"
             valor_gasto = (cliente_buscado[0][0]+self.total)
-            self.banco_cliente.dml(query_modificacao, ((valor_gasto, cliente)))
+            self.banco.dml(query_modificacao, ((valor_gasto, cliente)))
         except:
             None
         
@@ -307,7 +293,7 @@ class Vendas():
         self.dialog.protocol("WM_DELETE_WINDOW", lambda: self.definir_forma_pagamento(
             None))  # Lidar com o fechamento da janela
         # Ajuste o tamanho da janela conforme necessário
-        self.dialog.geometry("300x150")
+        self.dialog.geometry("600x300")
         self.dialog.attributes("-topmost", 1)  # Mantém a janela no topo
 
     # Função para definir a forma de pagamento e fechar a janela
@@ -332,7 +318,7 @@ class Vendas():
                 itens_formatados.append(item_formatado)
                 query_estoque = "UPDATE estoque SET quantidade = quantidade - ? WHERE ID = ?"
                 params_estoque = (item6, item0)
-                self.banco_estoque.dml(query_estoque, params_estoque)
+                self.banco.dml(query_estoque, params_estoque)
 
         self.resultado = ', '.join(itens_formatados)
 
@@ -342,7 +328,7 @@ class Vendas():
         self.total_bd = self.stringvar.get()
 
         query = "INSERT INTO venda (data, produtos, cliente, desconto, total, forma_pagamento) VALUES (?, ?, ?, ?, ?, ?)"  
-        self.banco_vendas.dml(query, (self.data, self.resultado, self.cliente, self.info_desconto, self.total_bd, self.valor_forma_pagamento))
+        self.banco.dml(query, (self.data, self.resultado, self.cliente, self.info_desconto, self.total_bd, self.valor_forma_pagamento))
 
         self.imprimir_recibo()
         self.mensagem_whats()
@@ -365,6 +351,7 @@ class Vendas():
     def imprimir_recibo(self):  
 
         texto_recibo = 'LOJA JK MODAS E VARIEDADES\n'
+        texto_recibo+= f'{self.data}'
         texto_recibo += f"============= Recibo de Compra =============\n\n"
         texto_recibo += f"Cliente: {self.nome_do_cliente}\n"
         texto_recibo += "---------------------------------\n"
