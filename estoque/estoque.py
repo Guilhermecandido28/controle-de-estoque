@@ -11,6 +11,7 @@ from estoque.editar_estoque import EditarEstoque
 from bancodedados.banco_dados import *
 from PIL import Image, ImageTk
 from estoque.barcode import imprimir_barcode
+from functions.functions import OndeEstou
 
 class Estoque(EditarEstoque):
     def __init__(self, frame):
@@ -19,11 +20,15 @@ class Estoque(EditarEstoque):
         self.f_add_estoque = tk.Frame(frame, bg= 'white')
         self.location_est = tk.Canvas(frame, bd=0, highlightthickness=0)
         self.banco_estoque = BancoDeDados()
-        
+        self.onde_estou()
         self.buscar_estoque_est()
         self.tree_estoque()
         self.estoque_na_treeview()
-        
+
+    def onde_estou(self):
+        local = OndeEstou(self.location_est, 'ESTOQUE', '../imagens/location.png')
+        local.localizador()
+
     def editar_estoque(self):        
         if self.estoque_treeview.selection() == ():
             messagebox.showerror('Erro', "Selecione um produto primeiro! ")
@@ -54,11 +59,7 @@ class Estoque(EditarEstoque):
         self.f_add_estoque.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.72)
 
     def estoques(self):
-        self.location_est.place(relx=0, rely=0.14, relwidth=1, relheight=0.09)        
-        self.img_location_est = Image.open('imagens/location.png')
-        self.img_location_est_tk = ImageTk.PhotoImage(self.img_location_est)
-        self.location_est.create_text(100,30, text='ESTOQUE', anchor=NW, font=('arial 18 bold underline'))
-        self.location_est.bind('<Configure>', self.resize_image)
+        
         self.principal.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.72)        
         #Botão_adicionar_estoque        
         self.btn_addestoque = Button(self.principal, text='ADICIONAR\n Estoque', bg='light gray', compound='center',bd=0, font=('arial 14 bold'), foreground='black', cursor='hand2', command=self.add_estoque)

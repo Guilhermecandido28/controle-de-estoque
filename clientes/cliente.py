@@ -13,6 +13,7 @@ from PIL import Image, ImageTk
 from clientes.imprimir_ficha import ImprimirFicha
 import subprocess
 import os
+from functions.functions import OndeEstou
 
 
 
@@ -23,7 +24,8 @@ class Cliente(AddCliente, EditarCliente):
         self.f_editar_cliente = tk.Frame(frame, bg='white')
         self.f_add_cliente = tk.Frame(frame, bg= 'white')
         self.location = tk.Canvas(frame, bd=0, highlightthickness=0) 
-        self.banco = BancoDeDados()       
+        self.banco = BancoDeDados()
+        self.onde_estou()       
         self.inserir_dados()
         self.clientes_na_treeview()              
 
@@ -59,14 +61,11 @@ class Cliente(AddCliente, EditarCliente):
                 campo.insert(0, dados[0][count])
                 count+=1
 
+    def onde_estou(self):
+        local = OndeEstou(self.location, 'CLIENTES', '../imagens/location.png')
+        local.localizador()
 
     def clientes(self):
-        self.location.place(relx=0, rely=0.14, relwidth=1, relheight=0.09)        
-        self.img_location = Image.open('imagens/location.png')
-        self.img_location_tk = ImageTk.PhotoImage(self.img_location)
-        self.location.create_text(100,30, text='CLIENTE', anchor=NW, font=('arial 18 bold underline'))
-        
-        self.location.bind('<Configure>', self.resize_image)
         self.principal.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.76)
         #Botão_adicionar_cliente        
         self.btn_addcliente = Button(self.principal, text='ADICIONAR\n Cliente', bg='light gray', compound='center',bd=0, font=('arial 14 bold'), foreground='black', cursor='hand2', command=self.novo_cliente)

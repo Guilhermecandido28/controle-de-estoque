@@ -10,6 +10,7 @@ from fornecedor.editar_fornecedor import EditarFornecedor
 from bancodedados.banco_dados import *
 from bancodedados.banco_dados import *
 from PIL import Image, ImageTk
+from functions.functions import OndeEstou
 
 
 class Fornecedor():
@@ -23,6 +24,7 @@ class Fornecedor():
         self.buscar_fornecedor_est()
         self.tree_fornecedor()
         self.fornecedor_na_treeview()
+        self.onde_estou()
         
     def editar_fornecedor(self):        
         if self.fornecedor_treeview.selection() == ():
@@ -65,12 +67,12 @@ class Fornecedor():
         self.adicionar_fornecedor = AddFornecedor(self.f_add_fornecedor)
         self.f_add_fornecedor.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.72)
 
+    def onde_estou(self):
+        local = OndeEstou(self.location_est, 'FORNECEDOR', '../imagens/location.png')
+        local.localizador()        
+
     def fornecedores(self):
-        self.location_est.place(relx=0, rely=0.14, relwidth=1, relheight=0.09)        
-        self.img_location_est = Image.open('imagens/location.png')
-        self.img_location_est_tk = ImageTk.PhotoImage(self.img_location_est)
-        self.location_est.create_text(100,30, text='FORNECEDOR', anchor=NW, font=('arial 18 bold underline'))
-        self.location_est.bind('<Configure>', self.resize_image)
+        
         self.principal.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.72)        
         #Botão_adicionar_estoque        
         self.btn_addfornecedor = Button(self.principal, text='ADICIONAR\n Fornecedor', bg='light gray', compound='center',bd=0, font=('arial 14 bold'), foreground='black', cursor='hand2', command=self.add_fornecedor)

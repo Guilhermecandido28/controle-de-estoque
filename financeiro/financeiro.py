@@ -3,17 +3,17 @@ from styles.cores import *
 import tkinter as tk
 from formations import *
 from PIL import Image, ImageTk
+from functions.functions import OndeEstou
 
-class Financeiro():
+class Financeiro:
     def __init__(self, frame):
         self.principal = tk.Frame(frame, background='light gray')
         self.location_financeiro = tk.Canvas(frame, bd=0, highlightthickness=0)
         self.onde_estou()
 
     def onde_estou(self):
-        # aqui coloca o frame de localização usando o metodo place
-        self.location_financeiro.place(
-            relx=0, rely=0.14, relwidth=1, relheight=0.09)
+        local = OndeEstou(self.location_financeiro, 'FINANCEIRO', '../imagens/location.png')
+        local.localizador()
 
         # coloca o nome da localização: FINANCEIRO
         self.location_financeiro.create_text(

@@ -7,6 +7,7 @@ from PIL import Image, ImageTk
 from compra.listadecompras import ListaCompras
 from compra.add_compra import AddCompra
 from bancodedados.banco_dados import *
+from functions.functions import OndeEstou
 
 
 class Compra():
@@ -43,16 +44,8 @@ class Compra():
         self.btn_voltar_add.place(relx=0.962, rely=0)
 
     def onde_estou(self):
-        #aqui coloca o frame de localização usando o metodo place
-        self.location_compra.place(relx=0, rely=0.14, relwidth=1, relheight=0.09)
-
-            # coloca o nome da localização: COMPRA
-        self.location_compra.create_text(100,30, text='COMPRA', anchor=NW, font=('arial 18 bold underline'))
-
-            # coloca a imagem de fundo e a torna responsiva
-        self.img_location_compra = Image.open('imagens/location.png')
-        self.img_location_compra_tk = ImageTk.PhotoImage(self.img_location_compra)
-        self.location_compra.bind('<Configure>', self.resize_image)
+        local = OndeEstou(self.location_compra, 'COMPRA', '../imagens/location.png')
+        local.localizador()
 
 
     def filtro_busca_compra(self):

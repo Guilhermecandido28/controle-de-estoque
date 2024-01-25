@@ -8,6 +8,7 @@ from PIL import Image, ImageTk
 from datetime import datetime
 from bancodedados.banco_dados import *
 import pandas as pd
+from functions.functions import Redimensionamento
 
 
 
@@ -22,13 +23,14 @@ class Home():
         self.layout_home = Image.open('imagens/layout_home1.png')
         self.home.place(relx=0.10, rely=.15, relheight=.8, relwidth=.8)
         self.layout_home_tk = PhotoImage(self.layout_home)
+        
+        self.obj = Redimensionamento(self.layout_home) # Transforma a imagem de localização em um objeto para que ele possa ser redimensionado conforme o usuário muda o tamanho da janela
+
         self.home.bind('<Configure>', self.resize_layout)
 
-    def resize_layout(self, event):
-        self.nova_layout = self.layout_home.resize((event.width, event.height))
-        self.nova_layout_tk = ImageTk.PhotoImage(self.nova_layout)
-        self.home.create_image(0, 0, anchor=NW, image=self.nova_layout_tk)
-        self.home.image = self.nova_layout_tk
+    def resize_layout(self, event):        
+        self.obj.resize(self.home, event)
+        
 
     def valores(self):
         self.seta_cima = PhotoImage(file='imagens/seta_cima.png')
