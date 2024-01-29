@@ -12,6 +12,7 @@ from bancodedados.banco_dados import *
 from twilio.rest import Client
 from dotenv import load_dotenv
 from functions.functions import OndeEstou
+from unidecode import unidecode
 
 class Vendas():
     def __init__(self, frame) -> None:
@@ -351,15 +352,15 @@ class Vendas():
     def imprimir_recibo(self):  
 
         texto_recibo = 'LOJA JK MODAS E VARIEDADES\n'
-        texto_recibo+= f'{self.data}'
+        texto_recibo+= f'{self.data}\n\n'
         texto_recibo += f"============= Recibo de Compra =============\n\n"
-        texto_recibo += f"Cliente: {self.nome_do_cliente}\n"
+        texto_recibo += f"Cliente: {unidecode(self.nome_do_cliente, 'utf-8')}\n"
         texto_recibo += "---------------------------------\n"
         texto_recibo += "Produtos\t\tPreco\tQtd\n"
         texto_recibo += "---------------------------------\n"
 
         for item in self.lista_vendas:
-            texto_recibo += f"{item[1].ljust(30)}{item[7]}\tx{item[6]}\n"
+            texto_recibo += f"{unidecode(item[1], 'utf-8').ljust(30)}{item[7]}\tx{item[6]}\n"
 
         texto_recibo += "---------------------------------\n"
         if self.desconto.get() != '0':
@@ -373,9 +374,11 @@ class Vendas():
         texto_recibo += "(11)93482-2157\n\n\n"
         texto_recibo += 'VOLTE SEMPRE!'
 
+        
+
         conector = ConectorV3()
         
-        conector.DeshabilitarCaracteresPersonalizados()
+        
         conector.Feed(10)
         conector.Corte(20)
         conector.texto(texto_recibo)
@@ -386,7 +389,8 @@ class Vendas():
 
 
         resposta = conector.imprimirEn(nome_impressora)
-
-
-        print(resposta)
+        self.clear_frame()
+        self.lista_temporaria.clear()
+        self.lista_vendas.clear()
+        
 
