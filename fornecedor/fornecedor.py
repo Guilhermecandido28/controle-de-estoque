@@ -68,7 +68,7 @@ class Fornecedor():
         self.f_add_fornecedor.place(relx=0.01, rely=0.23, relwidth=0.98, relheight=0.72)
 
     def onde_estou(self):
-        local = OndeEstou(self.location_est, 'FORNECEDOR', '../imagens/location.png')
+        local = OndeEstou(self.location_est, 'FORNECEDOR', os.path.dirname(__file__))
         local.localizador()        
 
     def fornecedores(self):

@@ -62,7 +62,8 @@ class Cliente(AddCliente, EditarCliente):
                 count+=1
 
     def onde_estou(self):
-        local = OndeEstou(self.location, 'CLIENTES', '../imagens/location.png')
+        local = OndeEstou(self.location, 'CLIENTES', os.path.dirname(__file__))
+        
         local.localizador()
 
     def clientes(self):

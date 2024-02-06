@@ -4,6 +4,7 @@ import tkinter as tk
 from formations import *
 from PIL import Image, ImageTk
 from functions.functions import OndeEstou
+import os
 
 class Financeiro:
     def __init__(self, frame):
@@ -12,7 +13,7 @@ class Financeiro:
         self.onde_estou()
 
     def onde_estou(self):
-        local = OndeEstou(self.location_financeiro, 'FINANCEIRO', '../imagens/location.png')
+        local = OndeEstou(self.location_financeiro, 'FINANCEIRO', os.path.dirname(__file__))
         local.localizador()
 
         # coloca o nome da localização: FINANCEIRO

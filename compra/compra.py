@@ -44,7 +44,7 @@ class Compra():
         self.btn_voltar_add.place(relx=0.962, rely=0)
 
     def onde_estou(self):
-        local = OndeEstou(self.location_compra, 'COMPRA', '../imagens/location.png')
+        local = OndeEstou(self.location_compra, 'COMPRA', os.path.dirname(__file__))
         local.localizador()
 
 

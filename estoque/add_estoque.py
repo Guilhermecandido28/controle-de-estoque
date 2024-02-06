@@ -95,14 +95,14 @@ class AddEstoque():
         self.e_tamanho.set(self.e_tamanho['values'][0])
             #fornecedor
         self.title_fonecedor = Label(self.principal, text='FORNECEDOR:', font=('arial 12'), foreground= cor4, bg='white')
-        self.title_fonecedor.place(relx=0.71, rely=.25)
+        #self.title_fonecedor.place(relx=0.71, rely=.25)
         self.e_fornecedor = ttk.Combobox(self.principal, background=cor4, font=('arial 12'), state='readonly')
         query = "SELECT nome FROM fornecedor"
         self.fornecedores = self.banco_fornecedor.dql(query)
         self.fornecedores = [fornecedor[0] for fornecedor in self.fornecedores]
         self.e_fornecedor['values'] = self.fornecedores
         
-        self.e_fornecedor.place(relx=0.71, rely=.3, relwidth=0.20, relheight=0.04)
+        #self.e_fornecedor.place(relx=0.71, rely=.3, relwidth=0.20, relheight=0.04)
         self.e_tamanho.place(relx=0.400, rely=0.50, relwidth=0.08, relheight=0.04)
         self.btn_add_tamanho = Button(self.principal, image=self.img_adicionar, background='dark green', relief='flat', highlightthickness=0, bd=0, command=self.tamanho, cursor='hand2')
         self.btn_add_tamanho.place(relx=0.482, rely=0.50, relheight=0.04, relwidth=0.02)
@@ -110,7 +110,7 @@ class AddEstoque():
         self.title_cor = Label(self.principal, text='COR:', font=('arial 12'), foreground= cor4, bg='white')
         self.title_cor.place(relx=0.530, rely=0.45)
         self.e_cor = ttk.Combobox(self.principal, background=cor4, font=('arial 12'), state='readonly')
-        self.e_cor.place(relx=0.530, rely=0.50, relwidth=0.06, relheight=0.04)
+        self.e_cor.place(relx=0.510, rely=0.50, relwidth=0.08, relheight=0.04)
         self.e_cor['values'] = list(self.e_cor['values']) + self.ler_cores_do_arquivo()
         self.e_cor.set(self.e_cor['values'][0])
         self.btn_add_cor = Button(self.principal, image=self.img_adicionar, background='dark green', relief='flat', highlightthickness=0, bd=0, command=self.cor, cursor='hand2')
@@ -150,45 +150,48 @@ class AddEstoque():
     
 
     def salvar_produto(self):
-        
-        lista = [self.e_descricao, self.e_categoria, self.e_marca, self.e_estoque_min, self.e_estoque_max, self.e_tamanho, self.e_cor, self.preco_custo, self.preco_venda]
-        for entry in lista:
-            if entry.get() == "":
-                messagebox.showerror('Erro', f'Preencha todos os campos. O campo código de barras se deixado vazio, será gerado um código automaticamente.')
-                return
-        if self.e_barcode.get() == "":                       
-            gerar_barcode(self.codigo, texto=f'R$ {(self.preco_venda.get())} - TAM: {self.e_tamanho.get()}')
-           
-        else:
-            if len(self.e_barcode.get()) < 12:
-                messagebox.showerror('Erro', 'O código de barras deve ter 12 dígitos, ou deixo-o em branco para ser gerado um código automaticamente.')
+        try:
+            lista = [self.e_descricao, self.e_categoria, self.e_marca, self.e_estoque_min, self.e_estoque_max, self.e_tamanho, self.e_cor, self.preco_custo, self.preco_venda]
+            for entry in lista:
+                if entry.get() == "":
+                    messagebox.showerror('Erro', f'Preencha todos os campos.')
+                    return
+            if self.e_barcode.get() == "":                       
+                gerar_barcode(self.codigo, texto=f'R$ {(self.preco_venda.get())} - TAM: {self.e_tamanho.get()}')
+            
+            else:
+                if len(self.e_barcode.get()) < 12:
+                    messagebox.showerror('Erro', 'O código de barras deve ter 12 dígitos, ou deixo-o em branco para ser gerado um código automaticamente.')
 
-        if self.filename is not None:
-            with open(self.filename, 'rb') as img_file:
-                self.byte_img = img_file.read()
-        else:
-            self.img_padrao = Image.open('imagens/pessoa.png')
-            with open('imagens/pessoa.png', 'rb') as img_file:
-                self.byte_img = img_file.read()
-        value_imagem = self.byte_img   
-        self.value_id = self.e_barcode.get()        
-        value_descricao = self.e_descricao.get().strip()
-        value_categoria = self.e_categoria.get()
-        value_marca = self.e_marca.get()
-        value_estoque_min = self.e_estoque_min.get()
-        value_qtd_estoque = self.e_estoque_max.get()
-        value_obs = self.e_obs.get()
-        value_tamanho = self.e_tamanho.get()
-        value_fornecedor = None
-        value_cor = self.e_cor.get()
-        value_custo = self.preco_custo.get()
-        value_venda = self.preco_venda.get()
-        
+            if self.filename is not None:
+                with open(self.filename, 'rb') as img_file:
+                    self.byte_img = img_file.read()
+            else:
+                self.img_padrao = Image.open('imagens/pessoa.png')
+                with open('imagens/pessoa.png', 'rb') as img_file:
+                    self.byte_img = img_file.read()
+            value_imagem = self.byte_img   
+            self.value_id = self.e_barcode.get()        
+            value_descricao = self.e_descricao.get().strip()
+            value_categoria = self.e_categoria.get()
+            value_marca = self.e_marca.get()
+            value_estoque_min = self.e_estoque_min.get()
+            value_qtd_estoque = self.e_estoque_max.get()
+            value_obs = self.e_obs.get()
+            value_tamanho = self.e_tamanho.get()
+            value_fornecedor = None
+            value_cor = self.e_cor.get()
+            value_custo = self.preco_custo.get()
+            value_venda = self.preco_venda.get()
+            
 
-        query = "INSERT INTO estoque (id, descricao, categoria, marca, estoque_minimo, quantidade, observacoes, tamanho, fornecedor, cor, custo, venda, imagem) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-        params = (self.value_id, value_descricao, value_categoria, value_marca, value_estoque_min, value_qtd_estoque, value_obs, value_tamanho, value_fornecedor, value_cor, value_custo, value_venda, value_imagem)
-        self.banco_estoque.dml(query, params)        
-        self.e_barcode.delete(0, tk.END)
+            query = "INSERT INTO estoque (id, descricao, categoria, marca, estoque_minimo, quantidade, observacoes, tamanho, fornecedor, cor, custo, venda, imagem) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            params = (self.value_id, value_descricao, value_categoria, value_marca, value_estoque_min, value_qtd_estoque, value_obs, value_tamanho, value_fornecedor, value_cor, value_custo, value_venda, value_imagem)
+            self.banco_estoque.dml(query, params)        
+            self.e_barcode.delete(0, tk.END)
+        
+        except Exception as e:
+            messagebox.showerror('Erro', f'{e}')
         
                    
                                         

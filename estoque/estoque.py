@@ -26,7 +26,7 @@ class Estoque(EditarEstoque):
         self.estoque_na_treeview()
 
     def onde_estou(self):
-        local = OndeEstou(self.location_est, 'ESTOQUE', '../imagens/location.png')
+        local = OndeEstou(self.location_est, 'ESTOQUE', os.path.dirname(__file__))
         local.localizador()
 
     def editar_estoque(self):        

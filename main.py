@@ -53,7 +53,7 @@ class Applicantion(Cliente, Home, Estoque, Compra, Vendas, Financeiro, Troca):
             latest_version = response.json()['name']
 
             
-            current_version = '1.8'
+            current_version = '1.9'
 
             
             if version.parse(latest_version) > version.parse(current_version):
@@ -244,7 +244,7 @@ class Applicantion(Cliente, Home, Estoque, Compra, Vendas, Financeiro, Troca):
         #estoque
         estoque = os.path.abspath('imagens/estoque.png')
         self.img_estoque= PhotoImage(file=estoque)
-        self.btn_estoque = Button(self.menu, text='Estoque', image=self.img_estoque, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2', command=self.estoque)
+        self.btn_estoque = Button(self.menu, text='Estoque', image=self.img_estoque, compound=LEFT, bg=cor4, bd=0, font=('arial 12 bold'), cursor='hand2', command= self.estoque)
         self.btn_estoque.place(relx=0.42, rely=0, relwidth=0.14, relheight=1)
         #compras
         compras = os.path.abspath('imagens/compras.png')

@@ -17,7 +17,7 @@ class Troca():
         self.onde_estou()
 
     def onde_estou(self):
-        local = OndeEstou(self.location_troca, 'Trocas', '../imagens/location.png')
+        local = OndeEstou(self.location_troca, 'TROCAS', os.path.dirname(__file__))
         local.localizador()
         
 

@@ -1,6 +1,7 @@
 from PIL import Image, ImageTk
 from tkinter.constants import NW
 import os
+from tkinter import messagebox
 
 
 
@@ -35,10 +36,11 @@ class OndeEstou:
          anchor=NW,
          font=('arial 18 bold underline')) # cria o texto que identifica a localização.
         
-        caminho_absoluto = os.path.join(os.path.dirname(__file__), self.diretorio) # caminho da imagem
+        caminho_absoluto = os.path.join(self.diretorio,"..", "imagens", "location.png") # caminho da imagem
+        
         imagem = Image.open(f'{caminho_absoluto}') # abre a imagem 
 
-        self.obj = Redimensionamento(imagem) # classe reposavel pelo redimensionamento eventual da imagem
+        self.obj = Redimensionamento(imagem) # classe reponsavel pelo redimensionamento eventual da imagem
         
         self.frame.bind('<Configure>', lambda event: self.obj.resize(self.frame, event)) # metodo que responsavel por iniciar o processo de redimensionamento.
         

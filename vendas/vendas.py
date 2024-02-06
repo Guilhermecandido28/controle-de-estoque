@@ -30,7 +30,7 @@ class Vendas():
         
 
     def onde_estou(self):
-        local = OndeEstou(self.location_venda, 'VENDAS', '../imagens/location.png')
+        local = OndeEstou(self.location_venda, 'VENDAS', os.path.dirname(__file__))
         local.localizador()  
  
     def init_entry(self):
