@@ -223,8 +223,6 @@ class Applicantion(Cliente, Home, Estoque, Compra, Vendas, Financeiro, Troca):
             troca.location_troca.place_forget()
             
             self.troca_widgets_criados = False
-
-                   
  
     def buttons(self):         
         #Botão cliente
